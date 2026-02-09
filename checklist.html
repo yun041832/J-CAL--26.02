@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>변경사항 확인 체크리스트</title>
+  <style>
+    body {
+      font-family: 'Noto Sans','Noto Sans KR',sans-serif;
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #f5f7fa;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #667eea;
+      border-bottom: 3px solid #667eea;
+      padding-bottom: 10px;
+    }
+    h2 {
+      color: #764ba2;
+      margin-top: 30px;
+    }
+    .checklist {
+      list-style: none;
+      padding: 0;
+    }
+    .checklist li {
+      background: #f8f9fb;
+      margin: 10px 0;
+      padding: 15px 20px;
+      border-radius: 8px;
+      border-left: 4px solid #ddd;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      padding-left: 50px;
+    }
+    .checklist li:hover {
+      background: #e3f2fd;
+      border-left-color: #2196f3;
+    }
+    .checklist li.checked {
+      background: #d4edda;
+      border-left-color: #28a745;
+      text-decoration: line-through;
+      opacity: 0.7;
+    }
+    .checklist li::before {
+      content: '☐';
+      position: absolute;
+      left: 15px;
+      font-size: 20px;
+      color: #999;
+    }
+    .checklist li.checked::before {
+      content: '☑';
+      color: #28a745;
+    }
+    .section {
+      margin: 30px 0;
+    }
+    .code {
+      background: #2d3748;
+      color: #f7fafc;
+      padding: 15px;
+      border-radius: 8px;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 13px;
+      overflow-x: auto;
+      margin: 15px 0;
+    }
+    .warning {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+    }
+    .info {
+      background: #d1ecf1;
+      border-left: 4px solid #0c5460;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+    }
+    .success {
+      background: #d4edda;
+      border-left: 4px solid #28a745;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+    }
+    button {
+      background: #667eea;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      margin: 10px 5px 0 0;
+      transition: all 0.3s;
+    }
+    button:hover {
+      background: #764ba2;
+    }
+    .progress {
+      background: #e9ecef;
+      height: 30px;
+      border-radius: 15px;
+      overflow: hidden;
+      margin: 20px 0;
+    }
+    .progress-bar {
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔍 변경사항 확인 체크리스트</h1>
+    
+    <div class="info">
+      <strong>📌 사용 방법:</strong> 각 항목을 클릭하여 확인 완료 표시하세요.
+    </div>
+
+    <div class="progress">
+      <div class="progress-bar" id="progressBar">0%</div>
+    </div>
+
+    <div class="section">
+      <h2>📋 기본 확인사항</h2>
+      <ul class="checklist" id="basicChecklist">
+        <li data-group="basic">브라우저에서 Ctrl+Shift+R로 강제 새로고침 완료</li>
+        <li data-group="basic">개발자 도구(F12) 콘솔에 오류 메시지 없음</li>
+        <li data-group="basic">페이지 로딩 정상 (로딩 오류 없음)</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>📅 달력 관련</h2>
+      <ul class="checklist" id="calendarChecklist">
+        <li data-group="calendar">달력에 일정 항목에 체크박스가 <strong>없음</strong></li>
+        <li data-group="calendar">달력에 일정 4줄까지 표시됨 (기본 상태)</li>
+        <li data-group="calendar">달력을 세로로 늘리면 칸이 커지면서 더 많은 항목 표시</li>
+        <li data-group="calendar">달력 가로 크기 조절 안됨 (세로만 조절 가능)</li>
+        <li data-group="calendar">이모티콘이 있는 일정이 정상 표시됨</li>
+        <li data-group="calendar">배경색이 전체 폭에 적용됨 (이모지+텍스트 포함)</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>📝 일정등록 섹션</h2>
+      <ul class="checklist" id="eventChecklist">
+        <li data-group="event">제목이 "일정 등록"으로 표시됨</li>
+        <li data-group="event">리스트에 체크박스가 <strong>없음</strong></li>
+        <li data-group="event">이모지 선택 버튼 작동</li>
+        <li data-group="event">색상 선택 시 맨 위에 "없음" 옵션 있음</li>
+        <li data-group="event">"없음" 선택 시 배경색이 투명해짐</li>
+        <li data-group="event">시작/종료 날짜 선택 가능</li>
+        <li data-group="event">기간 설정 시 여러 날짜에 일정 추가됨</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>✅ TODO 섹션</h2>
+      <ul class="checklist" id="todoChecklist">
+        <li data-group="todo">TODO 섹션에 체크박스 <strong>있음</strong></li>
+        <li data-group="todo">이모지 선택 버튼 있음</li>
+        <li data-group="todo">색상 선택 버튼 있음</li>
+        <li data-group="todo">시작/종료 날짜 입력 필드 있음</li>
+        <li data-group="todo">체크 시 회색으로 변경됨</li>
+        <li data-group="todo">배경색이 전체 폭에 적용됨</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>🔔 REMINDER 섹션</h2>
+      <ul class="checklist" id="reminderChecklist">
+        <li data-group="reminder">REMINDER 섹션이 표시됨</li>
+        <li data-group="reminder">리마인더 입력 필드 있음</li>
+        <li data-group="reminder">이모지 선택 버튼 있음</li>
+        <li data-group="reminder">색상 선택 버튼 있음</li>
+        <li data-group="reminder">체크박스 기능 작동</li>
+        <li data-group="reminder">드래그 앤 드롭으로 순서 변경 가능</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>📖 기타</h2>
+      <ul class="checklist" id="otherChecklist">
+        <li data-group="other">사용법 섹션이 표시됨</li>
+        <li data-group="other">메모 섹션 정상 작동</li>
+        <li data-group="other">위젯 버튼들 정상 작동</li>
+        <li data-group="other">LocalStorage 저장 정상 작동</li>
+        <li data-group="other">여러 탭 간 동기화 작동</li>
+      </ul>
+    </div>
+
+    <div class="success" id="successMessage" style="display:none;">
+      <strong>🎉 축하합니다!</strong><br>
+      모든 항목 확인이 완료되었습니다. 패치가 성공적으로 적용되었습니다!
+    </div>
+
+    <div class="warning">
+      <strong>⚠️ 문제가 발견되면:</strong><br>
+      1. 다시 Ctrl+Shift+R로 강제 새로고침<br>
+      2. 브라우저 캐시 완전 삭제 (Ctrl+Shift+Delete)<br>
+      3. 개발자 도구(F12) 콘솔에서 오류 확인<br>
+      4. 파일이 서버에 제대로 업로드되었는지 확인
+    </div>
+
+    <button onclick="resetChecklist()">체크리스트 초기화</button>
+    <button onclick="window.open('index.html', '_blank')">Jay 캘린더 열기</button>
+    <button onclick="window.print()">체크리스트 인쇄</button>
+  </div>
+
+  <script>
+    let checkedCount = 0;
+    const totalItems = document.querySelectorAll('.checklist li').length;
+
+    function updateProgress() {
+      const percentage = Math.round((checkedCount / totalItems) * 100);
+      const progressBar = document.getElementById('progressBar');
+      progressBar.style.width = percentage + '%';
+      progressBar.textContent = percentage + '%';
+
+      if (percentage === 100) {
+        document.getElementById('successMessage').style.display = 'block';
+      } else {
+        document.getElementById('successMessage').style.display = 'none';
+      }
+
+      // LocalStorage에 저장
+      const checkedItems = Array.from(document.querySelectorAll('.checklist li.checked'))
+        .map(li => li.textContent.trim());
+      localStorage.setItem('patchChecklist', JSON.stringify(checkedItems));
+    }
+
+    // 클릭 이벤트 추가
+    document.querySelectorAll('.checklist li').forEach(item => {
+      item.addEventListener('click', function() {
+        this.classList.toggle('checked');
+        if (this.classList.contains('checked')) {
+          checkedCount++;
+        } else {
+          checkedCount--;
+        }
+        updateProgress();
+      });
+    });
+
+    // 저장된 체크리스트 복원
+    function loadChecklist() {
+      const saved = localStorage.getItem('patchChecklist');
+      if (saved) {
+        const checkedItems = JSON.parse(saved);
+        document.querySelectorAll('.checklist li').forEach(item => {
+          if (checkedItems.includes(item.textContent.trim())) {
+            item.classList.add('checked');
+            checkedCount++;
+          }
+        });
+        updateProgress();
+      }
+    }
+
+    function resetChecklist() {
+      if (confirm('체크리스트를 초기화하시겠습니까?')) {
+        document.querySelectorAll('.checklist li').forEach(item => {
+          item.classList.remove('checked');
+        });
+        checkedCount = 0;
+        updateProgress();
+        localStorage.removeItem('patchChecklist');
+      }
+    }
+
+    // 페이지 로드 시 복원
+    loadChecklist();
+  </script>
+</body>
+</html>

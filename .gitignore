@@ -1,0 +1,16 @@
+# editor / ide
+.vscode/
+.cursorrules
+
+# archive & docs
+_archive/
+_docs/
+
+# os
+.DS_Store
+Thumbs.db
+
+# secrets
+*.pem
+*.key
+.env

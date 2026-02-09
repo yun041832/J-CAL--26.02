@@ -1,0 +1,427 @@
+<!-- index.html : 승인 전용(광고 완전 제거 버전) -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+
+  <title>PC 위젯 온라인 달력 | 루틴·ToDo·체크리스트·메모</title>
+  <meta name="description" content="PC 위젯형 달력. 투두리스트·체크리스트·루틴·메모·타이머로 오늘 일정관리와 할 일을 한 화면에서 정리하세요.">
+  <link rel="canonical" href="https://jaycalendar.com/">
+
+  <meta name="theme-color" content="#5c8dff">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="manifest" href="manifest.webmanifest">
+
+  <link rel="icon" href="favicon.ico">
+
+  <!-- Critical CSS (inline) - 최소화된 버전 -->
+  <style>
+    
+    :root{--bg:#f6f7fb;--card:#fff;--line:#e9ecf2;--text:#111827;--primary:#5c8dff}
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;margin:0}
+    body{display:flex;flex-direction:column;background:var(--bg);color:var(--text);font-family:"Noto Sans","Noto Sans KR",sans-serif}
+    .app{display:grid;grid-template-columns:168px minmax(400px,1fr) minmax(300px,360px);gap:10px;padding:6px;flex:1}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+    .calendar__grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+    .day{position:relative;min-height:110px;border:1px solid var(--line);border-radius:8px;background:#fff}
+    @media(max-width:1024px){.app{grid-template-columns:1fr;padding:4px;gap:8px}}
+    @media(max-width:768px){.day{min-height:100px}}
+    @media(max-width:480px){.day{min-height:80px}}
+
+    .open-app-inline img{
+    height: 26px;
+    width: auto;
+    vertical-align: middle;
+    margin: 0 4px;
+  }
+
+  </style>
+
+  <!-- Full Stylesheets -->
+  <link rel="stylesheet" href="style.css?v=20260205">
+
+  <!-- 색상/이모티콘 버튼 강제 스타일 (메모·루틴 동일) -->
+  <style>
+  #memoColorBtn, #memoEmojiBtn,
+  .routine-option-btn--color, .routine-option-btn--emoji {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    line-height: 0 !important;
+    box-sizing: border-box !important;
+    border-radius: 50% !important;
+    border: 2px solid #e2e8f0 !important;
+    display: inline-flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  #memoEmojiBtn .memo-option-btn-emoji-icon,
+  .routine-option-btn--emoji .routine-option-btn-emoji-icon {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    height: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    line-height: 0 !important;
+    font-size: 28px !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+  }
+  </style>
+
+  <!-- index.html : </head> 바로 위 -->
+<style>
+  .open-app-float{
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 9999;
+    display: inline-block;
+  }
+  .open-app-float img{
+    height: 34px;
+    width: auto;
+    display: block;
+  }
+</style>
+
+</head>
+
+<body>
+  <div class="app">
+    <aside class="sidebar" role="navigation" aria-label="메인 메뉴">
+      <button class="menu-button" id="homeBtn"><span class="menu-content"><span class="label">홈</span></span></button>
+      <button class="menu-button" data-widget="routine"><span class="menu-content"><span class="label">루틴</span></span></button>
+      <button class="menu-button" data-widget="memo"><span class="menu-content"><span class="label">메모</span></span></button>
+      <a class="menu-button" href="insight.html" aria-label="인사이트"><span class="menu-content"><span class="label">인사이트</span></span></a>
+      <button id="themeToggle" class="menu-button" aria-label="테마 전환"><span class="menu-content"><span class="label">다크</span></span></button>
+
+      <p class="sidebar__hint">
+        ※ 메뉴 선택 후 상단의<br>
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor" style="vertical-align:middle">
+          <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h560v-280h80v280q0 33-23.5 56.5T760-120H200Zm188-212-56-56 372-372H560v-80h280v280h-80v-144L388-332Z"/>
+        </svg>
+        버튼을 클릭하면<br>위젯이 활성화 됩니다.
+      </p>
+    </aside>
+
+    <main class="main">
+      <!-- 홈 소개 페이지 (기본 표시) -->
+      <div id="homeIntroSection" class="card home-hero">
+        <!-- 메인 헤더 -->
+        <div class="home-header">
+          <h1 style="font-size: 32px; margin-bottom: 8px;">오늘 해야 할 일정이나 목표가 있나요?</h1>
+          <p style="font-size: 17px; color: var(--text-secondary); margin-bottom: 40px;">
+            <br>
+            <br>
+
+          </p>
+        </div>
+        <!-- 기능 섹션 1: 달력 -->
+        <div class="home-section home-section-reverse">
+          <div class="home-section-image">
+            <img src="images/cal.png" alt="달력 기능 스크린샷" style="width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+          </div>
+          <div class="home-section-content">
+            <div class="home-section-icon"></div>
+            <h2>올인원 일정관리 캘린더</h2>
+            <p>이달의 목표를 입력하여 매일매일 목표를 상기시킬 수 있습니다..</p>
+            <p>날짜 옆 화살표를 클릭하면 작은 달력과 위젯 활용이 가능합니다.</p>
+            <p>일정과 ToDo리스트를 하나의 캘린더에서 관리 할 수 있습니다.<br>
+            달력에서 바로 체크하며 한눈에 확인할 수 있습니다.</p>
+          </div>
+        </div>
+
+        <!-- 기능 섹션 2: 루틴 -->
+        <div class="home-section home-section-reverse">
+          <div class="home-section-image">
+            <img src="images/Routine.png" alt="루틴 기능 스크린샷" style="width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+          </div>
+          <div class="home-section-content">
+            <div class="home-section-icon"></div>
+            <h2>일별 / 주간 단위로 루틴 관리</h2>
+            <p>매일, 매주 반복되는 나만의 루틴을 설정하세요.<br>
+            색상과 이모티콘으로 나만의 루틴을 꾸미고, 체크하며<br>성취감을 쌓을 수 있습니다.</p>
+          </div>
+        </div>
+
+        <!-- 기능 섹션 3: 타이머 -->
+        <div class="home-section home-section-reverse">
+          <div class="home-section-image">
+            <img src="images/timer.png" alt="타이머 기능 스크린샷" style="width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+          </div>
+          <div class="home-section-content">
+            <div class="home-section-icon"></div>
+            <h2>집중을 돕는 타이머</h2>
+            <p>6개의 독립적인 타이머를 동시에 사용 할 수 있습니다.<br>
+            공부, 운동, 휴식 시간을 각각 측정하고 관리할 수 있습니다.</p>
+          </div>
+        </div>
+
+        <!-- 기능 섹션 4: 메모 -->
+        <div class="home-section home-section-reverse">
+          <div class="home-section-image">
+            <img src="images/memo.png" alt="메모 기능 스크린샷" style="width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+          </div>
+          <div class="home-section-content">
+            <div class="home-section-icon"></div>
+            <h2>메모 습관을 키워보세요.</h2>
+            <p>날짜별로 메모를 작성하고 색상을 적용할 수 있습니다..<br>
+            목록을 한눈에 확인하고, 원하는 메모를 PC화면에 위젯으로<br>
+            활용하세요.</p>
+          </div>
+        </div>
+
+        <!-- 기능 섹션 5: 위젯 -->
+        <div class="home-section">
+          <div class="home-section-content">
+            <div class="home-section-icon">↗</div>
+            <h2>다양한 디바이스에서 사용</h2>
+            <p>PC, 태블릿, 모바일에서 모두 사용 가능합니다.<br>
+            위젯 기능으로 필요한 메뉴만 띄워 사용해 보세요.</p>
+          </div>
+          <div class="home-section-image">
+            <div style="width: 100%; height: 200px; background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 48px;">
+              💻
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+
+      <!-- 루틴 페이지 (기본 숨김) -->
+      <div id="routinePage" class="card card--has-fab page-layout content hidden" style="display: flex; flex-direction: column; position: relative;">
+        <div class="content-header">
+          <div class="card__header" style="display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
+            <div class="card__title">✅ 루틴</div>
+            <button id="toggleReorderBtn" class="icon-btn" title="목록 순서 변경" style="padding: 6px; display: flex; align-items: center; justify-content: center; border: 1px solid #e2e8f0; background: var(--card); border-radius: 8px;">
+              <svg xmlns="http://www.w3.org/2000/svg" height="22" viewBox="0 0 24 24" width="22" fill="#1e293b"><path d="M6 16L2 10h8L6 16z"/><path d="M18 8l-4 6h8L18 8z"/></svg>
+            </button>
+          </div>
+          <div id="routineWeekCalendar" class="routine-week-calendar"></div>
+        </div>
+        <div class="content-list">
+          <div id="routineContent" class="routine-content"></div>
+          <div class="content-footer">
+            <div class="content-footer-text" aria-live="polite"></div>
+          </div>
+        </div>
+        <button id="addRoutineBtn" class="global-fab" type="button" title="새 루틴 추가" aria-label="새 루틴 추가">+</button>
+      </div>
+
+      <!-- 메모 페이지 (기본 숨김) -->
+      <div id="memoPage" class="card card--has-fab page-layout content hidden" style="display: flex; flex-direction: column; position: relative;">
+        <div class="content-header">
+          <div class="card__header" style="display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
+            <div class="card__title">📝 메모</div>
+          </div>
+        </div>
+        <div class="content-list">
+          <div id="memoPageContent" class="memo-page-content"></div>
+          <div class="content-footer">
+            <div class="content-footer-text" aria-live="polite"></div>
+          </div>
+        </div>
+        <button id="addMemoBtn" class="global-fab" type="button" title="새 메모 추가" aria-label="새 메모 추가">+</button>
+      </div>
+
+      <!-- 메모 작성 페이지 (기본 숨김) -->
+      <div id="memoWritePage" class="card hidden">
+        <div class="card__header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e9ecf2; padding-bottom: 12px;">
+          <div class="card__title" id="memoWriteTitle">새 메모 작성</div>
+          <button id="saveMemoBtn" class="btn-confirm" style="padding: 8px 16px;">저장</button>
+        </div>
+        <div style="padding: 20px; display: flex; flex-direction: column; gap: 16px;">
+          <div class="memo-write-title-row" style="display: flex; align-items: center; gap: 10px; border-bottom: 2px solid #e9ecf2;">
+            <input type="text" id="memoTitleInput" placeholder="제목" style="flex: 1; min-width: 0; padding: 12px 0 12px 0; border: none; font-size: 18px; font-weight: 600; font-family: inherit; box-sizing: border-box; outline: none; background: transparent;" />
+            <button type="button" id="memoColorBtn" class="memo-option-btn memo-option-btn--color" title="색상" aria-label="색상 선택"></button>
+            <button type="button" id="memoEmojiBtn" class="memo-option-btn memo-option-btn--emoji" title="이모티콘" aria-label="이모티콘 선택"><span class="memo-option-btn-emoji-icon" aria-hidden="true">☺</span></button>
+          </div>
+          <textarea id="memoTextarea" placeholder="내용" style="width: 100%; min-height: 400px; padding: 16px; border: 1px solid #e9ecf2; border-radius: 12px; font-size: 15px; font-family: inherit; resize: vertical; box-sizing: border-box; outline: none;"></textarea>
+        </div>
+      </div>
+
+      <!-- 타이머 페이지 (기본 숨김) -->
+      <div id="timerPage" class="card hidden">
+        <div class="card__header">
+          <div class="card__title">⏲️ 타이머</div>
+        </div>
+        <div id="timerGrid" class="timer-grid"></div>
+      </div>
+
+      <!-- 달력 페이지 (기본 숨김) -->
+      <div id="calendarPage" class="card hidden">
+        <div class="card__header-unified">
+          <div class="goal-bar">
+            <span class="goal-emoji" id="goalEmojiBadge"></span>
+            <input type="text" id="monthlyGoalInput" class="monthly-goal-input-unified" placeholder="이달의 목표를 입력하고 Enter">
+            <button type="button" id="goalStyleBtn" class="goal-style-btn" aria-label="목표 스타일">⋮</button>
+          </div>
+          <div class="nav-controls" style="align-items:center;gap:6px;">
+            <button id="todayBtn" class="btn-today">오늘</button>
+            <button id="prevMonth" class="icon-btn">◀</button>
+            <div id="headerYmLabel" class="header-ym-compact">🗓</div>
+            <button id="nextMonth" class="icon-btn">▶</button>
+            <button id="openCalendarWidgetBtn" class="icon-btn-ghost" title="달력 위젯 열기">↗</button>
+          </div>
+        </div>
+
+        <div class="calendar-wrapper" id="calendarWrapper">
+          <div class="calendar" id="mainCalendar">
+            <div class="calendar__weekdays">
+              <span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span>
+            </div>
+            <div id="calendarGrid" class="calendar__grid"></div>
+          </div>
+        </div>
+
+        <!-- 사용법 안내 섹션 (메뉴 클릭 시만 보임) -->
+        <div id="usageSection" class="usage-section" style="display:none;">
+          <h3 class="usage-title">사용법</h3>
+          <div class="usage-grid">
+            <div class="usage-column">
+              <h4 class="usage-subtitle">메뉴 소개</h4>
+              <div id="usageIntro" class="usage-text"></div>
+            </div>
+            <div class="usage-column">
+              <h4 class="usage-subtitle">사용 방법</h4>
+              <div id="usageMethod" class="usage-text"></div>
+            </div>
+            <div class="usage-column">
+              <h4 class="usage-subtitle">위젯 사용법</h4>
+              <div id="usageWidget" class="usage-text"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="content-footer-text" id="contentFooterText" aria-live="polite"></div>
+      </div>
+    </main>
+
+    <aside class="right hidden">
+      <!-- 일정/투두 카드 -->
+      <div class="card">
+        <div class="card__header">
+          <div class="card__title">📅 일정 등록 (To-Do)</div>
+        </div>
+        <div class="datebox">
+          <div id="selectedDateText" class="datebox__date">2025-12-12</div>
+
+          <!-- 일정/투두 탭 -->
+          <div class="schedule-type-tabs" style="display:flex;gap:0;justify-content:left;margin:12px 0 8px 0;">
+            <button id="tabEvent" class="tab-btn left active" type="button">
+              <span class="tab-icon">📅</span> 일정
+            </button>
+            <button id="tabTodo" class="tab-btn right" type="button">
+              <span class="tab-icon">✅</span> TODO
+            </button>
+          </div>
+
+          <!-- 할 일 입력 -->
+          <div class="todo__input-group">
+            <input id="todoInput" type="text" placeholder="할 일을 입력하고 Enter">
+            <button id="todoAddBtn" class="icon-btn" title="추가">
+              <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="currentColor">
+                <path d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160Zm40 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+              </svg>
+            </button>
+            <button id="todoColorBtn" class="icon-btn color-indicator" title="색상"></button>
+            <button id="todoEmojiBtn" class="icon-btn emoji-gray" title="이모티콘">😊</button>
+            <button id="todoOptionsBtn" class="icon-btn" title="상세 설정">⋮</button>
+          </div>
+
+          <!-- 상세 설정 (기본 숨김) -->
+          <div id="todoOptionsPanel" class="todo-options-panel" style="display:none">
+            <div class="event-datetime-row">
+              <div class="event-date-group">
+                <label>시작:</label>
+                <input id="todoStartDate" type="date">
+              </div>
+              <div class="event-date-group">
+                <label>종료:</label>
+                <input id="todoEndDate" type="date">
+              </div>
+            </div>
+            <div class="event-time-row">
+              <div class="event-time-group">
+                <label>시간:</label>
+                <input id="eventTime" type="time">
+              </div>
+              <div class="event-options">
+                <!-- 알림 옵션 삭제됨 -->
+              </div>
+            </div>
+          </div>
+
+          <!-- 일정/투두 리스트 분리 -->
+          <div id="eventListLabel" class="list-type-label" style="margin:10px 0 4px 0;font-weight:600;font-size:15px;color:#64748b;display:flex;align-items:center;gap:6px;"></div>
+          <ul id="eventList" class="todo__list"></ul>
+          <div id="todoListLabel" class="list-type-label" style="margin:10px 0 4px 0;font-weight:600;font-size:15px;color:#64748b;display:flex;align-items:center;gap:6px;"></div>
+          <ul id="todoList" class="todo__list"></ul>
+        </div>
+      </div>
+
+      <!-- 메모 카드 -->
+      <div class="card">
+        <div class="card__header"><div class="card__title">⎙ 메모</div></div>
+        <div class="datebox">
+          <div class="memo__header">
+            <label class="memo__datepick">날짜: <input id="memoDate" type="date"></label>
+          </div>
+          <div class="memo__add">
+            <textarea id="memoInput" rows="2" placeholder="메모를 입력하세요"></textarea>
+            <button id="memoAddBtn" class="btn">저장</button>
+          </div>
+          <ul id="memoList" class="memo__list"></ul>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- 푸터 -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-links">
+        <!-- ✅ 실제 페이지로 연결 권장 (없으면 파일/라우트 생성 필요) -->
+        <a href="privacy.html" id="privacyLink" class="footer-link">개인정보 보호정책</a>
+        <span class="footer-divider">|</span>
+        <a href="contact.html" id="contactLink" class="footer-link">문의하기</a>
+      </div>
+      <p class="footer-copyright">&copy; 2025 Jay Calendar. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <div id="widgetHost" class="widget-host" aria-live="polite"></div>
+
+  <noscript>
+    <div style="max-width:720px;margin:16px auto;padding:16px;background:#fff;border:1px solid #e9ecf2;border-radius:12px;">
+      <h2 style="margin:0 0 8px 0;">Jay Calendar</h2>
+      <p style="margin:0;">이 페이지는 달력/투두/메모 기능을 위해 JavaScript가 필요합니다. 브라우저에서 JavaScript를 활성화해 주세요.</p>
+    </div>
+  </noscript>
+
+  <script src="app.js?v=202601061620" defer></script>
+  <script>
+    if('serviceWorker' in navigator){
+      window.addEventListener('load',()=>{
+        navigator.serviceWorker.register('./sw.js').catch(()=>{});
+      });
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!-- /var/www/html/app.html : 승인 전용(광고 완전 제거 버전) -->
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+
+  <title>PC 위젯 온라인 달력 | 루틴·ToDo·체크리스트·메모</title>
+  <meta name="description" content="PC 위젯형 달력. 투두리스트·체크리스트·루틴·메모·타이머로 오늘 일정관리와 할 일을 한 화면에서 정리하세요.">
+  <link rel="canonical" href="https://jaycalendar.com/app.html">
+
+
+
+  <meta name="theme-color" content="#5c8dff">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="manifest" href="manifest.webmanifest">
+
+  <link rel="icon" href="favicon.ico">
+
+  <!-- Critical CSS (inline) - 최소화된 버전 -->
+  <style>
+    :root{--bg:#f6f7fb;--card:#fff;--line:#e9ecf2;--text:#111827;--primary:#5c8dff}
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{height:100%;margin:0}
+    body{margin:0;display:flex;flex-direction:column;min-height:100vh;height:auto;background:var(--bg);color:var(--text);font-family:"Noto Sans","Noto Sans KR",sans-serif}
+    .app{display:grid;grid-template-columns:240px minmax(400px,1fr) minmax(300px,360px);gap:10px;padding:6px;flex:1;min-height:0}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+    .calendar__grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+    .day{position:relative;min-height:110px;border:1px solid var(--line);border-radius:8px;background:#fff}
+    @media(max-width:1024px){.app{grid-template-columns:1fr;padding:4px;gap:8px}}
+    @media(max-width:768px){.day{min-height:100px}}
+    @media(max-width:480px){.day{min-height:80px}}
+  </style>
+
+  <!-- Full Stylesheets -->
+  <link rel="stylesheet" href="style.css?v=20260205">
+
+</head>
+
+<body>
+  <div class="app">
+    <!-- 
+      사이드바 섹션
+      - 테마 전환 버튼을 포함하는 사이드바 영역
+      
+      구성 요소:
+      - aside.sidebar: 사이드바 컨테이너
+      - button#themeToggle: 다크/라이트 테마를 전환하는 버튼
+        - .menu-icon: 테마를 나타내는 이모지 아이콘 (🌙: 다크모드)
+        - .menu-label: 버튼의 텍스트 레이블 ("다크")
+    -->
+    <aside class="sidebar" role="navigation" aria-label="메인 메뉴">
+      <button class="menu-button" data-widget="home"><span class="menu-content"><span class="label">홈</span></span></button>
+      <button class="menu-button" data-widget="todo"><span class="menu-content"><span class="label">루틴</span></span></button>
+      <button class="menu-button" data-widget="memo"><span class="menu-content"><span class="label">메모</span></span></button>
+      <a class="menu-button" href="insight.html" aria-label="인사이트"><span class="menu-content"><span class="label">인사이트</span></span></a>
+      <button id="themeToggle" class="menu-button" aria-label="테마 전환"><span class="menu-content"><span class="label">다크</span></span></button>
+
+      <p class="sidebar__hint">
+        ※ 메뉴를 클릭하면<br>위젯창이 열립니다.<br><br>
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor" style="vertical-align:middle">
+          <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h560v-280h80v280q0 33-23.5 56.5T760-120H200Zm188-212-56-56 372-372H560v-80h280v280h-80v-144L388-332Z"/>
+        </svg>
+        버튼을 클릭하면<br>위젯이 활성화 됩니다.
+      </p>
+    </aside>
+
+    <main class="main">
+      <div class="card">
+        <div class="card__header-unified">
+          <div class="goal-bar">
+            <span class="goal-emoji" id="goalEmojiBadge"></span>
+            <input type="text" id="monthlyGoalInput" class="monthly-goal-input-unified" placeholder="이달의 목표를 입력하고 Enter">
+            <button type="button" id="goalStyleBtn" class="goal-style-btn" aria-label="목표 스타일">⋮</button>
+          </div>
+          <div class="nav-controls">
+            <button id="todayBtn" class="btn-today">오늘</button>
+            <button id="prevMonth" class="icon-btn">◀</button>
+            <div id="headerYmLabel" class="header-ym-compact">🗓 2025년 12월</div>
+            <button id="nextMonth" class="icon-btn">▶</button>
+          </div>
+        </div>
+
+        <div class="calendar-wrapper" id="calendarWrapper">
+          <div class="calendar" id="mainCalendar">
+            <div class="calendar__weekdays">
+              <span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span>
+            </div>
+            <div id="calendarGrid" class="calendar__grid"></div>
+          </div>
+        </div>
+
+        <!-- ✅ 사이트 소개 단일 블록 (홈에서만 보임) -->
+        <section id="siteIntro" class="usage-section" style="margin-bottom:24px;">
+          <div class="usage-text" style="max-width:600px;margin:0 auto;">
+            <h2 class="usage-title">PC 위젯 온라인 달력 (루틴·투두리스트·체크리스트·메모·일정관리)</h2>
+            <p>Jay Calendar는 ToDo 리스트를 달력에 추가하고, 체크하고, 수정하는 것에 중점을 두고 개발했습니다.</p>
+            <p>대부분의 달력 서비스가 '일정'에 초점을 맞춘다면,</p>
+            <p>Jay Calendar는 '일정 관리'에 초점을 맞춰 월간 달력에 담았습니다.</p>
+            <p>상단에는 이달의 목표를 입력하여 매일 목표를 되새기고 동기부여가 될 수 있도록 했습니다.</p>
+            <p>달력에서 날짜를 누르면 그날 해야 할 일을 확인할 수있고, 체크할 수 있으며, 계획을 추가할 수 있습니다.</p>
+            <p>메모를 입력한 날에는 달력에 표시를 줌으로써 보다 편리하게 관리할 수 있도록 했습니다.</p>
+            <p>일정등록에서는 바탕색을 포인트로 일정을 등록할 수 있고</p>
+            <p>투두등록에서는 글자색을 바꿔가며 리스트를 만들어 한눈에 구분할 수 있습니다.</p>
+            <br><br>
+            <p>또 하나의 특징은 모바일에서는 흔하지만 웹에서 찾기 힘든 PC 위젯형 구성입니다.</p>
+            <p>이 웹페이지를 만든 이유이기도 합니다.</p>
+            <p>달력·메모·투두를 위젯 창과 메인 화면에 함께 볼 수 있고,<br>필요할 땐 스티커처럼 각 메뉴를 바탕화면 위젯처럼 띄워 사용할 수도 있습니다.</p>
+            <p>그리고 타이머, 스탑워치, 알람 기능도 함께 담았습니다.</p>
+            <p>여러분의 일정과 할 일 관리에 도움이 되길 바랍니다.</p>
+          </div>
+        </section>
+
+        <!-- 사용법 안내 섹션 (메뉴 클릭 시만 보임) -->
+        <div id="usageSection" class="usage-section" style="display:none;">
+          <h3 class="usage-title">사용법</h3>
+          <div class="usage-grid">
+            <div class="usage-column">
+              <h4 class="usage-subtitle">메뉴 소개</h4>
+              <div id="usageIntro" class="usage-text"></div>
+            </div>
+            <div class="usage-column">
+              <h4 class="usage-subtitle">사용 방법</h4>
+              <div id="usageMethod" class="usage-text"></div>
+            </div>
+            <div class="usage-column">
+              <h4 class="usage-subtitle">위젯 사용법</h4>
+              <div id="usageWidget" class="usage-text"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="content-footer-text" id="contentFooterText">Jay Calendar는 일정·할 일·메모를 한 화면에서 관리하고, 위젯으로 띄워 쓸 수 있는 웹 서비스입니다. 달력에서 날짜를 선택해 일정을 등록하고 이달의 목표를 상단에 두고 매일 확인할 수 있습니다.</div>
+      </div>
+    </main>
+
+    <aside class="right">
+      <!-- 일정/투두 카드 -->
+      <div class="card">
+        <div class="card__header">
+          <div class="card__title">📅 일정 등록 (To-Do)</div>
+        </div>
+        <div class="datebox">
+          <div id="selectedDateText" class="datebox__date">2025-12-12</div>
+
+          <!-- 일정/투두 탭 -->
+          <div class="schedule-type-tabs" style="display:flex;gap:0;justify-content:left;margin:12px 0 8px 0;">
+            <button id="tabEvent" class="tab-btn left active" type="button">
+              <span class="tab-icon">📅</span> 일정
+            </button>
+            <button id="tabTodo" class="tab-btn right" type="button">
+              <span class="tab-icon">✅</span> TODO
+            </button>
+          </div>
+
+          <!-- 할 일 입력 -->
+          <div class="todo__input-group">
+            <input id="todoInput" type="text" placeholder="할 일을 입력하고 Enter">
+            <button id="todoAddBtn" class="icon-btn" title="추가">
+              <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="currentColor">
+                <path d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160Zm40 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+              </svg>
+            </button>
+            <button id="todoColorBtn" class="icon-btn color-indicator" title="색상"></button>
+            <button id="todoEmojiBtn" class="icon-btn emoji-gray" title="이모티콘">😊</button>
+            <button id="todoOptionsBtn" class="icon-btn" title="상세 설정">⋮</button>
+          </div>
+
+          <!-- 상세 설정 (기본 숨김) -->
+          <div id="todoOptionsPanel" class="todo-options-panel" style="display:none">
+            <div class="event-datetime-row">
+              <div class="event-date-group">
+                <label>시작:</label>
+                <input id="todoStartDate" type="date">
+              </div>
+              <div class="event-date-group">
+                <label>종료:</label>
+                <input id="todoEndDate" type="date">
+              </div>
+            </div>
+            <div class="event-time-row">
+              <div class="event-time-group">
+                <label>시간:</label>
+                <input id="eventTime" type="time">
+              </div>
+              <div class="event-options">
+                <label class="event-option"><input id="eventAlarm" type="checkbox"> 알림</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- 일정/투두 리스트 분리 -->
+          <div id="eventListLabel" class="list-type-label" style="margin:10px 0 4px 0;font-weight:600;font-size:15px;color:#64748b;display:flex;align-items:center;gap:6px;"></div>
+          <ul id="eventList" class="todo__list"></ul>
+          <div id="todoListLabel" class="list-type-label" style="margin:10px 0 4px 0;font-weight:600;font-size:15px;color:#64748b;display:flex;align-items:center;gap:6px;"></div>
+          <ul id="todoList" class="todo__list"></ul>
+        </div>
+      </div>
+
+      <!-- 메모 카드 -->
+      <div class="card">
+        <div class="card__header"><div class="card__title">⎙ 메모</div></div>
+        <div class="datebox">
+          <div class="memo__header">
+            <label class="memo__datepick">날짜: <input id="memoDate" type="date"></label>
+          </div>
+          <div class="memo__add">
+            <textarea id="memoInput" rows="2" placeholder="메모를 입력하세요"></textarea>
+            <button id="memoAddBtn" class="btn">저장</button>
+          </div>
+          <ul id="memoList" class="memo__list"></ul>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- 푸터 -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-links">
+        <!-- ✅ 실제 페이지로 연결 권장 (없으면 파일/라우트 생성 필요) -->
+        <a href="privacy.html" id="privacyLink" class="footer-link">개인정보 보호정책</a>
+        <span class="footer-divider">|</span>
+        <a href="contact.html" id="contactLink" class="footer-link">문의하기</a>
+      </div>
+      <p class="footer-copyright">&copy; 2025 Jay Calendar. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <div id="widgetHost" class="widget-host" aria-live="polite"></div>
+
+  <noscript>
+    <div style="max-width:720px;margin:16px auto;padding:16px;background:#fff;border:1px solid #e9ecf2;border-radius:12px;">
+      <h2 style="margin:0 0 8px 0;">Jay Calendar</h2>
+      <p style="margin:0;">이 페이지는 달력/투두/메모 기능을 위해 JavaScript가 필요합니다. 브라우저에서 JavaScript를 활성화해 주세요.</p>
+    </div>
+  </noscript>
+
+  <script src="app.js?v=202601061620" defer></script>
+  <script>
+    if('serviceWorker' in navigator){
+      window.addEventListener('load',()=>{
+        navigator.serviceWorker.register('./sw.js').catch(()=>{});
+      });
+    }
+  </script>
+</body>
+</html>

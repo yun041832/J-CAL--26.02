@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>인사이트 | Jay Calendar</title>
+  <meta name="description" content="Brain, Mind, Action 카테고리별 인사이트와 생각을 정리합니다.">
+  <link rel="canonical" href="https://jaycalendar.com/insight.html">
+  <meta name="theme-color" content="#5c8dff">
+  <link rel="icon" href="favicon.ico">
+  <link rel="stylesheet" href="style.css?v=20260205">
+  <style>
+    .app--insight { grid-template-columns: 160px minmax(0,1fr); }
+    .insight-hero { padding: 24px; }
+    .insight-hero h1 { font-size: 24px; margin-bottom: 8px; }
+    .insight-section { margin-top: 24px; padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--card); }
+    .insight-section h2 { font-size: 18px; margin-bottom: 12px; color: var(--text); }
+    .insight-section .post-list { list-style: none; padding: 0; margin: 0; }
+    .insight-section .post-list li { padding: 8px 0; border-bottom: 1px solid var(--line); }
+    .insight-section .post-list li:last-child { border-bottom: none; }
+    .insight-empty { color: var(--text-muted); font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="app app--insight">
+    <aside class="sidebar" role="navigation" aria-label="메인 메뉴">
+      <a class="menu-button" href="index.html"><span class="menu-content"><span class="label">홈</span></span></a>
+      <a class="menu-button" href="index.html"><span class="menu-content"><span class="label">루틴</span></span></a>
+      <a class="menu-button" href="index.html"><span class="menu-content"><span class="label">메모</span></span></a>
+      <a class="menu-button" href="insight.html" aria-current="page"><span class="menu-content"><span class="label">인사이트</span></span></a>
+      <button type="button" id="themeToggleInsight" class="menu-button" aria-label="테마 전환"><span class="menu-content"><span class="label">다크</span></span></button>
+      <p class="sidebar__hint">인사이트를 카테고리별로 정리할 수 있습니다.</p>
+    </aside>
+
+    <main class="main">
+      <article class="card insight-hero content">
+        <div class="content-header">
+          <header>
+            <h1>💡 인사이트</h1>
+            <p style="color: var(--text-muted); margin: 0;">Brain · Mind · Action 카테고리별로 게시물을 나눌 예정입니다.</p>
+          </header>
+        </div>
+
+        <div class="content-list">
+          <section class="insight-section" id="insight-brain" aria-labelledby="heading-brain">
+            <h2 id="heading-brain">Brain</h2>
+            <ul class="post-list" id="postListBrain" data-category="Brain"></ul>
+            <p class="insight-empty" id="emptyBrain">등록된 게시물이 없습니다.</p>
+          </section>
+
+          <section class="insight-section" id="insight-mind" aria-labelledby="heading-mind">
+            <h2 id="heading-mind">Mind</h2>
+            <ul class="post-list" id="postListMind" data-category="Mind"></ul>
+            <p class="insight-empty" id="emptyMind">등록된 게시물이 없습니다.</p>
+          </section>
+
+          <section class="insight-section" id="insight-action" aria-labelledby="heading-action">
+            <h2 id="heading-action">Action</h2>
+            <ul class="post-list" id="postListAction" data-category="Action"></ul>
+            <p class="insight-empty" id="emptyAction">등록된 게시물이 없습니다.</p>
+          </section>
+
+          <div class="content-footer">
+            <div class="content-footer-text">인사이트에서는 Brain·Mind·Action 카테고리별로 생각과 기록을 정리할 수 있습니다. 추후 게시물이 추가되면 여기에서 확인할 수 있습니다.</div>
+          </div>
+        </div>
+      </article>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-links">
+        <a href="privacy.html" class="footer-link">개인정보 보호정책</a>
+        <span class="footer-divider">|</span>
+        <a href="contact.html" class="footer-link">문의하기</a>
+      </div>
+      <p class="footer-copyright">&copy; 2025 Jay Calendar. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // ─── 인사이트 데이터 뼈대 (Brain, Mind, Action 카테고리) ───
+    // 게시물 형식: { id, title, content, category: 'Brain'|'Mind'|'Action', createdAt (ISO 문자열) }
+    const INSIGHT_STORAGE_KEY = 'jcal_insight_posts';
+    const INSIGHT_CATEGORIES = ['Brain', 'Mind', 'Action'];
+    /** 디버깅용. true면 localStorage 무시하고 INSIGHT_POSTS_INITIAL 강제 사용. 승인 전 제거 */
+    const FORCE_INITIAL_INSIGHT = true;
+
+    const insightState = {
+      posts: []
+    };
+
+    // ★ 포스팅 글: localStorage에 저장된 값이 없을 때만 이 초기 데이터를 사용합니다.
+    const INSIGHT_POSTS_INITIAL = [
+      { id: 'b1', title: '복잡한 문제는 작은 단위로 나누면 해결 가능성이 높아진다', content: '', category: 'Brain', createdAt: '2025-01-15T09:00:00.000Z' },
+      { id: 'b2', title: '새로운 것을 배울 때 기존 지식과 연결하면 기억에 오래 남는다', content: '', category: 'Brain', createdAt: '2025-01-18T10:00:00.000Z' },
+      { id: 'b3', title: '의사결정 전에 한 번 멈추고 옵션을 정리하는 습관이 도움이 된다', content: '', category: 'Brain', createdAt: '2025-01-20T11:00:00.000Z' },
+      { id: 'b4', title: '메모는 나중이 아니라 생각이 났을 때 바로 적는 것이 좋다', content: '', category: 'Brain', createdAt: '2025-01-22T12:00:00.000Z' },
+      { id: 'm1', title: '오늘 하루에 감사한 일을 하나씩 적어 보면 마음이 가벼워진다', content: '', category: 'Mind', createdAt: '2025-01-16T09:00:00.000Z' },
+      { id: 'm2', title: '불안할 때는 호흡에 집중하면 생각이 정리되는 느낌이 든다', content: '', category: 'Mind', createdAt: '2025-01-19T10:00:00.000Z' },
+      { id: 'm3', title: '비교보다는 어제의 나와 오늘의 나를 보는 편이 덜 힘들다', content: '', category: 'Mind', createdAt: '2025-01-21T11:00:00.000Z' },
+      { id: 'm4', title: '충분히 쉬는 것도 중요한 일이라는 걸 인정하는 게 첫걸음이다', content: '', category: 'Mind', createdAt: '2025-01-23T12:00:00.000Z' },
+      { id: 'a1', title: '아침에 가장 먼저 할 일 하나를 정해 두면 하루가 정돈된다', content: '', category: 'Action', createdAt: '2025-01-17T09:00:00.000Z' },
+      { id: 'a2', title: '할 일은 시간을 정해 두고 시작하는 것이 미루기를 줄여 준다', content: '', category: 'Action', createdAt: '2025-01-19T10:00:00.000Z' },
+      { id: 'a3', title: '작은 습관이라도 매일 같은 시점에 하면 유지하기 쉽다', content: '', category: 'Action', createdAt: '2025-01-21T11:00:00.000Z' },
+      { id: 'a4', title: '끝낸 일은 목록에서 지우기보다는 체크하는 것이 동기 부여에 도움이 된다', content: '', category: 'Action', createdAt: '2025-01-24T12:00:00.000Z' },
+    ];
+
+    function loadInsightState() {
+      try {
+        if (FORCE_INITIAL_INSIGHT && INSIGHT_POSTS_INITIAL.length > 0) {
+          insightState.posts = INSIGHT_POSTS_INITIAL.slice();
+          return;
+        }
+        const raw = localStorage.getItem(INSIGHT_STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) insightState.posts = parsed;
+          else if (parsed && Array.isArray(parsed.posts)) insightState.posts = parsed.posts;
+        } else if (INSIGHT_POSTS_INITIAL.length > 0) {
+          insightState.posts = INSIGHT_POSTS_INITIAL.slice();
+          saveInsightState();
+        }
+      } catch (_) {}
+    }
+
+    function saveInsightState() {
+      try {
+        localStorage.setItem(INSIGHT_STORAGE_KEY, JSON.stringify(insightState.posts));
+      } catch (_) {}
+    }
+
+    // ★ 포스팅 글을 화면(Brain/Mind/Action 섹션)에 그리는 코드 위치 (아래 함수)
+    function renderPostLists() {
+      INSIGHT_CATEGORIES.forEach(function (cat) {
+        const listId = 'postList' + cat;
+        const emptyId = 'empty' + cat;
+        const list = document.getElementById(listId);
+        const emptyEl = document.getElementById(emptyId);
+        if (!list || !emptyEl) return;
+        const items = insightState.posts.filter(function (p) { return p.category === cat; });
+        list.innerHTML = '';
+        if (items.length === 0) {
+          emptyEl.style.display = 'block';
+          return;
+        }
+        emptyEl.style.display = 'none';
+        items.forEach(function (post) {
+          const li = document.createElement('li');
+          li.textContent = post.title || '(제목 없음)';
+          list.appendChild(li);
+        });
+      });
+    }
+
+    loadInsightState();
+    renderPostLists();
+
+    // 테마 전환 (다크/라이트) — 메인 앱과 동일 키 jcal_theme 사용
+    (function () {
+      var theme = localStorage.getItem('jcal_theme') || 'light';
+      if (theme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      var btn = document.getElementById('themeToggleInsight');
+      if (btn) {
+        var label = btn.querySelector('.label');
+        if (theme === 'dark') label.textContent = '라이트';
+        btn.onclick = function () {
+          var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+          if (isDark) {
+            document.documentElement.removeAttribute('data-theme');
+            localStorage.setItem('jcal_theme', 'light');
+            label.textContent = '다크';
+          } else {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem('jcal_theme', 'dark');
+            label.textContent = '라이트';
+          }
+        };
+      }
+    })();
+  </script>
+</body>
+</html>
