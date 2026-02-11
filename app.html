@@ -26,11 +26,8 @@
     *{box-sizing:border-box;margin:0;padding:0}
     html{height:100%;margin:0}
     body{margin:0;display:flex;flex-direction:column;min-height:100vh;height:auto;background:var(--bg);color:var(--text);font-family:"Noto Sans","Noto Sans KR",sans-serif}
-    .app{display:grid;grid-template-columns:240px minmax(400px,1fr) minmax(300px,360px);gap:10px;padding:6px;flex:1;min-height:0}
     .card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
-    .calendar__grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
     .day{position:relative;min-height:110px;border:1px solid var(--line);border-radius:8px;background:#fff}
-    @media(max-width:1024px){.app{grid-template-columns:1fr;padding:4px;gap:8px}}
     @media(max-width:768px){.day{min-height:100px}}
     @media(max-width:480px){.day{min-height:80px}}
   </style>
@@ -56,8 +53,10 @@
       <button class="menu-button" data-widget="home"><span class="menu-content"><span class="label">홈</span></span></button>
       <button class="menu-button" data-widget="todo"><span class="menu-content"><span class="label">루틴</span></span></button>
       <button class="menu-button" data-widget="memo"><span class="menu-content"><span class="label">메모</span></span></button>
+      <button class="menu-button" data-widget="calendar" data-feature="calendar" id="calendarMenuBtn"><span class="menu-content"><span class="label">달력</span></span></button>
       <a class="menu-button" href="insight.html" aria-label="인사이트"><span class="menu-content"><span class="label">인사이트</span></span></a>
-      <button id="themeToggle" class="menu-button" aria-label="테마 전환"><span class="menu-content"><span class="label">다크</span></span></button>
+      <a class="menu-button" href="about.html">About</a>
+      <button id="themeToggle" class="menu-button" data-feature="dark" aria-label="테마 전환"><span class="menu-content"><span class="label">다크</span></span></button>
 
       <p class="sidebar__hint">
         ※ 메뉴를 클릭하면<br>위젯창이 열립니다.<br><br>
@@ -221,7 +220,8 @@
   <footer class="footer">
     <div class="footer-content">
       <div class="footer-links">
-        <!-- ✅ 실제 페이지로 연결 권장 (없으면 파일/라우트 생성 필요) -->
+        <a href="about.html" class="footer-link">소개</a>
+        <span class="footer-divider">|</span>
         <a href="privacy.html" id="privacyLink" class="footer-link">개인정보 보호정책</a>
         <span class="footer-divider">|</span>
         <a href="contact.html" id="contactLink" class="footer-link">문의하기</a>

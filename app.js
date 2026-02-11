@@ -1,5 +1,14 @@
 // app.js
 /* 메모위젯 v0.8.2 — 홈패널/달력/메모/ToDo + 팝아웃/위젯 동기화 */
+
+/* ── 기능 플래그 (승인 전 완전 비활성: 모두 false) ── */
+const FEATURES = {
+  calendar: false,
+  timer: false,
+  alarm: false,
+  stopwatch: false
+};
+
 function el(t,c,txt){const x=document.createElement(t);if(c)x.className=c;if(txt!=null)x.textContent=txt;return x;}
 const DEFAULT_COLOR='', DONE_COLOR='#9aa5b1';
 // ...existing code...
@@ -45,7 +54,28 @@ function setContentFooterText(key){
   document.querySelectorAll('.content-footer-text').forEach(function(el){ el.textContent=text; });
 }
 
+/* ── 달력 진입/종료 (중복 init·이벤트 누수 방지) ── */
+let calendarBooted = false;
+let calendarStorageHandler = null;
+let calendarResizeObserver = null;
+
+function openCalendar(){
+  if(!FEATURES.calendar) return;
+  if(calendarBooted){ showCalendarPage(); return; }
+  if(typeof initCalendarOnce === 'function') initCalendarOnce();
+  calendarBooted = true;
+  showCalendarPage();
+}
+
+function closeCalendar(){
+  if(!calendarBooted) return;
+  if(calendarStorageHandler){ window.removeEventListener('storage', calendarStorageHandler); calendarStorageHandler = null; }
+  if(calendarResizeObserver && $.calWrap){ try{ calendarResizeObserver.disconnect(); }catch(_){} calendarResizeObserver = null; }
+  calendarBooted = false;
+}
+
 function showHomeIntro(){
+  closeCalendar();
   homeIntroSection?.classList.remove('hidden');
   calendarPage?.classList.add('hidden');
   memoPage?.classList.add('hidden');
@@ -69,6 +99,7 @@ function showCalendarPage(){
   setContentFooterText('calendar');
 }
 function showMemoPage(){
+  closeCalendar();
   homeIntroSection?.classList.add('hidden');
   calendarPage?.classList.add('hidden');
   memoPage?.classList.remove('hidden');
@@ -80,6 +111,7 @@ function showMemoPage(){
   setContentFooterText('memo');
 }
 function showMemoWritePage(editMode=false,itemId=null,idx=null,dstr=null){
+  closeCalendar();
   homeIntroSection?.classList.add('hidden');
   calendarPage?.classList.add('hidden');
   memoPage?.classList.add('hidden');
@@ -91,6 +123,7 @@ function showMemoWritePage(editMode=false,itemId=null,idx=null,dstr=null){
   setContentFooterText('memo');
 }
 function showRoutinePage(){
+  closeCalendar();
   homeIntroSection?.classList.add('hidden');
   calendarPage?.classList.add('hidden');
   memoPage?.classList.add('hidden');
@@ -102,6 +135,8 @@ function showRoutinePage(){
   setContentFooterText('routine');
 }
 function showTimerPage(){
+  if(!FEATURES.timer) return;
+  closeCalendar();
   homeIntroSection?.classList.add('hidden');
   calendarPage?.classList.add('hidden');
   memoPage?.classList.add('hidden');
@@ -115,11 +150,12 @@ function showTimerPage(){
 // ...existing code...
 
 document.addEventListener('DOMContentLoaded',()=>{
-  // ...existing code...
+  runStorageMigrationOnce();
   const openCalWidgetBtn=document.getElementById('openCalendarWidgetBtn');
 
   if(openCalWidgetBtn){
     openCalWidgetBtn.onclick=()=>{
+      if(!FEATURES.calendar) return;
       widgetCalendar?.({popupOnly:true});
       trackMenuPV('nav:widgetCalendar');
     };
@@ -130,9 +166,13 @@ document.addEventListener('DOMContentLoaded',()=>{
     b.onclick=(e)=>{
       if(b.tagName==='A'&&b.getAttribute('href')) return;
       const t=b.dataset.widget;
+      if(t==='calendar'&&!FEATURES.calendar) return;
+      if(t==='timer'&&!FEATURES.timer) return;
+      if(t==='alarm'&&!FEATURES.alarm) return;
+      if(t==='stopwatch'&&!FEATURES.stopwatch) return;
       trackMenuPV(`menu:${t||'unknown'}`);
       showUsage(t);
-      if(t==='calendar'){ showCalendarPage(); }
+      if(t==='calendar'){ openCalendar(); }
       if(t==='memo') showMemoPage();
       if(t==='routine') showRoutinePage();
       if(t==='todo') widgetTodo?.();
@@ -161,6 +201,11 @@ document.addEventListener('DOMContentLoaded',()=>{
     };
   }
   
+  // 기능 플래그 OFF 시 메뉴 버튼 숨김 (data-feature에 .feature-off 적용)
+  ['calendar','timer','alarm','stopwatch','dark'].forEach(function(key){
+    if(key==='dark' || !FEATURES[key]) document.querySelectorAll('[data-feature="'+key+'"]').forEach(function(el){ el.classList.add('feature-off'); });
+  });
+
   // 초기에는 홈 소개 화면 노출
   showHomeIntro();
 
@@ -228,7 +273,9 @@ if($.todoEndDate) $.todoEndDate.value = initDateStr;
 if($.memoDate) $.memoDate.value = initDateStr;
 if($.selText) $.selText.textContent = initDateStr;
 
+/* localStorage 키 (프리픽스 memo2.): memo2.todos.{date}, memo2.memos.{date}, memo2.selected, memo2.menuPV, memo2.theme, memo2.recentColors, memo2.reminders, memo2.routines, memo2.lastMemoColor, memo2.lastRoutineColor, memo2.monthlyGoal.{y}-{m}, memo2.monthlyGoal.style, memo2.timer.* (위젯/타이머). 기존 데이터 유지, 중복 시 마이그레이션은 runStorageMigrationOnce()에서 1회 실행 */
 const kTodo=(d)=>`memo2.todos.${d}`, kMemo=(d)=>`memo2.memos.${d}`;
+function runStorageMigrationOnce(){ try{ if(localStorage.getItem('memo2.migrated.v1')) return; localStorage.setItem('memo2.migrated.v1','1'); }catch(_){} }
 const storeCache=new Map();
 const cloneDefault=(val)=>{
   if(Array.isArray(val)) return [...val];
@@ -2119,6 +2166,7 @@ function getGlobalTimerId(){
   return id;
 }
 function widgetTimer(){
+  if(!FEATURES.timer) return;
   const groupId=getGlobalTimerId();
   const key=`memo2.timer.${groupId}`;
   const stateKey=`memo2.timer.state.${groupId}`;
@@ -2231,6 +2279,7 @@ function widgetTimer(){
 
 /* ── 타이머 페이지 (6개 타이머) ── */
 function initTimersPage(){
+  if(!FEATURES.timer) return;
   const grid=document.getElementById('timerGrid');
   if(!grid) return;
   
@@ -2485,6 +2534,7 @@ function createTimerBox(index){
 }
 
 function openTimerWidgetPopup(index){
+  if(!FEATURES.timer) return;
   const key=`memo2.timer.multi.${index}`;
   const stateKey=`memo2.timer.state.multi.${index}`;
   const settingsKey=`memo2.timer.settings.multi.${index}`;
@@ -2709,6 +2759,7 @@ function openTimerWidgetPopup(index){
 }
 
 function openTimerWidget(index){
+  if(!FEATURES.timer) return;
   const key=`memo2.timer.multi.${index}`;
   const stateKey=`memo2.timer.state.multi.${index}`;
   const settingsKey=`memo2.timer.settings.multi.${index}`;
@@ -4542,6 +4593,7 @@ function showColorPickerModal(currentColor,onSave){
 }
 
 function widgetAlarm(){
+  if(!FEATURES.alarm) return;
   const sounds=[
     {label:'Beep',src:'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQgAAAAA'},
     {label:'Bell',src:'data:audio/wav;base64,UklGRoQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YRgAAAAA'}
@@ -4609,6 +4661,7 @@ function widgetAlarm(){
 }
 
 function widgetStopwatch(){
+  if(!FEATURES.stopwatch) return;
   return makeWidget('스탑워치',(isPopup, win)=>{
     ensureTimeStyles(win);
     const doc=win.document;
@@ -4706,6 +4759,7 @@ function widgetStopwatch(){
 
 /* ── 동기화 미니 달력/메모/투두 위젯 ── */
 function widgetCalendar(options){
+  if(!FEATURES.calendar) return;
   const opts=options||{};
   const popupOnly=!!opts.popupOnly;
   function build(isPopup, win){
@@ -5762,18 +5816,29 @@ if(document.getElementById('contactLink')) {
 }
 
 loadTheme();
-renderCalendar(); renderRight(); renderReminders(); renderMonthlyGoals();
-if(window.ResizeObserver && $.calWrap){
-  new ResizeObserver(()=>{ const n=calcMaxLines(); if(n!==ST.linesHint){ ST.linesHint=n; renderCalendar(); } }).observe($.calWrap);
-}
-if(appBC){
-  appBC.onmessage=(e)=>{
-    const m=e.data||{};
-    if(m.type==='select' && m.date){ ST.selected=new Date(m.date); renderCalendar(); renderRight(); }
-    if(m.type==='refresh'){ renderCalendar(); renderRight(); }
+
+/* 달력 1회 초기화: openCalendar()에서만 호출, 중복 init/렌더 방지 */
+function initCalendarOnce(){
+  if(!FEATURES.calendar) return;
+  renderCalendar(); renderRight(); renderReminders(); renderMonthlyGoals();
+  if(window.ResizeObserver && $.calWrap){
+    if(calendarResizeObserver) try{ calendarResizeObserver.disconnect(); }catch(_){}
+    calendarResizeObserver = new ResizeObserver(()=>{ if(!calendarBooted) return; const n=calcMaxLines(); if(n!==ST.linesHint){ ST.linesHint=n; renderCalendar(); } });
+    calendarResizeObserver.observe($.calWrap);
+  }
+  if(appBC){
+    appBC.onmessage=(e)=>{
+      if(!calendarBooted) return;
+      const m=e.data||{};
+      if(m.type==='select' && m.date){ ST.selected=new Date(m.date); renderCalendar(); renderRight(); }
+      if(m.type==='refresh'){ renderCalendar(); renderRight(); }
+    };
+  }
+  if(calendarStorageHandler) window.removeEventListener('storage', calendarStorageHandler);
+  calendarStorageHandler=function(e){
+    if(!calendarBooted) return;
+    if(e.key==='memo2.selected' && e.newValue){ ST.selected=new Date(e.newValue); renderCalendar(); renderRight(); }
+    if(e.key && (e.key.startsWith('memo2.todos.')||e.key.startsWith('memo2.memos.'))){ renderCalendar(); renderRight(); }
   };
+  window.addEventListener('storage', calendarStorageHandler);
 }
-window.addEventListener('storage',(e)=>{
-  if(e.key==='memo2.selected' && e.newValue){ ST.selected=new Date(e.newValue); renderCalendar(); renderRight(); }
-  if(e.key && (e.key.startsWith('memo2.todos.')||e.key.startsWith('memo2.memos.'))){ renderCalendar(); renderRight(); }
-});

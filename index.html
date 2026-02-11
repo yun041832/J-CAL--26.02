@@ -17,21 +17,16 @@
 
   <link rel="icon" href="favicon.ico">
 
-  <!-- Critical CSS (inline) - 최소화된 버전 -->
+  <!-- Critical CSS (inline) - 레이아웃은 style.css에서만 정의 -->
   <style>
-    
     :root{--bg:#f6f7fb;--card:#fff;--line:#e9ecf2;--text:#111827;--primary:#5c8dff}
     *{box-sizing:border-box;margin:0;padding:0}
     html,body{height:100%;margin:0}
     body{display:flex;flex-direction:column;background:var(--bg);color:var(--text);font-family:"Noto Sans","Noto Sans KR",sans-serif}
-    .app{display:grid;grid-template-columns:168px minmax(400px,1fr) minmax(300px,360px);gap:10px;padding:6px;flex:1}
     .card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
-    .calendar__grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
     .day{position:relative;min-height:110px;border:1px solid var(--line);border-radius:8px;background:#fff}
-    @media(max-width:1024px){.app{grid-template-columns:1fr;padding:4px;gap:8px}}
     @media(max-width:768px){.day{min-height:100px}}
     @media(max-width:480px){.day{min-height:80px}}
-
     .open-app-inline img{
     height: 26px;
     width: auto;
@@ -106,8 +101,10 @@
       <button class="menu-button" id="homeBtn"><span class="menu-content"><span class="label">홈</span></span></button>
       <button class="menu-button" data-widget="routine"><span class="menu-content"><span class="label">루틴</span></span></button>
       <button class="menu-button" data-widget="memo"><span class="menu-content"><span class="label">메모</span></span></button>
+      <button class="menu-button" data-widget="calendar" data-feature="calendar" id="calendarMenuBtn"><span class="menu-content"><span class="label">달력</span></span></button>
       <a class="menu-button" href="insight.html" aria-label="인사이트"><span class="menu-content"><span class="label">인사이트</span></span></a>
-      <button id="themeToggle" class="menu-button" aria-label="테마 전환"><span class="menu-content"><span class="label">다크</span></span></button>
+      <a class="menu-button" href="about.html">About</a>
+      <button id="themeToggle" class="menu-button" data-feature="dark" aria-label="테마 전환"><span class="menu-content"><span class="label">다크</span></span></button>
 
       <p class="sidebar__hint">
         ※ 메뉴 선택 후 상단의<br>
@@ -134,11 +131,12 @@
         <div class="home-section home-section-reverse">
           <div class="home-section-image">
             <img src="images/cal.png" alt="달력 기능 스크린샷" style="width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+            <p style="margin-top:10px;font-size:14px;color:var(--text-secondary);">월별 그리드에서 날짜를 클릭하면 해당 날짜의 일정·할 일을 등록·체크할 수 있으며, 상단에 이달의 목표를 두어 매일 확인할 수 있습니다.</p>
           </div>
           <div class="home-section-content">
             <div class="home-section-icon"></div>
             <h2>올인원 일정관리 캘린더</h2>
-            <p>이달의 목표를 입력하여 매일매일 목표를 상기시킬 수 있습니다..</p>
+            <p>이달의 목표를 입력하여 매일매일 목표를 상기시킬 수 있습니다.</p>
             <p>날짜 옆 화살표를 클릭하면 작은 달력과 위젯 활용이 가능합니다.</p>
             <p>일정과 ToDo리스트를 하나의 캘린더에서 관리 할 수 있습니다.<br>
             달력에서 바로 체크하며 한눈에 확인할 수 있습니다.</p>
@@ -149,6 +147,7 @@
         <div class="home-section home-section-reverse">
           <div class="home-section-image">
             <img src="images/Routine.png" alt="루틴 기능 스크린샷" style="width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+            <p style="margin-top:10px;font-size:14px;color:var(--text-secondary);">매일·매주 반복할 항목을 등록한 뒤 주간 뷰에서 체크할 수 있으며, 색상과 이모티콘으로 구분해 한눈에 진행 상황을 확인할 수 있습니다.</p>
           </div>
           <div class="home-section-content">
             <div class="home-section-icon"></div>
@@ -175,6 +174,7 @@
         <div class="home-section home-section-reverse">
           <div class="home-section-image">
             <img src="images/memo.png" alt="메모 기능 스크린샷" style="width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+            <p style="margin-top:10px;font-size:14px;color:var(--text-secondary);">날짜별로 메모를 저장하고 목록에서 선택해 위젯으로 띄울 수 있어, PC 화면 한쪽에서 메모를 계속 보며 작업할 수 있습니다.</p>
           </div>
           <div class="home-section-content">
             <div class="home-section-icon"></div>
@@ -200,15 +200,26 @@
           </div>
         </div>
 
+        <!-- 하단 사이트 설명 (콘텐츠 밀도 강화) -->
+        <section class="home-section" style="margin-top:32px;padding-top:24px;border-top:1px solid var(--line);">
+          <div class="home-section-content" style="max-width:720px;margin:0 auto;">
+            <h2 style="font-size:20px;margin-bottom:16px;">Jay Calendar 소개</h2>
+            <p>Jay Calendar는 웹에서 개인 일정·할 일·루틴·메모를 한 화면에서 관리할 수 있도록 제공하는 서비스입니다. 사이트 목적은 이용자가 월별 달력을 기준으로 일정과 할 일을 등록·체크하고, 반복 루틴을 주간 단위로 관리하며, 날짜별 메모를 남겨 필요한 때 위젯으로 꺼내 쓸 수 있게 하는 것입니다.</p>
+            <p>사용자에게 도움이 되는 점은 별도 설치 없이 브라우저만으로 접속해 사용할 수 있고, 데이터는 이용자 기기의 저장소에 저장되며, 달력·루틴·메모·타이머 등을 메뉴와 위젯으로 나누어 필요한 기능만 골라 쓸 수 있다는 것입니다. 이달의 목표를 상단에 두어 매일 확인할 수 있고, 일정과 할 일은 날짜별로 구분되어 한눈에 파악하기 쉽습니다.</p>
+            <p>제공 기능은 월간 달력과 일정·할 일 등록·체크, 주간 루틴 관리, 날짜별 메모 목록 및 위젯 팝업, 타이머 등이 있으며, 상세 사용 방법은 각 메뉴 진입 후 화면 안내를 참고하면 됩니다.</p>
+          </div>
+        </section>
+
       </div>
 
 
       <!-- 루틴 페이지 (기본 숨김) -->
-      <div id="routinePage" class="card card--has-fab page-layout content hidden" style="display: flex; flex-direction: column; position: relative;">
+      <!-- 레이아웃 안정화: content-list가 화면 채우고, footer는 스크롤 아래, +버튼은 리스트 영역 우하단 -->
+      <div id="routinePage" class="card card--has-fab page-layout content hidden">
         <div class="content-header">
-          <div class="card__header" style="display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
+          <div class="card__header">
             <div class="card__title">✅ 루틴</div>
-            <button id="toggleReorderBtn" class="icon-btn" title="목록 순서 변경" style="padding: 6px; display: flex; align-items: center; justify-content: center; border: 1px solid #e2e8f0; background: var(--card); border-radius: 8px;">
+            <button id="toggleReorderBtn" class="icon-btn" title="목록 순서 변경">
               <svg xmlns="http://www.w3.org/2000/svg" height="22" viewBox="0 0 24 24" width="22" fill="#1e293b"><path d="M6 16L2 10h8L6 16z"/><path d="M18 8l-4 6h8L18 8z"/></svg>
             </button>
           </div>
@@ -216,27 +227,28 @@
         </div>
         <div class="content-list">
           <div id="routineContent" class="routine-content"></div>
-          <div class="content-footer">
-            <div class="content-footer-text" aria-live="polite"></div>
-          </div>
+          <button id="addRoutineBtn" class="global-fab" type="button" title="새 루틴 추가" aria-label="새 루틴 추가">+</button>
         </div>
-        <button id="addRoutineBtn" class="global-fab" type="button" title="새 루틴 추가" aria-label="새 루틴 추가">+</button>
+        <div class="content-footer">
+          <div class="content-footer-text" aria-live="polite"></div>
+        </div>
       </div>
 
       <!-- 메모 페이지 (기본 숨김) -->
-      <div id="memoPage" class="card card--has-fab page-layout content hidden" style="display: flex; flex-direction: column; position: relative;">
+      <!-- 레이아웃 안정화: content-list가 화면 채우고, footer는 스크롤 아래, +버튼은 리스트 영역 우하단 -->
+      <div id="memoPage" class="card card--has-fab page-layout content hidden">
         <div class="content-header">
-          <div class="card__header" style="display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
+          <div class="card__header">
             <div class="card__title">📝 메모</div>
           </div>
         </div>
         <div class="content-list">
           <div id="memoPageContent" class="memo-page-content"></div>
-          <div class="content-footer">
-            <div class="content-footer-text" aria-live="polite"></div>
-          </div>
+          <button id="addMemoBtn" class="global-fab" type="button" title="새 메모 추가" aria-label="새 메모 추가">+</button>
         </div>
-        <button id="addMemoBtn" class="global-fab" type="button" title="새 메모 추가" aria-label="새 메모 추가">+</button>
+        <div class="content-footer">
+          <div class="content-footer-text" aria-live="polite"></div>
+        </div>
       </div>
 
       <!-- 메모 작성 페이지 (기본 숨김) -->
@@ -396,7 +408,8 @@
   <footer class="footer">
     <div class="footer-content">
       <div class="footer-links">
-        <!-- ✅ 실제 페이지로 연결 권장 (없으면 파일/라우트 생성 필요) -->
+        <a href="about.html" class="footer-link">소개</a>
+        <span class="footer-divider">|</span>
         <a href="privacy.html" id="privacyLink" class="footer-link">개인정보 보호정책</a>
         <span class="footer-divider">|</span>
         <a href="contact.html" id="contactLink" class="footer-link">문의하기</a>

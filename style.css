@@ -26,7 +26,73 @@
 *{box-sizing:border-box}
 html{height:100%;margin:0}
 body{margin:0;display:flex;flex-direction:column;min-height:100vh;height:auto;background:var(--bg);color:var(--text);font-family:"Noto Sans","Noto Sans KR",sans-serif}
-.app{display:grid;grid-template-columns:200px minmax(400px,1fr) minmax(300px,360px);gap:10px;padding:6px;flex:1;min-height:0}
+/* ---------- 앱 레이아웃 (단일 정의, breakpoint 1024px) ---------- */
+.app{
+  display:grid;
+  grid-template-columns:200px 1fr;
+  gap:10px;
+  padding:6px;
+  flex:1;
+  min-height:0;
+}
+.app .sidebar{width:200px;min-width:200px;box-sizing:border-box}
+/* .right가 있는 페이지(app): 3번째 자식은 2행에서 전체 너비 */
+.app > .right{grid-column:1 / -1}
+@media (min-width: 1025px){
+  .app{gap:12px;padding:10px}
+}
+@media (max-width: 1024px){
+  .app{
+    display:flex !important;
+    flex-direction:column !important;
+    grid-template-columns:1fr;
+    min-height:100vh !important;
+    gap:0 !important;
+    padding:4px;
+  }
+  .app .sidebar{
+    width:100% !important;
+    min-width:0 !important;
+    display:flex !important;
+    flex-direction:row !important;
+    flex-wrap:nowrap !important;
+    gap:6px !important;
+    padding:8px 12px !important;
+    min-height:52px !important;
+    position:sticky !important;
+    top:0 !important;
+    left:0 !important;
+    right:0 !important;
+    z-index:999 !important;
+    background:var(--card) !important;
+    border-bottom:1px solid var(--line) !important;
+    overflow-x:auto !important;
+    overflow-y:hidden !important;
+    -webkit-overflow-scrolling:touch;
+  }
+  .app .sidebar .menu-button{
+    flex:0 0 auto !important;
+    min-width:fit-content !important;
+    width:auto !important;
+    white-space:nowrap !important;
+    border-radius:8px;
+    background:var(--bg);
+    padding-left:12px !important;
+    padding-right:12px !important;
+  }
+  .app .sidebar .menu-button .menu-content{
+    white-space:nowrap !important;
+  }
+  .app .sidebar .menu-button .label{
+    white-space:nowrap !important;
+  }
+  .app .sidebar .menu-button .icon{display:none}
+  .app .sidebar .sidebar__hint{display:none !important}
+  .app .main{flex:1;min-width:0;padding:10px}
+}
+/* ---------- 기능 플래그 OFF 시 메뉴 버튼 숨김 ---------- */
+[data-feature].feature-off{display:none !important;}
+
 /* ---------- 사이드바 메뉴 (menu-button): 공통 베이스 ---------- */
 .sidebar .menu-button{
   display:flex;
@@ -78,88 +144,28 @@ body{margin:0;display:flex;flex-direction:column;min-height:100vh;height:auto;ba
   line-height:1.6;
 }
 
-/* ---------- J-CAL 기본 레이아웃: 데스크톱 사이드바 / 모바일 상단네비 / ISTJ ---------- */
-/* PC: 왼쪽 사이드바 */
+/* 1025px 이상: 사이드바 세로 배치 (데스크탑 안정화) */
 @media (min-width: 1025px) {
-  .app {
-    grid-template-columns: 160px minmax(400px, 1fr) minmax(280px, 340px);
-    gap: 12px;
-    padding: 10px;
-  }
   .sidebar {
     display: flex;
     flex-direction: column;
     gap: 6px;
     padding: 8px 0;
+    width: 200px;
+    min-width: 200px;
+    overflow: visible;
+  }
+  .sidebar .menu-button {
+    width: 100%;
+    flex: none;
+    white-space: normal;
   }
   .sidebar .menu-button .icon,
-  .sidebar .menu-button .label {
-    display: inline;
-  }
-  .sidebar .menu-button:hover {
-    background: #f0f2f5;
-    border-color: #d1d5db;
-  }
-  .sidebar .menu-button {
-    border-radius: 8px;
-    background: var(--card);
-    color: var(--text);
-  }
-  .sidebar__hint {
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-top: 16px;
-    line-height: 1.5;
-  }
-  .card {
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-  }
-}
-
-/* 모바일: 상단 네비게이션 */
-@media (max-width: 1024px) {
-  .app {
-    display: flex !important;
-    flex-direction: column !important;
-    min-height: 100vh !important;
-    gap: 0 !important;
-  }
-  .sidebar {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    gap: 6px;
-    padding: 8px 12px;
-    min-height: 52px;
-    position: sticky;
-    top: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    z-index: 999;
-    background: var(--card);
-    border-bottom: 1px solid var(--line);
-  }
-  .sidebar .menu-button {
-    flex: 1 1 0;
-    border-radius: 8px;
-    background: var(--bg);
-  }
-  .sidebar .menu-button .icon {
-    display: none;
-  }
-  .sidebar__hint {
-    display: none;
-  }
-  .main {
-    flex: 1;
-    min-width: 0;
-    padding: 10px;
-  }
-  .card {
-    border-radius: 12px;
-  }
+  .sidebar .menu-button .label { display: inline; }
+  .sidebar .menu-button:hover { background: #f0f2f5; border-color: #d1d5db; }
+  .sidebar .menu-button { border-radius: 8px; background: var(--card); color: var(--text); }
+  .sidebar__hint { font-size: 12px; color: var(--text-muted); margin-top: 16px; line-height: 1.5; }
+  .card { border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
 }
 
 .card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 6px 18px rgba(17,24,39,.06)}
@@ -265,7 +271,7 @@ body{margin:0;display:flex;flex-direction:column;min-height:100vh;height:auto;ba
   content-visibility:auto;
   contain-intrinsic-size:600px;
 }
-@media(min-width:1024px){
+@media(min-width:1025px){
   .sidebar,
   .right{
     contain-intrinsic-size:780px;
@@ -1838,20 +1844,38 @@ aside.right .todo-item{display:flex;align-items:center;gap:2px}
   min-height: 0;
   position: relative;
 }
-/* 루틴/메모: content에 viewport 기준 높이 지정 → content-list에 실제 height 적용 */
+/* 루틴/메모: 페이지 전체 스크롤, content-list는 화면 채우기만 담당 */
 .page-layout.content {
-  height: 100vh;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 .content .content-header {
   flex-shrink: 0;
 }
 .content .content-list {
   flex: 1;
-  min-height: 0;
-  overflow-y: auto;
+  position: relative;
+  padding-bottom: 88px; /* FAB 가리지 않도록 */
 }
-/* content-footer: content-list의 자연스러운 마지막 요소 (margin/min-height 연출 없음) */
+/* 루틴/메모: content-list가 화면을 채우도록 (리스트 영역 안정화) */
+.page-layout.content .content-list {
+  min-height: calc(100vh - 200px);
+  flex: 1 1 auto;
+}
+/* content-footer: content-list 밖으로 분리 (스크롤 아래로 이동) */
+.content .content-footer {
+  flex-shrink: 0;
+  padding: 20px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  margin-top: 0;
+}
+.content .content-footer .content-footer-text {
+  padding-left: 0;
+  padding-right: 0;
+}
+/* 레거시: content-list 내부 footer (인사이트 등 다른 페이지용) */
 .content-list .content-footer {
   padding-left: 20px;
   padding-right: 20px;
@@ -1859,23 +1883,44 @@ aside.right .todo-item{display:flex;align-items:center;gap:2px}
 .page-layout.content .content-list .content-footer {
   padding-right: 72px;
 }
-.content .content-footer .content-footer-text,
-.page-layout .content-footer .content-footer-text {
+.content-list .content-footer .content-footer-text,
+.page-layout .content-list .content-footer .content-footer-text {
   padding-left: 0;
   padding-right: 0;
-}
-/* 루틴/메모: content-list에 viewport 기준 고정 높이 (스크롤은 이 영역만) */
-.page-layout.content .content-list {
-  height: calc(100vh - 180px);
-  flex-shrink: 0;
 }
 /* 인사이트: content-list만 스크롤, footer는 리스트 끝(스크롤 시 노출) */
 .insight-hero.content .content-list {
   max-height: calc(100vh - 220px);
 }
+/* 인사이트 글 단위: 개별 포스트 분리 시 article 그대로 복사용 (구조 정리) */
+.insight-item {
+  margin-bottom: 32px;
+}
 
-/* 공통: FAB 버튼 (containing block = .content, body fixed 미사용) */
-.content .global-fab {
+/* 공통: FAB 버튼 (리스트 영역 기준 우하단 고정) */
+.content .content-list .global-fab {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: #5c7dff;
+  color: #fff;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 4px 14px rgba(92, 125, 255, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+/* 레거시: content 직접 자식인 FAB (다른 페이지용) */
+.content > .global-fab {
   position: absolute;
   right: 20px;
   bottom: 20px;
@@ -1971,11 +2016,13 @@ aside.right .todo-item{display:flex;align-items:center;gap:2px}
   align-items:center;
 }
 .footer-links{
-  margin-bottom:12px;
+  width:100%;
+  margin:0 0 12px 0;
   display:flex;
   align-items:center;
   justify-content:center;
   gap:8px;
+  text-align:center;
 }
 .footer-link{
   color:#64748b;
@@ -2080,20 +2127,8 @@ aside.right .todo-item{display:flex;align-items:center;gap:2px}
   font-weight:600;
 }
 
-/* ---------- 10. 반응형 (태블릿/모바일) ---------- */
+/* ---------- 10. 반응형 (1024px 이하 기타) ---------- */
 @media (max-width: 1024px) {
-  .app{
-    grid-template-columns:1fr;
-    padding:4px;
-    gap:8px;
-  }
-  /* .sidebar{display:none;} ← 이 줄 삭제됨 (모바일에서 메뉴 표시 필요) */
-  .main{
-    grid-column:1;
-  }
-  .right{
-    grid-column:1;
-  }
   .card__header-unified{
     flex-direction:column;
     gap:8px;
@@ -2246,30 +2281,6 @@ aside.right .todo-item{display:flex;align-items:center;gap:2px}
   body { overflow-y: auto !important; }
 
   /* 앱 레이아웃을 세로 흐름으로 고정 */
-  .app{
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: stretch !important;
-    justify-content: flex-start !important;
-    height: auto !important;
-    min-height: 100vh !important;
-  }
-
-  /* 어떤 CSS가 있어도 메뉴는 무조건 보이게 */
-  .sidebar{
-    display: flex !important;
-    flex-direction: row !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    flex-wrap: nowrap !important;
-    gap: 4px !important;
-    padding: 6px 4px !important;
-    -webkit-overflow-scrolling: touch !important;
-    background: var(--bg) !important;
-    border-bottom: 1px solid var(--line) !important;
-    overflow-x: auto !important;
-    justify-content: flex-start !important;
-  }
 
   /* 메뉴가 “고정(sticky/fixed)”되어 본문을 덮지 않게 */
   /* 사이드바 상단 그룹도 가로로 */
@@ -2511,6 +2522,18 @@ aside.right .todo-item{display:flex;align-items:center;gap:2px}
 /* ---------- 14. 메모 페이지 ---------- */
 .memo-page-content {
   padding: 20px;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+/* 메모 빈 상태: 리스트 영역 중앙 정렬 */
+.memo-page-content:empty::before,
+.memo-page-content:has(.memo-empty) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 300px);
+  flex: 1;
 }
 
 .memo-page-grid {
@@ -2616,6 +2639,7 @@ aside.right .todo-item{display:flex;align-items:center;gap:2px}
   padding: 60px 20px;
   color: #94a3b8;
   font-size: 15px;
+  margin: auto;
 }
 
 /* 모달 스타일 */
@@ -2821,6 +2845,18 @@ aside.right .todo-item{display:flex;align-items:center;gap:2px}
 
 .routine-content {
   padding: 20px;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+/* 루틴 빈 상태: 리스트 영역 중앙 정렬 */
+.routine-content:empty::before,
+.routine-content:has(.routine-empty) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 300px);
+  flex: 1;
 }
 
 .routine-list {
@@ -2886,57 +2922,23 @@ aside.right .todo-item{display:flex;align-items:center;gap:2px}
 }
 
 /* ---------- 16. 모바일 메뉴 (한 줄 스크롤) ---------- */
-@media (max-width: 1024px){
-  html, body{
-    overflow-x: hidden !important;
-    overflow-x: clip !important;
-  }
-
-  /* 세로 흐름으로 */
-  .app{
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 8px !important;
-    min-height: 100vh !important;
-  }
-
+@media (max-width: 1024px) {
+  html, body { overflow-x: hidden !important; overflow-x: clip !important; }
 }
 
 /*
  * ============================================================
- * [숨김] 달력(Calendar) / 타이머(Timer) UI
- * ============================================================
- * 목적: 사용자 화면에서만 숨김. 코드/로직은 그대로 유지.
- * 재활성화: 아래 블록 전체를 삭제하거나 주석 처리하면 됨.
+ * [숨김] 타이머(Timer) UI (달력은 FEATURES.calendar로 제어)
  * ============================================================
  */
-/* app.html: 메인 영역의 달력 그리드 + 월 네비게이션 */
-.main .calendar-wrapper,
-.main .nav-controls {
-  display: none !important;
-}
-
-/* index.html: 달력 페이지 / 타이머 페이지 카드 */
-#calendarPage,
+/* index.html: 타이머 페이지 카드 */
 #timerPage {
   display: none !important;
 }
 
-/* index.html: 홈 소개 섹션 중 "달력"·"타이머" 기능 설명 블록 */
-#homeIntroSection .home-section:nth-of-type(1),
+/* index.html: 홈 소개 섹션 중 "타이머" 기능 설명 블록만 숨김 */
 #homeIntroSection .home-section:nth-of-type(3) {
   display: none !important;
 }
 
-@media (max-width: 1024px) {
-  .sidebar {
-    padding: 8px 12px;
-    min-height: 56px;
-    gap: 6px;
-  }
-  .sidebar .menu-button {
-    padding: 0;
-    border-radius: 8px;
-  }
-}
 
