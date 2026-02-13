@@ -26,6 +26,15 @@
     .toplinks{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 0}
     .btn{display:inline-block;border:1px solid var(--line);padding:8px 12px;border-radius:10px}
     .hr{height:1px;background:var(--line);margin:18px 0}
+    body{display:flex;flex-direction:column;min-height:100vh}
+    .wrap{flex:1}
+    .footer{margin-top:auto;flex-shrink:0;border-top:1px solid var(--line);padding:20px 16px;text-align:center}
+    .footer-content{max-width:920px;margin:0 auto}
+    .footer-links{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+    .footer-divider{color:var(--line);margin:0 4px}
+    .footer-link{color:var(--accent);text-decoration:none;font-size:13px}
+    .footer-link:hover{text-decoration:underline}
+    .footer-copyright{color:var(--muted);font-size:12px;margin:0}
   </style>
 </head>
 <body>
@@ -73,10 +82,20 @@
       </p>
 
       <div class="hr"></div>
-      <div class="muted" style="font-size:12px">
-        © 2026 Jay Calendar. All rights reserved.
-      </div>
     </article>
   </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-links">
+        <a href="about.html" class="footer-link">소개</a>
+        <span class="footer-divider">|</span>
+        <a href="privacy.html" class="footer-link">개인정보 보호정책</a>
+        <span class="footer-divider">|</span>
+        <a href="contact.html" class="footer-link">문의하기</a>
+      </div>
+      <p class="footer-copyright">&copy; 2025 Jay Calendar. All rights reserved.</p>
+    </div>
+  </footer>
 </body>
 </html>

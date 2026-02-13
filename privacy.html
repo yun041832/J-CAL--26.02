@@ -1,122 +1,168 @@
-<!-- /var/www/html/privacy.html -->
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>개인정보처리방침 | J-Calendar · 수집·이용·쿠키·광고 안내</title>
-  <meta name="description" content="J-Calendar 개인정보처리방침. 수집·이용 목적, 쿠키·Google AdSense 안내, 브라우저 저장소·이용자 권리 및 문의 절차를 명시합니다." />
-  <meta name="keywords" content="J-Calendar 개인정보처리방침, 쿠키, AdSense, 로컬저장소, 이용자 권리" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%235c8dff'/%3E%3Ctext x='50%25' y='68%25' text-anchor='middle' font-size='18' font-weight='700' fill='white' font-family='Arial,sans-serif'%3EJ%3C/text%3E%3C/svg%3E" type="image/svg+xml" />
-  <link rel="canonical" href="https://jaycalendar.com/privacy.html" />
+  <meta name="description" content="J-Calendar 개인정보처리방침. 수집·이용 목적, 쿠키·Google AdSense 안내, 브라우저 저장소·이용자 권리 및 문의 절차를 명시합니다.">
+  <meta name="keywords" content="J-Calendar 개인정보처리방침, 쿠키, AdSense, 로컬저장소, 이용자 권리">
+  <link rel="canonical" href="https://jaycalendar.com/privacy.html">
+  <meta name="theme-color" content="#5c8dff">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%235c8dff'/%3E%3Ctext x='50%25' y='68%25' text-anchor='middle' font-size='18' font-weight='700' fill='white' font-family='Arial,sans-serif'%3EJ%3C/text%3E%3C/svg%3E" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css?v=1.1">
   <style>
-    :root{
-      --bg:#0b0f19; --card:#111827; --line:#243044; --text:#e5e7eb; --muted:#9ca3af; --accent:#60a5fa;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans KR",Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
-    a{color:var(--accent);text-decoration:none}
-    a:hover{text-decoration:underline}
-    .wrap{max-width:920px;margin:0 auto;padding:28px 16px}
-    .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}
-    h1{margin:0 0 8px;font-size:26px}
-    h2{margin:22px 0 10px;font-size:18px}
-    h3{margin:14px 0 6px;font-size:15px;font-weight:600}
-    ul{margin:10px 0 0 18px}
-    .badge{display:inline-block;font-size:12px;color:var(--muted);border:1px solid var(--line);padding:6px 10px;border-radius:999px}
-    .muted{color:var(--muted)}
-    .hr{height:1px;background:var(--line);margin:18px 0}
-    code{background:#0f172a;border:1px solid var(--line);padding:2px 6px;border-radius:6px}
-    .toplinks{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 0}
-    .btn{display:inline-block;border:1px solid var(--line);padding:8px 12px;border-radius:10px}
+    .privacy-doc { max-width: 720px; margin: 0 auto; padding: 24px 20px; }
+    .privacy-doc h1 { font-size: 1.5rem; margin-bottom: 8px; }
+    .privacy-doc .privacy-meta { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; }
+    .privacy-doc h2 { font-size: 1.15rem; margin: 24px 0 10px; }
+    .privacy-doc h3 { font-size: 1rem; margin: 16px 0 8px; font-weight: 600; }
+    .privacy-doc p { margin: 0 0 12px; line-height: 1.7; }
+    .privacy-doc ul { margin: 8px 0 16px 20px; padding: 0; }
+    .privacy-doc li { margin-bottom: 6px; line-height: 1.6; }
+    .privacy-doc code { background: var(--bg); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+    .privacy-doc .privacy-links { margin: 20px 0; }
+    .privacy-doc .privacy-links a { color: var(--primary); }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="card">
-      <h1>개인정보처리방침</h1>
-      <div class="badge">시행일: 2026-01-05</div>
+  <div class="app">
+    <aside class="sidebar" role="navigation" aria-label="메인 메뉴">
+      <a class="menu-button nav-item" href="index.html"><span class="menu-content"><span class="label">홈</span></span></a>
+      <a class="menu-button nav-item" href="index.html"><span class="menu-content"><span class="label">루틴</span></span></a>
+      <a class="menu-button nav-item" href="index.html"><span class="menu-content"><span class="label">메모</span></span></a>
+      <a class="menu-button nav-item" href="insight.html"><span class="menu-content"><span class="label">인사이트</span></span></a>
+      <a class="menu-button nav-item" href="about.html">About</a>
+      <button type="button" id="themeTogglePrivacy" class="menu-button nav-item" data-feature="dark" aria-label="테마 전환"><span class="menu-content"><span class="label">다크</span></span></button>
+      <p class="sidebar__hint">개인정보처리방침을 확인할 수 있습니다.</p>
+    </aside>
 
-      <p class="muted" style="margin-top:12px">
-        Jay Calendar(이하 “서비스”)는 이용자의 개인정보를 중요하게 생각합니다.
-        본 방침은 서비스 이용 과정에서 수집·이용될 수 있는 정보와 쿠키/광고(AdSense) 관련 안내 및 이용자 선택권을 설명합니다.
-      </p>
+    <main class="main">
+      <article class="card content privacy-doc">
+        <h1>개인정보처리방침</h1>
+        <p class="privacy-meta">시행일: 2026-01-05</p>
+        <p>
+          J-Calendar(이하 “서비스”)는 이용자의 개인정보를 소중히 합니다.
+          본 방침은 서비스 이용 과정에서 수집·이용될 수 있는 정보, 쿠키·광고(AdSense) 안내 및 이용자 권리·선택권을 설명합니다.
+        </p>
 
-      <div class="toplinks">
-        <a class="btn" href="index.html">홈으로</a>
-        <a class="btn" href="about.html">소개</a>
-        <a class="btn" href="contact.html">문의하기</a>
-      </div>
+        <div class="privacy-links">
+          <a href="index.html">홈</a>
+          <span aria-hidden="true"> · </span>
+          <a href="about.html">소개</a>
+          <span aria-hidden="true"> · </span>
+          <a href="contact.html">문의하기</a>
+        </div>
 
-      <h2>1. 수집하는 정보</h2>
-      <ul>
-        <li><b>자동 수집(로그)</b>: IP 주소, 브라우저/OS, 접속 시간, 방문 페이지, 리퍼러(유입 경로), 오류/보안 로그 등</li>
-        <li><b>브라우저 저장소</b>: 사용자가 입력한 메모/할 일/설정값이 <code>localStorage</code> 등 브라우저 저장소에 저장될 수 있습니다(일반적으로 서버로 전송되지 않음).</li>
-        <li><b>쿠키/유사 식별자</b>: 광고/통계/보안 목적으로 쿠키 또는 유사 기술이 사용될 수 있습니다.</li>
-        <li><b>문의 시 제공 정보</b>: 이메일 주소, 문의 내용(선택) 등</li>
-      </ul>
+        <h2>1. 수집하는 정보</h2>
+        <ul>
+          <li><strong>자동 수집(로그)</strong>: IP 주소, 브라우저·OS 정보, 접속 시간, 방문 페이지, 리퍼러(유입 경로), 오류·보안 로그 등</li>
+          <li><strong>브라우저 저장소</strong>: 이용자가 입력한 메모·할 일·설정값이 <code>localStorage</code> 등 브라우저 저장소에 저장될 수 있으며, 일반적으로 서버로 전송되지 않습니다.</li>
+          <li><strong>쿠키 및 유사 기술</strong>: 광고·통계·보안 목적으로 쿠키 또는 유사 기술이 사용될 수 있습니다.</li>
+          <li><strong>문의 시 제공 정보</strong>: 이메일 주소, 문의 내용(선택) 등</li>
+        </ul>
 
-      <h2>2. 이용 목적</h2>
-      <ul>
-        <li>서비스 제공 및 기능 운영(달력/루틴/메모 등)</li>
-        <li>오류 분석, 품질 개선, 보안/부정 이용 방지</li>
-        <li>문의 응대(사용자가 문의로 제공한 정보에 한함)</li>
-        <li>광고 제공 및 측정(광고 기능 사용 시)</li>
-      </ul>
+        <h2>2. 이용 목적</h2>
+        <ul>
+          <li>서비스 제공 및 기능 운영(달력·루틴·메모·타이머 등)</li>
+          <li>오류 분석, 품질 개선, 보안·부정 이용 방지</li>
+          <li>문의 응대(이용자가 문의로 제공한 정보에 한함)</li>
+          <li>광고 제공 및 측정(광고 기능 사용 시)</li>
+        </ul>
 
-      <h2>3. 쿠키(Cookie) 및 Google AdSense(제3자 광고)</h2>
-      <p>
-        서비스는 현재 또는 향후 Google AdSense 등 광고 서비스를 통해 광고를 게재할 수 있습니다.
-        이 경우 Google을 포함한 제3자 광고 사업자가 쿠키를 사용하여 사용자의 이전 방문 기록(본 사이트 및/또는 다른 사이트)을 바탕으로 광고를 제공할 수 있습니다.
-      </p>
-      <h3>3.1 제3자 광고(AdSense) 쿠키</h3>
-      <ul>
-        <li>Google의 광고 쿠키 사용으로 Google 및 파트너가 사용자의 방문 기록을 기반으로 광고를 제공할 수 있습니다.</li>
-        <li>다른 제3자 광고 네트워크의 쿠키가 사용될 수도 있으며, 각 사업자 정책/설정에 따라 관리가 가능합니다.</li>
-      </ul>
-      <h3>3.2 이용자 선택권 및 설정</h3>
-      <p>사용자는 <b>개인화 광고</b>를 끄거나 관리할 수 있습니다. 아래 링크에서 설정이 가능합니다.</p>
-      <p class="muted">
-        개인화 광고 설정: <a href="https://adssettings.google.com/" target="_blank" rel="noreferrer">https://adssettings.google.com/</a><br/>
-        일부 제3자 광고 쿠키 거부: <a href="https://www.aboutads.info/" target="_blank" rel="noreferrer">https://www.aboutads.info/</a><br/>
-        Google 광고 기술 안내: <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noreferrer">https://policies.google.com/technologies/ads</a>
-      </p>
+        <h2>3. 쿠키(Cookie) 및 Google AdSense(제3자 광고)</h2>
+        <p>
+          서비스는 현재 또는 향후 Google AdSense 등 광고 서비스를 통해 광고를 게재할 수 있습니다.
+          이 경우 Google을 포함한 제3자 광고 사업자가 쿠키를 사용하여 이용자의 방문 기록(본 사이트 및/또는 다른 사이트)을 바탕으로 광고를 제공할 수 있습니다.
+        </p>
+        <h3>3.1 제3자 광고(AdSense) 쿠키</h3>
+        <ul>
+          <li>Google의 광고 쿠키 사용으로 Google 및 파트너가 이용자의 방문 기록을 기반으로 광고를 제공할 수 있습니다.</li>
+          <li>다른 제3자 광고 네트워크의 쿠키가 사용될 수 있으며, 각 사업자의 정책·설정에 따라 관리가 가능합니다.</li>
+        </ul>
+        <h3>3.2 이용자 선택권 및 설정</h3>
+        <p>이용자는 <strong>개인화 광고</strong>를 끄거나 관리할 수 있습니다. 아래 링크에서 설정이 가능합니다.</p>
+        <ul>
+          <li>개인화 광고 설정: <a href="https://adssettings.google.com/" target="_blank" rel="noreferrer noopener">https://adssettings.google.com/</a></li>
+          <li>일부 제3자 광고 쿠키 거부: <a href="https://www.aboutads.info/" target="_blank" rel="noreferrer noopener">https://www.aboutads.info/</a></li>
+          <li>Google 광고 기술 안내: <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noreferrer noopener">https://policies.google.com/technologies/ads</a></li>
+        </ul>
 
-      <h2>4. 제3자 제공/처리위탁</h2>
-      <p class="muted">
-        서비스 운영 과정에서 호스팅/보안/로그 분석/광고 제공 등 목적을 위해 외부 서비스(예: Google 광고 서비스)를 사용할 수 있으며,
-        이 경우 해당 사업자는 자체 개인정보처리방침에 따라 정보를 처리할 수 있습니다.
-      </p>
+        <h2>4. 제3자 제공 및 처리위탁</h2>
+        <p>
+          서비스 운영 과정에서 호스팅·보안·로그 분석·광고 제공 등 목적을 위해 외부 서비스(예: Google 광고 서비스)를 사용할 수 있으며,
+          이 경우 해당 사업자는 자체 개인정보처리방침에 따라 정보를 처리할 수 있습니다.
+        </p>
 
-      <h2>5. 보유 및 이용 기간</h2>
-      <ul>
-        <li>로그 정보: 보안/장애 대응 목적의 최소 기간 보관 후 삭제/익명화될 수 있습니다.</li>
-        <li>브라우저 저장소 데이터: 이용자 기기 내에 저장되며 사용자가 삭제할 때까지 유지될 수 있습니다.</li>
-        <li>문의 정보: 문의 처리 목적 달성 후 합리적인 기간 내 삭제될 수 있습니다.</li>
-      </ul>
+        <h2>5. 보유 및 이용 기간</h2>
+        <ul>
+          <li><strong>로그 정보</strong>: 보안·장애 대응 목적의 최소 기간 보관 후 삭제·익명화될 수 있습니다.</li>
+          <li><strong>브라우저 저장소 데이터</strong>: 이용자 기기 내에 저장되며, 이용자가 삭제할 때까지 유지될 수 있습니다.</li>
+          <li><strong>문의 정보</strong>: 문의 처리 목적 달성 후 합리적인 기간 내 삭제될 수 있습니다.</li>
+        </ul>
 
-      <h2>6. 이용자 권리 및 설정</h2>
-      <ul>
-        <li>쿠키 차단/삭제: 브라우저 설정에서 가능</li>
-        <li>브라우저 저장소 삭제: 브라우저 설정에서 사이트 데이터/캐시 삭제 가능</li>
-        <li>개인화 광고 관리: 위 “개인화 광고 설정” 링크 참고</li>
-      </ul>
+        <h2>6. 이용자 권리 및 설정</h2>
+        <ul>
+          <li>쿠키 차단·삭제: 브라우저 설정에서 가능합니다.</li>
+          <li>브라우저 저장소 삭제: 브라우저 설정에서 사이트 데이터·캐시 삭제가 가능합니다.</li>
+          <li>개인화 광고 관리: 위 「3.2 이용자 선택권 및 설정」의 링크를 참고하세요.</li>
+        </ul>
 
-      <h2>7. 아동의 개인정보</h2>
-      <p class="muted">
-        본 서비스는 일반 이용자를 대상으로 하며, 법령상 특별한 보호가 필요한 아동의 정보가 수집되지 않도록 주의합니다.
-      </p>
+        <h2>7. 아동의 개인정보</h2>
+        <p>
+          본 서비스는 일반 이용자를 대상으로 하며, 법령상 특별한 보호가 필요한 아동의 개인정보가 수집되지 않도록 주의하고 있습니다.
+        </p>
 
-      <h2>8. 문의</h2>
-      <p>
-        개인정보 관련 문의: <a href="contact.html">문의하기 페이지</a>
-      </p>
-
-      <div class="hr"></div>
-      <div class="muted" style="font-size:12px">
-        © 2026 Jay Calendar. All rights reserved.
-      </div>
-    </div>
+        <h2>8. 문의</h2>
+        <p>
+          개인정보 관련 문의는 <a href="contact.html">문의하기</a> 페이지를 통해 접수하며, 동일 정책에 따라 처리합니다.
+        </p>
+      </article>
+    </main>
   </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-links">
+        <a href="about.html" class="footer-link">소개</a>
+        <span class="footer-divider">|</span>
+        <a href="privacy.html" class="footer-link">개인정보 보호정책</a>
+        <span class="footer-divider">|</span>
+        <a href="contact.html" class="footer-link">문의하기</a>
+      </div>
+      <p class="footer-copyright">&copy; 2025 Jay Calendar. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    (function(){
+      var path = (window.location.pathname || '').replace(/^.*\//, '') || 'index.html';
+      document.querySelectorAll('.sidebar a[href]').forEach(function(a){
+        a.removeAttribute('aria-current');
+        var h = (a.getAttribute('href') || '').split('#')[0];
+        if (h === path) a.setAttribute('aria-current', 'page');
+      });
+    })();
+    (function(){
+      var theme = localStorage.getItem('jcal_theme') || 'light';
+      if (theme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      var btn = document.getElementById('themeTogglePrivacy');
+      if (btn) {
+        var label = btn.querySelector('.label');
+        if (theme === 'dark') label.textContent = '라이트';
+        btn.onclick = function(){
+          var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+          if (isDark) {
+            document.documentElement.removeAttribute('data-theme');
+            localStorage.setItem('jcal_theme', 'light');
+            label.textContent = '다크';
+          } else {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem('jcal_theme', 'dark');
+            label.textContent = '라이트';
+          }
+        };
+      }
+    })();
+  </script>
 </body>
 </html>
