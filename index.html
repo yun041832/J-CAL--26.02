@@ -1,4 +1,3 @@
-<!-- index.html : 승인 전용(광고 완전 제거 버전) -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -6,8 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
 
 
-  <title>PC 위젯 온라인 달력 | 루틴·ToDo·체크리스트·메모</title>
-  <meta name="description" content="PC 위젯형 달력. 투두리스트·체크리스트·루틴·메모·타이머로 오늘 일정관리와 할 일을 한 화면에서 정리하세요.">
+  <title>J-Calendar | 일정·감정 기록·루틴 관리·심리적 통찰을 한곳에서</title>
+  <meta name="description" content="웹 기반 일정 관리와 감정·메모 기록, 루틴·할 일 정리를 한 화면에서. PC 위젯형 달력으로 이달의 목표를 세우고, Brain·Mind·Action 인사이트로 생산성과 심리적 통찰을 함께 쌓아가세요.">
+  <meta name="keywords" content="J-Calendar, Jay Calendar, 일정 관리, 달력, 루틴 관리, 메모, 할 일, ToDo, 감정 기록, 생산성, 인사이트, PC 위젯 달력">
   <link rel="canonical" href="https://jaycalendar.com/">
 
   <meta name="theme-color" content="#5c8dff">
@@ -15,14 +15,14 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link rel="manifest" href="manifest.webmanifest">
 
-  <link rel="icon" href="favicon.ico">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%235c8dff'/%3E%3Ctext x='50%25' y='68%25' text-anchor='middle' font-size='18' font-weight='700' fill='white' font-family='Arial,sans-serif'%3EJ%3C/text%3E%3C/svg%3E" type="image/svg+xml">
 
-  <!-- Critical CSS (inline) - 레이아웃은 style.css에서만 정의 -->
+  <!-- Critical CSS (inline) - 레이아웃은 style.css에서만 정의, 스크롤 보장을 위해 min-height 사용 -->
   <style>
     :root{--bg:#f6f7fb;--card:#fff;--line:#e9ecf2;--text:#111827;--primary:#5c8dff}
     *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%;margin:0}
-    body{display:flex;flex-direction:column;background:var(--bg);color:var(--text);font-family:"Noto Sans","Noto Sans KR",sans-serif}
+    html{min-height:100%;margin:0}
+    body{min-height:100%;margin:0;display:flex;flex-direction:column;background:var(--bg);color:var(--text);font-family:"Noto Sans","Noto Sans KR",sans-serif;overflow-y:auto}
     .card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
     .day{position:relative;min-height:110px;border:1px solid var(--line);border-radius:8px;background:#fff}
     @media(max-width:768px){.day{min-height:100px}}
@@ -37,7 +37,7 @@
   </style>
 
   <!-- Full Stylesheets -->
-  <link rel="stylesheet" href="style.css?v=20260205">
+  <link rel="stylesheet" href="style.css?v=1.1">
 
   <!-- 색상/이모티콘 버튼 강제 스타일 (메모·루틴 동일) -->
   <style>
@@ -98,13 +98,13 @@
 <body>
   <div class="app">
     <aside class="sidebar" role="navigation" aria-label="메인 메뉴">
-      <button class="menu-button" id="homeBtn"><span class="menu-content"><span class="label">홈</span></span></button>
-      <button class="menu-button" data-widget="routine"><span class="menu-content"><span class="label">루틴</span></span></button>
-      <button class="menu-button" data-widget="memo"><span class="menu-content"><span class="label">메모</span></span></button>
-      <button class="menu-button" data-widget="calendar" data-feature="calendar" id="calendarMenuBtn"><span class="menu-content"><span class="label">달력</span></span></button>
-      <a class="menu-button" href="insight.html" aria-label="인사이트"><span class="menu-content"><span class="label">인사이트</span></span></a>
-      <a class="menu-button" href="about.html">About</a>
-      <button id="themeToggle" class="menu-button" data-feature="dark" aria-label="테마 전환"><span class="menu-content"><span class="label">다크</span></span></button>
+      <button class="menu-button nav-item" id="homeBtn"><span class="menu-content"><span class="label">홈</span></span></button>
+      <button class="menu-button nav-item" data-widget="routine"><span class="menu-content"><span class="label">루틴</span></span></button>
+      <button class="menu-button nav-item" data-widget="memo"><span class="menu-content"><span class="label">메모</span></span></button>
+      <button class="menu-button nav-item" data-widget="calendar" data-feature="calendar" id="calendarMenuBtn"><span class="menu-content"><span class="label">달력</span></span></button>
+      <a class="menu-button nav-item" href="insight.html" aria-label="인사이트"><span class="menu-content"><span class="label">인사이트</span></span></a>
+      <a class="menu-button nav-item" href="about.html">About</a>
+      <button id="themeToggle" class="menu-button nav-item" data-feature="dark" aria-label="테마 전환"><span class="menu-content"><span class="label">다크</span></span></button>
 
       <p class="sidebar__hint">
         ※ 메뉴 선택 후 상단의<br>
@@ -118,19 +118,23 @@
     <main class="main">
       <!-- 홈 소개 페이지 (기본 표시) -->
       <div id="homeIntroSection" class="card home-hero">
-        <!-- 메인 헤더 -->
+        <div class="home-hero-slots">
+          <div class="home-hero-slot" aria-hidden="true"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='220' viewBox='0 0 400 220'%3E%3Crect width='400' height='220' fill='%23eef2ff'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%235c8dff' font-size='14' font-family='sans-serif'%3EJ-Calendar%3C/text%3E%3C/svg%3E" alt=""></div>
+          <div class="home-hero-slot" aria-hidden="true"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='220' viewBox='0 0 400 220'%3E%3Crect width='400' height='220' fill='%23f0fdf4'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%2316a34a' font-size='14' font-family='sans-serif'%3E%EC%9D%BC%EC%A0%95%20%2B%20%EB%A3%A8%ED%8B%B4%3C/text%3E%3C/svg%3E" alt=""></div>
+          <div class="home-hero-slot" aria-hidden="true"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='220' viewBox='0 0 400 220'%3E%3Crect width='400' height='220' fill='%23fefce8'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23ca8a04' font-size='14' font-family='sans-serif'%3E%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%3C/text%3E%3C/svg%3E" alt=""></div>
+        </div>
+        <section class="home-hero-intro" aria-labelledby="home-intro-heading">
+          <h2 id="home-intro-heading" class="home-hero-intro__title">J-Calendar는 일정·루틴·메모를 한 화면에서 관리하는 웹 달력입니다</h2>
+          <p class="home-hero-intro__text">이달의 목표를 세우고, 날짜별 일정과 할 일을 등록·체크하며, Brain·Mind·Action 인사이트로 생산성과 심리적 통찰을 쌓아갈 수 있습니다. 별도 설치 없이 브라우저만으로 사용할 수 있습니다.</p>
+        </section>
         <div class="home-header">
           <h1 style="font-size: 32px; margin-bottom: 8px;">오늘 해야 할 일정이나 목표가 있나요?</h1>
-          <p style="font-size: 17px; color: var(--text-secondary); margin-bottom: 40px;">
-            <br>
-            <br>
-
-          </p>
+          <p style="font-size: 17px; color: var(--text-secondary); margin-bottom: 40px;">아래에서 달력·루틴·메모·위젯 활용 방법을 확인하세요.</p>
         </div>
         <!-- 기능 섹션 1: 달력 -->
         <div class="home-section home-section-reverse">
           <div class="home-section-image">
-            <img src="images/cal.png" alt="달력 기능 스크린샷" style="width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='250' viewBox='0 0 400 250'%3E%3Crect width='400' height='250' fill='%23f0f2f5'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%239ca3af' font-size='14' font-family='sans-serif'%3E%EB%8B%AC%EB%A0%A5%3C/text%3E%3C/svg%3E" alt="달력 기능 스크린샷: 월별 그리드에서 날짜를 클릭해 일정·할 일을 등록·체크할 수 있습니다." style="width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
             <p style="margin-top:10px;font-size:14px;color:var(--text-secondary);">월별 그리드에서 날짜를 클릭하면 해당 날짜의 일정·할 일을 등록·체크할 수 있으며, 상단에 이달의 목표를 두어 매일 확인할 수 있습니다.</p>
           </div>
           <div class="home-section-content">
@@ -146,7 +150,7 @@
         <!-- 기능 섹션 2: 루틴 -->
         <div class="home-section home-section-reverse">
           <div class="home-section-image">
-            <img src="images/Routine.png" alt="루틴 기능 스크린샷" style="width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='250' viewBox='0 0 400 250'%3E%3Crect width='400' height='250' fill='%23f0f2f5'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%239ca3af' font-size='14' font-family='sans-serif'%3E%EB%A3%A8%ED%8B%B4%3C/text%3E%3C/svg%3E" alt="루틴 기능 스크린샷: 매일·매주 반복 항목을 등록하고 주간 뷰에서 체크할 수 있습니다." style="width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
             <p style="margin-top:10px;font-size:14px;color:var(--text-secondary);">매일·매주 반복할 항목을 등록한 뒤 주간 뷰에서 체크할 수 있으며, 색상과 이모티콘으로 구분해 한눈에 진행 상황을 확인할 수 있습니다.</p>
           </div>
           <div class="home-section-content">
@@ -160,7 +164,7 @@
         <!-- 기능 섹션 3: 타이머 -->
         <div class="home-section home-section-reverse">
           <div class="home-section-image">
-            <img src="images/timer.png" alt="타이머 기능 스크린샷" style="width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='250' viewBox='0 0 400 250'%3E%3Crect width='400' height='250' fill='%23f0f2f5'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%239ca3af' font-size='14' font-family='sans-serif'%3E%ED%83%80%EC%9D%B4%EB%A8%B8%3C/text%3E%3C/svg%3E" alt="타이머 기능 스크린샷: 집중·운동·휴식 시간을 측정할 수 있습니다." style="width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
           </div>
           <div class="home-section-content">
             <div class="home-section-icon"></div>
@@ -173,7 +177,7 @@
         <!-- 기능 섹션 4: 메모 -->
         <div class="home-section home-section-reverse">
           <div class="home-section-image">
-            <img src="images/memo.png" alt="메모 기능 스크린샷" style="width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='250' viewBox='0 0 400 250'%3E%3Crect width='400' height='250' fill='%23f0f2f5'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%239ca3af' font-size='14' font-family='sans-serif'%3E%EB%A9%94%EB%AA%A8%3C/text%3E%3C/svg%3E" alt="메모 기능 스크린샷: 날짜별 메모 저장 및 위젯으로 띄워 작업할 수 있습니다." style="width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
             <p style="margin-top:10px;font-size:14px;color:var(--text-secondary);">날짜별로 메모를 저장하고 목록에서 선택해 위젯으로 띄울 수 있어, PC 화면 한쪽에서 메모를 계속 보며 작업할 수 있습니다.</p>
           </div>
           <div class="home-section-content">

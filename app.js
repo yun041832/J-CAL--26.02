@@ -9,6 +9,21 @@ const FEATURES = {
   stopwatch: false
 };
 
+/** AdSense 승인용: FEATURES가 false인 기능을 호출하는 메뉴 버튼/링크 및 다크버튼을 display:none 처리 */
+function applyFeatureVisibility(){
+  ['calendar','timer','alarm','stopwatch'].forEach(function(key){
+    if(FEATURES[key]) return;
+    document.querySelectorAll('[data-widget="'+key+'"], [data-feature="'+key+'"]').forEach(function(el){
+      el.style.display='none';
+    });
+  });
+  document.querySelectorAll('[data-feature="dark"]').forEach(function(el){ el.style.display='none'; });
+  var themeToggle=document.getElementById('themeToggle');
+  if(themeToggle) themeToggle.style.display='none';
+  var themeToggleInsight=document.getElementById('themeToggleInsight');
+  if(themeToggleInsight) themeToggleInsight.style.display='none';
+}
+
 function el(t,c,txt){const x=document.createElement(t);if(c)x.className=c;if(txt!=null)x.textContent=txt;return x;}
 const DEFAULT_COLOR='', DONE_COLOR='#9aa5b1';
 // ...existing code...
@@ -150,6 +165,12 @@ function showTimerPage(){
 // ...existing code...
 
 document.addEventListener('DOMContentLoaded',()=>{
+  // 네비게이션 방해 방지: DOM 조작을 먼저 한 번만 수행 (이동 직전 조작 없음)
+  ['calendar','timer','alarm','stopwatch','dark'].forEach(function(key){
+    if(key==='dark' || !FEATURES[key]) document.querySelectorAll('[data-feature="'+key+'"]').forEach(function(el){ el.classList.add('feature-off'); });
+  });
+  applyFeatureVisibility();
+
   runStorageMigrationOnce();
   const openCalWidgetBtn=document.getElementById('openCalendarWidgetBtn');
 
@@ -160,35 +181,37 @@ document.addEventListener('DOMContentLoaded',()=>{
       trackMenuPV('nav:widgetCalendar');
     };
   }
-  
-  // 메뉴 버튼 설정 (href가 있는 링크형 메뉴는 위젯 핸들러 적용하지 않음 → 페이지 이동)
-  document.querySelectorAll('.menu-btn, .menu-button').forEach(b=>{
-    b.onclick=(e)=>{
-      if(b.tagName==='A'&&b.getAttribute('href')) return;
-      const t=b.dataset.widget;
+
+  // 네비게이션: <a href>는 JS 미적용 → 1회 클릭으로 즉시 이동. 버튼만 위임 처리.
+  var sidebar=document.querySelector('.sidebar');
+  if(sidebar){
+    sidebar.addEventListener('click',function(e){
+      var link=e.target.closest('a[href]');
+      if(link){ return; }
+      var btn=e.target.closest('.menu-button, .menu-btn');
+      if(!btn||btn.tagName!=='BUTTON') return;
+      e.preventDefault();
+      if(btn.id==='homeBtn'){ showHomeIntro(); trackMenuPV('menu:home'); return; }
+      var t=btn.dataset.widget;
       if(t==='calendar'&&!FEATURES.calendar) return;
       if(t==='timer'&&!FEATURES.timer) return;
       if(t==='alarm'&&!FEATURES.alarm) return;
       if(t==='stopwatch'&&!FEATURES.stopwatch) return;
-      trackMenuPV(`menu:${t||'unknown'}`);
+      trackMenuPV('menu:'+ (t||'unknown'));
       showUsage(t);
-      if(t==='calendar'){ openCalendar(); }
-      if(t==='memo') showMemoPage();
-      if(t==='routine') showRoutinePage();
-      if(t==='todo') widgetTodo?.();
-      if(t==='timer') showTimerPage();
-      if(t==='alarm') widgetAlarm?.();
-      if(t==='stopwatch') widgetStopwatch?.();
-    };
-  });
-
-  // 홈 메뉴 클릭 핸들러
-  const homeBtn = document.getElementById('homeBtn');
-  if(homeBtn) {
-    homeBtn.addEventListener('click', function(e) {
-      e.preventDefault();
-      showHomeIntro();
-      trackMenuPV('menu:home');
+      if(t==='calendar') openCalendar();
+      else if(t==='memo') showMemoPage();
+      else if(t==='routine') showRoutinePage();
+      else if(t==='todo') widgetTodo?.();
+      else if(t==='timer') showTimerPage();
+      else if(t==='alarm') widgetAlarm?.();
+      else if(t==='stopwatch') widgetStopwatch?.();
+    });
+    var path=window.location.pathname.replace(/^.*\//,'')||'index.html';
+    sidebar.querySelectorAll('a[href]').forEach(function(a){
+      a.removeAttribute('aria-current');
+      var h=a.getAttribute('href')||'';
+      if(h===path||(path===''&&h==='index.html')) a.setAttribute('aria-current','page');
     });
   }
 
@@ -196,18 +219,11 @@ document.addEventListener('DOMContentLoaded',()=>{
   const addRoutineBtn = document.getElementById('addRoutineBtn');
   if(addRoutineBtn) {
     addRoutineBtn.onclick = () => {
-      console.log('루틴 추가 버튼 클릭됨');
       showRoutineModal();
     };
   }
-  
-  // 기능 플래그 OFF 시 메뉴 버튼 숨김 (data-feature에 .feature-off 적용)
-  ['calendar','timer','alarm','stopwatch','dark'].forEach(function(key){
-    if(key==='dark' || !FEATURES[key]) document.querySelectorAll('[data-feature="'+key+'"]').forEach(function(el){ el.classList.add('feature-off'); });
-  });
 
-  // 초기에는 홈 소개 화면 노출
-  showHomeIntro();
+  if(homeIntroSection) showHomeIntro(); /* app.html에는 homeIntroSection 없음 → 호출 생략으로 rightPane 숨김/빈화면 방지 */
 
   // ...existing code...
 });
@@ -288,7 +304,6 @@ const readFromStore=(key,def=[])=>{
     const raw=localStorage.getItem(key);
     if(raw!=null) parsed=JSON.parse(raw);
   }catch(err){
-    console.warn('storage parse fail', err);
   }
   storeCache.set(key,parsed);
   return parsed;
@@ -344,14 +359,10 @@ function trackMenuPV(label){
     snap.events.unshift({label,ts:Date.now()});
     if(snap.events.length>100) snap.events.length=100;
     set(PV_KEY,snap);
-    if(window.memo2PVLogEnabled){
-      const ts=new Date().toISOString();
-      console.log(`[menuPV] ${label} | total=${snap.count} | ${ts}`);
-    }
-  }catch(err){ console.warn('menuPV track fail', err); }
+  }catch(_){}
 }
-window.memo2PVStats=()=>{ const snap=get(PV_KEY,{count:0,events:[]}); console.table(snap.events.map(e=>({label:e.label, time:new Date(e.ts).toLocaleString()}))); console.log('total', snap.count); return snap; };
-window.memo2ClearPV=()=>{ localStorage.removeItem(PV_KEY); invalidateStoreCache(PV_KEY); console.log('menuPV cleared'); };
+window.memo2PVStats=function(){ return get(PV_KEY,{count:0,events:[]}); };
+window.memo2ClearPV=function(){ localStorage.removeItem(PV_KEY); invalidateStoreCache(PV_KEY); };
 
 /* ── 전역 앱 채널 ── */
 const APP_CH='memo2.app';
@@ -584,7 +595,6 @@ function scheduleFabButton(){
       setupFabButton();
     }catch(err){
       fabInitScheduled=false;
-      console.warn('fab init failed', err);
     }
   });
 }

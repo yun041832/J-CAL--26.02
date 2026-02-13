@@ -1,5 +1,7 @@
 # robots.txt
 User-agent: *
 Allow: /
+Disallow: /widget.html
+Disallow: /checklist.html
 
 Sitemap: https://jaycalendar.com/sitemap.xml

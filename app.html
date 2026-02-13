@@ -7,8 +7,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
 
 
-  <title>PC 위젯 온라인 달력 | 루틴·ToDo·체크리스트·메모</title>
-  <meta name="description" content="PC 위젯형 달력. 투두리스트·체크리스트·루틴·메모·타이머로 오늘 일정관리와 할 일을 한 화면에서 정리하세요.">
+  <title>J-Calendar 앱 | 일정·루틴·메모·할 일 한 화면 관리</title>
+  <meta name="description" content="J-Calendar 웹 앱. 이달의 목표, 월간 달력, 일정·ToDo·메모를 한 화면에서 관리하고 위젯으로 띄워 쓸 수 있습니다. 일정 관리와 루틴 정리로 생산성을 높이세요.">
+  <meta name="keywords" content="J-Calendar, 달력 앱, 일정 관리, 루틴, ToDo, 메모, 위젯, 이달의 목표">
   <link rel="canonical" href="https://jaycalendar.com/app.html">
 
 
@@ -18,7 +19,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link rel="manifest" href="manifest.webmanifest">
 
-  <link rel="icon" href="favicon.ico">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%235c8dff'/%3E%3Ctext x='50%25' y='68%25' text-anchor='middle' font-size='18' font-weight='700' fill='white' font-family='Arial,sans-serif'%3EJ%3C/text%3E%3C/svg%3E" type="image/svg+xml">
 
   <!-- Critical CSS (inline) - 최소화된 버전 -->
   <style>
@@ -33,7 +34,7 @@
   </style>
 
   <!-- Full Stylesheets -->
-  <link rel="stylesheet" href="style.css?v=20260205">
+  <link rel="stylesheet" href="style.css?v=1.1">
 
 </head>
 
@@ -50,13 +51,13 @@
         - .menu-label: 버튼의 텍스트 레이블 ("다크")
     -->
     <aside class="sidebar" role="navigation" aria-label="메인 메뉴">
-      <button class="menu-button" data-widget="home"><span class="menu-content"><span class="label">홈</span></span></button>
-      <button class="menu-button" data-widget="todo"><span class="menu-content"><span class="label">루틴</span></span></button>
-      <button class="menu-button" data-widget="memo"><span class="menu-content"><span class="label">메모</span></span></button>
-      <button class="menu-button" data-widget="calendar" data-feature="calendar" id="calendarMenuBtn"><span class="menu-content"><span class="label">달력</span></span></button>
-      <a class="menu-button" href="insight.html" aria-label="인사이트"><span class="menu-content"><span class="label">인사이트</span></span></a>
-      <a class="menu-button" href="about.html">About</a>
-      <button id="themeToggle" class="menu-button" data-feature="dark" aria-label="테마 전환"><span class="menu-content"><span class="label">다크</span></span></button>
+      <button class="menu-button nav-item" data-widget="home"><span class="menu-content"><span class="label">홈</span></span></button>
+      <button class="menu-button nav-item" data-widget="todo"><span class="menu-content"><span class="label">루틴</span></span></button>
+      <button class="menu-button nav-item" data-widget="memo"><span class="menu-content"><span class="label">메모</span></span></button>
+      <button class="menu-button nav-item" data-widget="calendar" data-feature="calendar" id="calendarMenuBtn"><span class="menu-content"><span class="label">달력</span></span></button>
+      <a class="menu-button nav-item" href="insight.html" aria-label="인사이트"><span class="menu-content"><span class="label">인사이트</span></span></a>
+      <a class="menu-button nav-item" href="about.html">About</a>
+      <button id="themeToggle" class="menu-button nav-item" data-feature="dark" aria-label="테마 전환"><span class="menu-content"><span class="label">다크</span></span></button>
 
       <p class="sidebar__hint">
         ※ 메뉴를 클릭하면<br>위젯창이 열립니다.<br><br>

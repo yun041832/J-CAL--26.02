@@ -24,20 +24,30 @@
   --bg:#f6f7fb; --card:#ffffff; --line:#e9ecf2; --text:#111827;
 }
 *{box-sizing:border-box}
-html{height:100%;margin:0}
-body{margin:0;display:flex;flex-direction:column;min-height:100vh;height:auto;background:var(--bg);color:var(--text);font-family:"Noto Sans","Noto Sans KR",sans-serif}
+html{margin:0;overflow-x:hidden;min-height:100%}
+body{margin:0;display:flex;flex-direction:column;min-height:100vh;height:auto;background:var(--bg);color:var(--text);font-family:"Noto Sans","Noto Sans KR",sans-serif;overflow-x:hidden;overflow-y:auto}
+/* ---------- 가로 스크롤/메뉴 돌출 원천 차단 (모바일·웨일 등) ---------- */
+.app{overflow-x:hidden;max-width:100%}
+.main,.content{max-width:100%;min-width:0;box-sizing:border-box}
 /* ---------- 앱 레이아웃 (단일 정의, breakpoint 1024px) ---------- */
 .app{
   display:grid;
   grid-template-columns:200px 1fr;
   gap:10px;
   padding:6px;
-  flex:1;
-  min-height:0;
+  flex:1 1 auto;
+  min-height:min-content;
 }
 .app .sidebar{width:200px;min-width:200px;box-sizing:border-box}
 /* .right가 있는 페이지(app): 3번째 자식은 2행에서 전체 너비 */
 .app > .right{grid-column:1 / -1}
+
+/*
+ * ---------- 네비게이션 브레이크포인트 가이드 (단일화) ----------
+ * 768px 미만 (모바일): 하단 탭 바(Bottom Nav)만 노출. 사이드바가 fixed bottom.
+ * 769px ~ 1024px (태블릿): 상단 스티키 메뉴만 노출. 하단 바 숨김.
+ * 1025px 이상 (데스크톱): 좌측 사이드바만 노출. 하단 바 숨김.
+ */
 @media (min-width: 1025px){
   .app{gap:12px;padding:10px}
 }
@@ -52,6 +62,7 @@ body{margin:0;display:flex;flex-direction:column;min-height:100vh;height:auto;ba
   }
   .app .sidebar{
     width:100% !important;
+    max-width:100vw !important;
     min-width:0 !important;
     display:flex !important;
     flex-direction:row !important;
@@ -90,8 +101,95 @@ body{margin:0;display:flex;flex-direction:column;min-height:100vh;height:auto;ba
   .app .sidebar .sidebar__hint{display:none !important}
   .app .main{flex:1;min-width:0;padding:10px}
 }
+
+/* ---------- 모바일 최적화 (768px 이하): 하단 네비 전환, 콘텐츠 가림 방지 ---------- */
+@media (max-width: 768px){
+  .app{
+    padding:0 !important;
+    min-height:100vh !important;
+    flex-direction:column !important;
+  }
+  /* 사이드바 → 하단 고정 네비 (메인을 가리지 않음) */
+  .app .sidebar{
+    position:fixed !important;
+    bottom:0 !important;
+    left:0 !important;
+    right:0 !important;
+    top:auto !important;
+    width:100% !important;
+    max-width:100vw !important;
+    height:54px !important;
+    min-height:54px !important;
+    flex-direction:row !important;
+    flex-wrap:nowrap !important;
+    padding:0 !important;
+    gap:0 !important;
+    border-top:1px solid var(--line) !important;
+    border-bottom:none !important;
+    z-index:999 !important;
+    background:var(--card) !important;
+    overflow:visible !important;
+    padding-bottom:env(safe-area-inset-bottom,0) !important;
+    box-sizing:border-box !important;
+  }
+  /* .nav-item 규격(54px) 유지, 버튼만 가로 균등 분할 */
+  .app .sidebar .menu-button.nav-item,
+  .app .sidebar .menu-button{
+    flex:1 1 0 !important;
+    min-width:0 !important;
+    width:auto !important;
+    height:54px !important;
+    min-height:54px !important;
+    border-radius:0 !important;
+    border:none !important;
+    border-right:1px solid var(--line) !important;
+    padding:0 8px !important;
+  }
+  .app .sidebar .menu-button:last-of-type,
+  .app .sidebar .menu-button.nav-item:last-of-type{
+    border-right:none !important;
+  }
+  .app .sidebar .menu-button .menu-content,
+  .app .sidebar .menu-button .label{
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+  }
+  /* 메인: 하단 네비 높이만큼 여백 → 콘텐츠 가림 없음 (AdSense 친화) */
+  .app .main{
+    flex:1 !important;
+    min-width:0 !important;
+    padding:16px 12px !important;
+    padding-bottom:calc(54px + env(safe-area-inset-bottom,0) + 16px) !important;
+    width:100% !important;
+    box-sizing:border-box !important;
+  }
+  /* 푸터/콘텐츠 하단 영역 모바일 여백 */
+  .content-footer-zone{
+    padding:16px 12px 24px !important;
+    margin-top:24px !important;
+  }
+  .content-footer-text{
+    padding-left:0 !important;
+    padding-right:0 !important;
+  }
+}
+
 /* ---------- 기능 플래그 OFF 시 메뉴 버튼 숨김 ---------- */
 [data-feature].feature-off{display:none !important;}
+/* AdSense 승인용: 불완전한 다크모드 버튼 은닉 (app.js 미로드 페이지 포함) */
+#themeToggle,#themeToggleInsight,[data-feature="dark"]{display:none !important;}
+
+/* ---------- 네비 항목 규격화 (브라우저별 버튼 크기 통일, AdSense 승인용) ---------- */
+.nav-item{
+  width:100%;
+  height:54px;
+  box-sizing:border-box;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  padding:0 20px;
+}
 
 /* ---------- 사이드바 메뉴 (menu-button): 공통 베이스 ---------- */
 .sidebar .menu-button{
@@ -544,6 +642,42 @@ body{margin:0;display:flex;flex-direction:column;min-height:100vh;height:auto;ba
   line-height:1.7;
   max-width:1200px;
   margin:0 auto;
+}
+.home-hero-slots{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:16px;
+  margin-bottom:32px;
+  max-width:100%;
+}
+.home-hero-slot{
+  min-width:0;
+  border-radius:12px;
+  overflow:hidden;
+  border:1px solid var(--line);
+}
+.home-hero-slot img{ width:100%; height:auto; display:block; }
+@media (max-width:768px){
+  .home-hero-slots{ grid-template-columns:1fr; }
+}
+.home-hero-intro{
+  padding:24px 0;
+  margin-bottom:32px;
+  border-bottom:1px solid var(--line);
+}
+.home-hero-intro__title{
+  font-size:22px;
+  font-weight:700;
+  margin:0 0 12px;
+  line-height:1.4;
+  color:var(--text);
+}
+.home-hero-intro__text{
+  font-size:16px;
+  line-height:1.7;
+  color:var(--text-muted);
+  margin:0;
+  max-width:720px;
 }
 .home-hero h1{
   font-size:26px;
@@ -1888,14 +2022,180 @@ aside.right .todo-item{display:flex;align-items:center;gap:2px}
   padding-left: 0;
   padding-right: 0;
 }
-/* 인사이트: content-list만 스크롤, footer는 리스트 끝(스크롤 시 노출) */
+/* 인사이트: content-list 사용 시에도 문서 스크롤 우선 (100vh 고정 제거) */
 .insight-hero.content .content-list {
-  max-height: calc(100vh - 220px);
+  max-height: none;
+  min-height: 0;
+}
+/* 인사이트 페이지: 문서 스크롤 보장, 콘텐츠 하단 잘림 방지 */
+body.insight-page .app {
+  min-height: min-content;
+  flex: 0 1 auto;
+}
+body.insight-page .main {
+  min-height: 100vh;
+  height: auto;
+  overflow-y: visible;
+}
+body.insight-page .main .content {
+  min-height: min-content;
 }
 /* 인사이트 글 단위: 개별 포스트 분리 시 article 그대로 복사용 (구조 정리) */
 .insight-item {
   margin-bottom: 32px;
 }
+
+/* 인사이트 상단: Featured 6카드 3x2 고정 */
+.insight-featured {
+  max-width: 1200px;
+  margin: 0 auto 32px;
+  padding: 0 0 16px;
+}
+.insight-section-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0 0 20px;
+  color: var(--text);
+}
+.insight-featured-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+@media (max-width: 900px) {
+  .insight-featured-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 560px) {
+  .insight-featured-grid {
+    grid-template-columns: 1fr;
+  }
+}
+/* 인사이트 하단: 아카이브 리스트 */
+.insight-archive {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 0 16px;
+}
+/* 인사이트 그리드(레거시 호환) */
+.insight-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 0 16px;
+}
+
+/* 인사이트 상단 서문(진심의 디스클레이머) */
+.insight-disclaimer {
+  max-width: 1200px;
+  margin: 0 auto 24px;
+  padding: 16px 20px;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--text-muted);
+  border-left: 3px solid var(--line);
+  background: var(--card);
+  border-radius: 0 8px 8px 0;
+}
+.insight-disclaimer p {
+  margin: 0 0 0.75em;
+}
+.insight-disclaimer p:last-child {
+  margin-bottom: 0;
+}
+
+.insight-board-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.insight-card {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+.insight-card:hover { border-color: var(--primary); box-shadow: 0 4px 12px rgba(92,141,255,0.12); }
+.insight-card__category {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+.insight-card__title {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  line-height: 1.35;
+  color: var(--text);
+}
+.insight-card__title a {
+  color: inherit;
+  text-decoration: none;
+}
+.insight-card__title a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+.insight-card__excerpt {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 0 0 12px;
+  flex: 1;
+}
+.insight-card__date {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* 인사이트: 구분선 + 심플 리스트 게시판 */
+.list-divider {
+  height: 1px;
+  background: var(--line);
+  margin: 32px 0 20px;
+}
+.insight-list-simple {
+  margin-bottom: 24px;
+}
+.insight-list-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.insight-list-table thead {
+  background: var(--bg);
+  border-bottom: 2px solid var(--line);
+}
+.insight-list-table th {
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text);
+}
+.insight-list-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  color: var(--text);
+}
+.insight-list-num { width: 60px; text-align: center; }
+.insight-list-cat { width: 90px; }
+.insight-list-title { min-width: 0; }
+.insight-list-author { width: 100px; }
+.insight-list-date { width: 100px; white-space: nowrap; }
+.insight-list-views { display: none !important; }
 
 /* 공통: FAB 버튼 (리스트 영역 기준 우하단 고정) */
 .content .content-list .global-fab {
@@ -2276,8 +2576,8 @@ aside.right .todo-item{display:flex;align-items:center;gap:2px}
 
 /* ---------- 12. 모바일 메뉴 (가로 스크롤, 항상 표시) ---------- */
 @media (max-width: 1024px){
-  /* 스크롤 막힘 방지 */
-  html, body { height: auto !important; }
+  /* 스크롤 막힘 방지, 가로 돌출 유지 차단 */
+  html, body { height: auto !important; overflow-x: hidden !important; }
   body { overflow-y: auto !important; }
 
   /* 앱 레이아웃을 세로 흐름으로 고정 */
