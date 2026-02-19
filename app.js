@@ -64,9 +64,11 @@ J-캘린더의 루틴 기능은 여러분의 목표와 이를 위한 작업을 �
 기록은 미래의 자신에게 보내는 가장 신뢰할 수 있는 메시지이자 선물입니다. 당신의 소중한 생각들이 흩어지지 않도록, J-캘린더가 그 자리를 든든하게 지키겠습니다. 당신의 모든 기록은 성장의 발판이 될 것이며, 그 과정 속에서 더 선명해진 목표를 발견하시길 진심으로 응원합니다.`,
   timer:'타이머와 스탑워치로 집중 시간·운동·휴식 등을 측정할 수 있습니다. 여러 타이머를 동시에 사용할 수 있습니다.'
 };
+const PAGE_TITLES={ home:'J-Calendar | 일정·감정 기록·루틴 관리·심리적 통찰을 한곳에서', calendar:'J-Calendar | 달력·일정·할 일 관리', memo:'J-Calendar | 메모', routine:'J-Calendar | 루틴', timer:'J-Calendar | 타이머' };
 function setContentFooterText(key){
   var text=CONTENT_FOOTER_TEXTS[key]||'';
   document.querySelectorAll('.content-footer-text').forEach(function(el){ el.textContent=text; });
+  if(PAGE_TITLES[key]) document.title=PAGE_TITLES[key];
 }
 
 /* ── 달력 진입/종료 (중복 init·이벤트 누수 방지) ── */

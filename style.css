@@ -19,6 +19,46 @@
  * ============================================================
  */
 
+/* ---------- 0. 전역 UI 유틸리티 (색상/이모티콘 버튼 정렬 통일, 게시글 줄바꿈) ---------- */
+/* 색상·이모티콘 버튼 통일: 모든 입력창 버튼 그룹에 동일 UX */
+.btn-icon-centered,
+.todo__input-group .icon-btn,
+.todo__input-group .color-indicator,
+.todo__input-group .emoji-gray,
+.routine-option-btn,
+.memo-option-btn,
+.color-btn,
+.del-btn,
+.event-menu-btn,
+.widget .color-btn,
+.widget .del-btn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+}
+/* 입력창+버튼 그룹: gap·정렬 통일 (grid 유지하는 경우 gap만 덮어씀) */
+.todo__input-group { gap: 8px !important; align-items: center !important; }
+.reminder__input-group { gap: 8px !important; align-items: center !important; }
+.memo-write-title-row { gap: 8px !important; align-items: center !important; }
+.routine-option-row { gap: 8px !important; align-items: center !important; }
+/* 게시글/콘텐츠 영역: 대량 업로드·SEO 대비 줄바꿈 (한글 가독성) */
+.content-word-wrap,
+.todo__list,
+.memo__list,
+.reminder__list,
+.memo-card__content,
+.memo-card__text,
+.event-text,
+.reminder-text,
+.insight-post .insight-card,
+.content,
+.card .content {
+  overflow-wrap: break-word !important;
+  word-break: keep-all !important;
+  hyphens: none;
+}
+
 /* ---------- 1. 기본 레이아웃 (베이스) ---------- */
 :root{
   --bg:#f6f7fb; --card:#ffffff; --line:#e9ecf2; --text:#111827;
@@ -900,11 +940,11 @@ body{margin:0;display:flex;flex-direction:column;min-height:100vh;height:auto;ba
 .event-text.done{text-decoration:line-through;color:#9aa5b1 !important;}
 
 /* TODO 입력 */
-.todo__input-group{display:grid;grid-template-columns:1fr auto auto auto auto;gap:2px;margin-bottom:8px;align-items:center}
+.todo__input-group{display:grid;grid-template-columns:1fr auto auto auto auto;gap:8px;margin-bottom:8px;align-items:center}
 .todo__input-group input[type="text"]{flex:1;padding:10px 12px;border:1px solid var(--line);border-radius:10px}
-.todo__input-group .icon-btn{border:none;background:transparent;font-size:14px;padding:4px;width:24px;height:24px;cursor:pointer;transition:transform 0.2s;display:flex;align-items:center;justify-content:center}
+.todo__input-group .icon-btn{border:none;background:transparent;font-size:14px;padding:0;width:28px;height:28px;min-width:28px;min-height:28px;cursor:pointer;transition:transform 0.2s;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .todo__input-group .icon-btn svg{width:18px;height:18px;fill:currentColor}
-.todo__input-group .color-indicator{background:#e5e7eb;border-radius:50%;border:1px solid #d1d5db;position:relative;width:18px;height:18px;padding:0}
+.todo__input-group .color-indicator{background:#e5e7eb;border-radius:50%;border:1px solid #d1d5db;position:relative;width:28px;height:28px;min-width:28px;min-height:28px;padding:0;flex-shrink:0}
 .todo__input-group .color-indicator.has-color{border-color:currentColor}
 .todo__input-group .emoji-gray{filter:grayscale(100%);opacity:0.5}
 .todo__input-group .icon-btn:hover{transform:scale(1.15);background:transparent}
