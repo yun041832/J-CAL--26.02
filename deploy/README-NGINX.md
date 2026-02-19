@@ -1,10 +1,10 @@
-# Nginx: Canonical URL 설정 (https://jaycalendar.com)
+# Nginx: Canonical URL 설정 (https://www.jaycalendar.com)
 
 ## 목적
-- `http://jaycalendar.com` → **301** → `https://jaycalendar.com`
-- `http://www.jaycalendar.com` → **301** → `https://jaycalendar.com`
-- `https://www.jaycalendar.com` → **301** → `https://jaycalendar.com`
-- Canonical URL: **https://jaycalendar.com** 만 사용 (SEO·ads.txt 일원화)
+- `http://jaycalendar.com` → **301** → `https://www.jaycalendar.com`
+- `http://www.jaycalendar.com` → **301** → `https://www.jaycalendar.com`
+- `https://jaycalendar.com` → **301** → `https://www.jaycalendar.com`
+- Canonical URL: **https://www.jaycalendar.com** 만 사용 (SEO·구글 서치콘솔 중복 URL 통합)
 
 ---
 
@@ -63,10 +63,10 @@ sudo nginx -t && sudo systemctl restart nginx
 ## 3. 확인
 
 - 브라우저에서:
-  - `http://jaycalendar.com` → 주소창이 `https://jaycalendar.com` 로 바뀌는지
-  - `http://www.jaycalendar.com` → `https://jaycalendar.com` 로 이동하는지
-  - `https://www.jaycalendar.com` → `https://jaycalendar.com` 로 이동하는지
-- `https://jaycalendar.com/ads.txt` 접속 시 내용이 정상 노출되는지
+  - `http://jaycalendar.com` → 주소창이 `https://www.jaycalendar.com` 로 바뀌는지
+  - `http://www.jaycalendar.com` → `https://www.jaycalendar.com` 로 이동하는지
+  - `https://jaycalendar.com` → `https://www.jaycalendar.com` 로 이동하는지
+- `https://www.jaycalendar.com/ads.txt` 접속 시 내용이 정상 노출되는지
 
 ---
 

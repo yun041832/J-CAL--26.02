@@ -1,4 +1,4 @@
-# Apply Nginx config for https://jaycalendar.com
+# Apply Nginx config for https://www.jaycalendar.com
 
 ## Step 1 — Apply the config (you do this)
 
@@ -17,24 +17,24 @@ server {
     listen 80;
     listen [::]:80;
     server_name jaycalendar.com www.jaycalendar.com;
-    return 301 https://jaycalendar.com$request_uri;
-}
-
-server {
-    listen 443 ssl http2;
-    listen [::]:443 ssl http2;
-    server_name www.jaycalendar.com;
-    include /etc/letsencrypt/options-ssl-nginx.conf;
-    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
-    ssl_certificate /etc/letsencrypt/live/jaycalendar.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/jaycalendar.com/privkey.pem;
-    return 301 https://jaycalendar.com$request_uri;
+    return 301 https://www.jaycalendar.com$request_uri;
 }
 
 server {
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
     server_name jaycalendar.com;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+    ssl_certificate /etc/letsencrypt/live/jaycalendar.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/jaycalendar.com/privkey.pem;
+    return 301 https://www.jaycalendar.com$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name www.jaycalendar.com;
     root /var/www/jaycalendar.com;
     index index.html;
     include /etc/letsencrypt/options-ssl-nginx.conf;
@@ -75,7 +75,7 @@ sudo nginx -t && sudo systemctl restart nginx
 
 ## Done
 
-- Check: https://jaycalendar.com  
-- Check: https://jaycalendar.com/ads.txt  
+- Check: https://www.jaycalendar.com  
+- Check: https://www.jaycalendar.com/ads.txt  
 
 If `sudo` asks for a password, enter your server user password.

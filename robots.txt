@@ -4,4 +4,4 @@ Allow: /
 Disallow: /widget.html
 Disallow: /checklist.html
 
-Sitemap: https://jaycalendar.com/sitemap.xml
+Sitemap: https://www.jaycalendar.com/sitemap.xml

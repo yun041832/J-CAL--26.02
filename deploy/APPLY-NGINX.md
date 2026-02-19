@@ -1,11 +1,11 @@
-# Nginx 적용: https://jaycalendar.com 단일 Canonical
+# Nginx 적용: https://www.jaycalendar.com 단일 Canonical
 
 ## 요구사항 충족
-- `http://jaycalendar.com` → **301** → `https://jaycalendar.com`
-- `http://www.jaycalendar.com` → **301** → `https://jaycalendar.com`
-- `https://www.jaycalendar.com` → **301** → `https://jaycalendar.com`
-- Canonical URL: **https://jaycalendar.com** 만 사용
-- `root` 설정으로 **https://jaycalendar.com/ads.txt** 제공
+- `http://jaycalendar.com` → **301** → `https://www.jaycalendar.com`
+- `http://www.jaycalendar.com` → **301** → `https://www.jaycalendar.com`
+- `https://jaycalendar.com` → **301** → `https://www.jaycalendar.com`
+- Canonical URL: **https://www.jaycalendar.com** 만 사용 (SEO·구글 서치콘솔)
+- `root` 설정으로 **https://www.jaycalendar.com/ads.txt** 제공
 
 ---
 
@@ -55,8 +55,8 @@ sudo nginx -t && sudo systemctl restart nginx
 - `nginx -t` 가 성공해야 `systemctl restart nginx` 가 실행됨.
 
 ### 2.5 확인
-- 브라우저: `http://jaycalendar.com` → `https://jaycalendar.com` 으로 넘어가는지.
-- **https://jaycalendar.com/ads.txt** 접속 시 내용 노출 여부.
+- 브라우저: `http://jaycalendar.com` → `https://www.jaycalendar.com` 으로 넘어가는지.
+- **https://www.jaycalendar.com/ads.txt** 접속 시 내용 노출 여부.
 
 ---
 

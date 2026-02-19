@@ -5,7 +5,7 @@
 
 ---
 
-## 1. https://jaycalendar.com/ads.txt
+## 1. https://www.jaycalendar.com/ads.txt
 
 | Item        | Result   |
 |------------|----------|
@@ -19,12 +19,12 @@
 | Item        | Result   |
 |------------|----------|
 | HTTP Status| **301 Moved Permanently** |
-| Location   | **https://jaycalendar.com/** |
+| Location   | **https://www.jaycalendar.com/** |
 | Conclusion | Correct 301 redirect to canonical HTTPS URL. |
 
 ---
 
-## 3. https://jaycalendar.com/robots.txt
+## 3. https://www.jaycalendar.com/robots.txt
 
 | Item        | Result   |
 |------------|----------|
@@ -49,8 +49,8 @@
 
 | URL                        | Expected | Actual | Pass |
 |----------------------------|----------|--------|------|
-| https://jaycalendar.com/ads.txt | 200      | 200    | Yes  |
-| http://jaycalendar.com     | 301 → https | 301 → https://jaycalendar.com/ | Yes  |
-| https://jaycalendar.com/robots.txt | 200      | 200    | Yes  |
+| https://www.jaycalendar.com/ads.txt | 200      | 200    | Yes  |
+| http://jaycalendar.com     | 301 → https | 301 → https://www.jaycalendar.com/ | Yes  |
+| https://www.jaycalendar.com/robots.txt | 200      | 200    | Yes  |
 
 All checks passed.

@@ -7,13 +7,15 @@
   <meta name="description" content="J-Calendar(Jay Calendar) 소개. 웹 기반 일정·할 일·루틴·메모 관리 도구 제공과 Brain·Mind·Action 인사이트 등 정보 허브로서의 목적·운영 원칙을 안내합니다." />
   <meta name="keywords" content="J-Calendar 소개, Jay Calendar, 일정 관리, 루틴, 정보 허브, 운영 원칙" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%235c8dff'/%3E%3Ctext x='50%25' y='68%25' text-anchor='middle' font-size='18' font-weight='700' fill='white' font-family='Arial,sans-serif'%3EJ%3C/text%3E%3C/svg%3E" type="image/svg+xml" />
-  <link rel="canonical" href="https://jaycalendar.com/about.html" />
+  <link rel="canonical" href="https://www.jaycalendar.com/about.html" />
+  <link rel="stylesheet" href="style.css" />
   <style>
+    /* index.html과 동일한 라이트 테마 기반 (배경 #f6f7fb 등) */
     :root{
-      --bg:#0b0f19; --card:#111827; --line:#243044; --text:#e5e7eb; --muted:#9ca3af; --accent:#60a5fa;
+      --bg:#f6f7fb; --card:#ffffff; --line:#e9ecf2; --text:#111827; --muted:#6B7280; --accent:#5c8dff;
     }
     *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans KR",Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+    body{margin:0;font-family:"Noto Sans","Noto Sans KR",system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
     a{color:var(--accent);text-decoration:none}
     a:hover{text-decoration:underline}
     .wrap{max-width:920px;margin:0 auto;padding:28px 16px}
@@ -35,9 +37,22 @@
     .footer-link{color:var(--accent);text-decoration:none;font-size:13px}
     .footer-link:hover{text-decoration:underline}
     .footer-copyright{color:var(--muted);font-size:12px;margin:0}
+    /* about 전용: app 레이아웃 유지, main 영역만 기존 wrap 스타일 */
+    .app .main .wrap{flex:1}
   </style>
 </head>
 <body>
+  <div class="app">
+    <aside class="sidebar" role="navigation" aria-label="메인 메뉴">
+      <a href="index.html" class="menu-button nav-item"><span class="menu-content"><span class="label">홈</span></span></a>
+      <a href="index.html" class="menu-button nav-item"><span class="menu-content"><span class="label">루틴</span></span></a>
+      <a href="index.html" class="menu-button nav-item"><span class="menu-content"><span class="label">메모</span></span></a>
+      <a href="index.html" class="menu-button nav-item"><span class="menu-content"><span class="label">달력</span></span></a>
+      <a href="insight.html" class="menu-button nav-item" aria-label="인사이트"><span class="menu-content"><span class="label">인사이트</span></span></a>
+      <a href="about.html" class="menu-button nav-item" aria-current="page">About</a>
+      <button type="button" id="themeToggle" class="menu-button nav-item" data-feature="dark" aria-label="테마 전환"><span class="menu-content"><span class="label">다크</span></span></button>
+    </aside>
+    <main class="main">
   <div class="wrap">
     <article class="card">
       <h1>사이트 소개</h1>
@@ -84,6 +99,8 @@
       <div class="hr"></div>
     </article>
   </div>
+    </main>
+  </div>
 
   <footer class="footer">
     <div class="footer-content">
@@ -92,10 +109,40 @@
         <span class="footer-divider">|</span>
         <a href="privacy.html" class="footer-link">개인정보 보호정책</a>
         <span class="footer-divider">|</span>
+        <a href="terms.html" class="footer-link">이용약관</a>
+        <span class="footer-divider">|</span>
         <a href="contact.html" class="footer-link">문의하기</a>
       </div>
       <p class="footer-copyright">&copy; 2025 Jay Calendar. All rights reserved.</p>
     </div>
   </footer>
+  <script>
+    (function(){
+      function updateThemeButton(){
+        var btn=document.getElementById('themeToggle');
+        if(!btn)return;
+        var label=btn.querySelector('.label');
+        var current=document.documentElement.getAttribute('data-theme')||'light';
+        if(label) label.textContent=current==='light'?'◑ 다크':'◑ 라이트';
+      }
+      function loadTheme(){
+        var saved=localStorage.getItem('memo2.theme')||'light';
+        document.documentElement.setAttribute('data-theme',saved);
+        updateThemeButton();
+      }
+      function toggleTheme(){
+        var current=document.documentElement.getAttribute('data-theme')||'light';
+        var next=current==='light'?'dark':'light';
+        document.documentElement.setAttribute('data-theme',next);
+        localStorage.setItem('memo2.theme',next);
+        updateThemeButton();
+      }
+      document.addEventListener('DOMContentLoaded',function(){
+        loadTheme();
+        var themeBtn=document.getElementById('themeToggle');
+        if(themeBtn) themeBtn.addEventListener('click',toggleTheme);
+      });
+    })();
+  </script>
 </body>
 </html>

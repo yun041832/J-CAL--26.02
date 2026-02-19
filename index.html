@@ -6,9 +6,9 @@
 
 
   <title>J-Calendar | 일정·감정 기록·루틴 관리·심리적 통찰을 한곳에서</title>
-  <meta name="description" content="웹 기반 일정 관리와 감정·메모 기록, 루틴·할 일 정리를 한 화면에서. PC 위젯형 달력으로 이달의 목표를 세우고, Brain·Mind·Action 인사이트로 생산성과 심리적 통찰을 함께 쌓아가세요.">
-  <meta name="keywords" content="J-Calendar, Jay Calendar, 일정 관리, 달력, 루틴 관리, 메모, 할 일, ToDo, 감정 기록, 생산성, 인사이트, PC 위젯 달력">
-  <link rel="canonical" href="https://jaycalendar.com/">
+  <meta name="description" content="웹 기반 루틴·일정 관리와 감정·메모 기록을 한 화면에서. PC 위젯형 달력으로 이달의 목표를 세우고, Brain·Mind·Action 인사이트로 생산성과 심리적 통찰을 함께 쌓아가세요.">
+  <meta name="keywords" content="J-Calendar, Jay Calendar, 루틴 관리, 감정 기록, 일정 관리, 달력, 메모, 할 일, ToDo, 생산성, 인사이트, PC 위젯 달력">
+  <link rel="canonical" href="https://www.jaycalendar.com/">
   <meta name="naver-site-verification" content="c610c2376179223d74c7dbea33a711f002d52026">
 
   <meta name="theme-color" content="#5c8dff">
@@ -17,6 +17,15 @@
   <link rel="manifest" href="manifest.webmanifest">
 
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%235c8dff'/%3E%3Ctext x='50%25' y='68%25' text-anchor='middle' font-size='18' font-weight='700' fill='white' font-family='Arial,sans-serif'%3EJ%3C/text%3E%3C/svg%3E" type="image/svg+xml">
+
+  <!-- Tailwind CSS (홈 미니멀 리뉴얼) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" as="style" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" crossorigin="">
+  <script>
+    tailwind.config = {
+      theme: { extend: { fontFamily: { sans: ['Pretendard', 'system-ui', '-apple-system', 'sans-serif'] } } }
+    }
+  </script>
 
   <!-- Critical CSS (inline) - 레이아웃은 style.css에서만 정의, 스크롤 보장을 위해 min-height 사용 -->
   <style>
@@ -106,115 +115,95 @@
       <a class="menu-button nav-item" href="insight.html" aria-label="인사이트"><span class="menu-content"><span class="label">인사이트</span></span></a>
       <a class="menu-button nav-item" href="about.html">About</a>
       <button id="themeToggle" class="menu-button nav-item" data-feature="dark" aria-label="테마 전환"><span class="menu-content"><span class="label">다크</span></span></button>
-
-      <p class="sidebar__hint">
-        ※ 메뉴 선택 후 상단의<br>
-        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor" style="vertical-align:middle">
-          <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h560v-280h80v280q0 33-23.5 56.5T760-120H200Zm188-212-56-56 372-372H560v-80h280v280h-80v-144L388-332Z"/>
-        </svg>
-        버튼을 클릭하면<br>위젯이 활성화 됩니다.
-      </p>
     </aside>
 
     <main class="main">
-      <!-- 홈 소개 페이지 (기본 표시) -->
-      <div id="homeIntroSection" class="card home-hero">
-        <div class="home-hero-slots">
-          <div class="home-hero-slot" aria-hidden="true"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='220' viewBox='0 0 400 220'%3E%3Crect width='400' height='220' fill='%23eef2ff'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%235c8dff' font-size='14' font-family='sans-serif'%3EJ-Calendar%3C/text%3E%3C/svg%3E" alt=""></div>
-          <div class="home-hero-slot" aria-hidden="true"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='220' viewBox='0 0 400 220'%3E%3Crect width='400' height='220' fill='%23f0fdf4'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%2316a34a' font-size='14' font-family='sans-serif'%3E%EC%9D%BC%EC%A0%95%20%2B%20%EB%A3%A8%ED%8B%B4%3C/text%3E%3C/svg%3E" alt=""></div>
-          <div class="home-hero-slot" aria-hidden="true"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='220' viewBox='0 0 400 220'%3E%3Crect width='400' height='220' fill='%23fefce8'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23ca8a04' font-size='14' font-family='sans-serif'%3E%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%3C/text%3E%3C/svg%3E" alt=""></div>
-        </div>
-        <section class="home-hero-intro" aria-labelledby="home-intro-heading">
-          <h2 id="home-intro-heading" class="home-hero-intro__title">J-Calendar는 일정·루틴·메모를 한 화면에서 관리하는 웹 달력입니다</h2>
-          <p class="home-hero-intro__text">이달의 목표를 세우고, 날짜별 일정과 할 일을 등록·체크하며, Brain·Mind·Action 인사이트로 생산성과 심리적 통찰을 쌓아갈 수 있습니다. 별도 설치 없이 브라우저만으로 사용할 수 있습니다.</p>
-        </section>
-        <div class="home-header">
-          <h1 style="font-size: 32px; margin-bottom: 8px;">오늘 해야 할 일정이나 목표가 있나요?</h1>
-          <p style="font-size: 17px; color: var(--text-secondary); margin-bottom: 40px;">아래에서 달력·루틴·메모·위젯 활용 방법을 확인하세요.</p>
-        </div>
-        <!-- 기능 섹션 1: 달력 -->
-        <div class="home-section home-section-reverse">
-          <div class="home-section-image">
-            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='250' viewBox='0 0 400 250'%3E%3Crect width='400' height='250' fill='%23f0f2f5'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%239ca3af' font-size='14' font-family='sans-serif'%3E%EB%8B%AC%EB%A0%A5%3C/text%3E%3C/svg%3E" alt="달력 기능 스크린샷: 월별 그리드에서 날짜를 클릭해 일정·할 일을 등록·체크할 수 있습니다." style="width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-            <p style="margin-top:10px;font-size:14px;color:var(--text-secondary);">월별 그리드에서 날짜를 클릭하면 해당 날짜의 일정·할 일을 등록·체크할 수 있으며, 상단에 이달의 목표를 두어 매일 확인할 수 있습니다.</p>
-          </div>
-          <div class="home-section-content">
-            <div class="home-section-icon"></div>
-            <h2>올인원 일정관리 캘린더</h2>
-            <p>이달의 목표를 입력하여 매일매일 목표를 상기시킬 수 있습니다.</p>
-            <p>날짜 옆 화살표를 클릭하면 작은 달력과 위젯 활용이 가능합니다.</p>
-            <p>일정과 ToDo리스트를 하나의 캘린더에서 관리 할 수 있습니다.<br>
-            달력에서 바로 체크하며 한눈에 확인할 수 있습니다.</p>
-          </div>
-        </div>
+      <!-- 홈 소개 페이지 (미니멀 리뉴얼) -->
+      <div id="homeIntroSection" class="card home-hero bg-[#F9FAFB] border-0 shadow-none max-w-4xl mx-auto w-full">
+        <div class="font-sans text-[#111827] tracking-tight antialiased">
+          <!-- 히어로 섹션 -->
+          <section class="px-6 sm:px-10 py-16 sm:py-24 text-center" aria-labelledby="hero-heading">
+            <h1 id="hero-heading" class="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight tracking-tight text-[#111827] mb-6">
+              계획에 에너지 쓰지 마세요.
+            </h1>
+            <p class="text-lg sm:text-xl text-[#6B7280] leading-relaxed max-w-xl mx-auto mb-10 sm:mb-12">
+              루틴만 세팅하세요. 실행은 자동으로 따라옵니다.
+            </p>
+            <button type="button" id="homeCtaStart" class="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-[#374151] hover:bg-[#1F2937] rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#374151] focus:ring-offset-2 focus:ring-offset-[#F9FAFB]" aria-label="지금 바로 시작하기">
+              지금 바로 시작하기
+            </button>
+          </section>
 
-        <!-- 기능 섹션 2: 루틴 -->
-        <div class="home-section home-section-reverse">
-          <div class="home-section-image">
-            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='250' viewBox='0 0 400 250'%3E%3Crect width='400' height='250' fill='%23f0f2f5'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%239ca3af' font-size='14' font-family='sans-serif'%3E%EB%A3%A8%ED%8B%B4%3C/text%3E%3C/svg%3E" alt="루틴 기능 스크린샷: 매일·매주 반복 항목을 등록하고 주간 뷰에서 체크할 수 있습니다." style="width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-            <p style="margin-top:10px;font-size:14px;color:var(--text-secondary);">매일·매주 반복할 항목을 등록한 뒤 주간 뷰에서 체크할 수 있으며, 색상과 이모티콘으로 구분해 한눈에 진행 상황을 확인할 수 있습니다.</p>
-          </div>
-          <div class="home-section-content">
-            <div class="home-section-icon"></div>
-            <h2>일별 / 주간 단위로 루틴 관리</h2>
-            <p>매일, 매주 반복되는 나만의 루틴을 설정하세요.<br>
-            색상과 이모티콘으로 나만의 루틴을 꾸미고, 체크하며<br>성취감을 쌓을 수 있습니다.</p>
-          </div>
-        </div>
-
-        <!-- 기능 섹션 3: 타이머 -->
-        <div class="home-section home-section-reverse">
-          <div class="home-section-image">
-            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='250' viewBox='0 0 400 250'%3E%3Crect width='400' height='250' fill='%23f0f2f5'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%239ca3af' font-size='14' font-family='sans-serif'%3E%ED%83%80%EC%9D%B4%EB%A8%B8%3C/text%3E%3C/svg%3E" alt="타이머 기능 스크린샷: 집중·운동·휴식 시간을 측정할 수 있습니다." style="width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-          </div>
-          <div class="home-section-content">
-            <div class="home-section-icon"></div>
-            <h2>집중을 돕는 타이머</h2>
-            <p>6개의 독립적인 타이머를 동시에 사용 할 수 있습니다.<br>
-            공부, 운동, 휴식 시간을 각각 측정하고 관리할 수 있습니다.</p>
-          </div>
-        </div>
-
-        <!-- 기능 섹션 4: 메모 -->
-        <div class="home-section home-section-reverse">
-          <div class="home-section-image">
-            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='250' viewBox='0 0 400 250'%3E%3Crect width='400' height='250' fill='%23f0f2f5'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%239ca3af' font-size='14' font-family='sans-serif'%3E%EB%A9%94%EB%AA%A8%3C/text%3E%3C/svg%3E" alt="메모 기능 스크린샷: 날짜별 메모 저장 및 위젯으로 띄워 작업할 수 있습니다." style="width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-            <p style="margin-top:10px;font-size:14px;color:var(--text-secondary);">날짜별로 메모를 저장하고 목록에서 선택해 위젯으로 띄울 수 있어, PC 화면 한쪽에서 메모를 계속 보며 작업할 수 있습니다.</p>
-          </div>
-          <div class="home-section-content">
-            <div class="home-section-icon"></div>
-            <h2>메모 습관을 키워보세요.</h2>
-            <p>날짜별로 메모를 작성하고 색상을 적용할 수 있습니다..<br>
-            목록을 한눈에 확인하고, 원하는 메모를 PC화면에 위젯으로<br>
-            활용하세요.</p>
-          </div>
-        </div>
-
-        <!-- 기능 섹션 5: 위젯 -->
-        <div class="home-section">
-          <div class="home-section-content">
-            <div class="home-section-icon">↗</div>
-            <h2>다양한 디바이스에서 사용</h2>
-            <p>PC, 태블릿, 모바일에서 모두 사용 가능합니다.<br>
-            위젯 기능으로 필요한 메뉴만 띄워 사용해 보세요.</p>
-          </div>
-          <div class="home-section-image">
-            <div style="width: 100%; height: 200px; background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 48px;">
-              💻
+          <!-- 상세 가치 섹션 (3열) -->
+          <section class="px-6 sm:px-10 py-16 sm:py-24 border-t border-[#E5E7EB]" aria-labelledby="value-heading">
+            <h2 id="value-heading" class="sr-only">서비스 가치</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 lg:gap-12 max-w-5xl mx-auto min-w-0">
+              <article class="text-center md:text-left min-w-0">
+                <p class="text-sm font-semibold text-[#6B7280] uppercase tracking-wider mb-3 !whitespace-nowrap truncate block w-full">Focus</p>
+                <h3 class="text-xl font-bold text-[#111827] mb-4 leading-snug">뇌의 부하를 덜어내는 설계</h3>
+                <p class="text-[#4B5563] !whitespace-nowrap truncate block w-full" title="사소한 결정은 시스템에 맡기고, 당신의 에너지는 본질적인 성과에만 집중하게 합니다.">사소한 결정은 시스템에 맡기고, 당신의 에너지는 본질적인 성과에만 집중하게 합니다.</p>
+              </article>
+              <article class="text-center md:text-left min-w-0">
+                <p class="text-sm font-semibold text-[#6B7280] uppercase tracking-wider mb-3 !whitespace-nowrap truncate block w-full">System</p>
+                <h3 class="text-xl font-bold text-[#111827] mb-4 leading-snug">의지력이 필요 없는 자동 루틴</h3>
+                <p class="text-[#4B5563] truncate whitespace-nowrap block w-full" title="번거로운 설정을 제거하여, 생각하기 전에 몸이 먼저 움직이는 환경을 만듭니다.">번거로운 설정을 제거하여, 생각하기 전에 몸이 먼저 움직이는 환경을 만듭니다.</p>
+              </article>
+              <article class="text-center md:text-left min-w-0">
+                <p class="text-sm font-semibold text-[#6B7280] uppercase tracking-wider mb-3 !whitespace-nowrap truncate block w-full">Growth</p>
+                <h3 class="text-xl font-bold text-[#111827] mb-4 leading-snug">데이터로 확인하는 메타 인지</h3>
+                <p class="text-[#4B5563] !whitespace-nowrap truncate block w-full" title="자동으로 쌓이는 실행 데이터가 시각화될 때, 당신의 성장은 확신이 됩니다.">자동으로 쌓이는 실행 데이터가 시각화될 때, 당신의 성장은 확신이 됩니다.</p>
+              </article>
             </div>
-          </div>
+          </section>
+
+          <!-- 상세 기능 설명 (루틴·메모·인사이트) - 사이드바 순서 기준 3열 -->
+          <section class="px-6 sm:px-10 py-16 sm:py-24 border-t border-[#E5E7EB]" aria-labelledby="features-heading">
+            <h2 id="features-heading" class="sr-only">주요 기능</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto min-w-0">
+              <article class="card border border-[#E5E7EB] rounded-xl overflow-hidden min-w-0 bg-white shadow-sm flex flex-col">
+                <div class="h-2 w-full bg-[#10B981]" aria-hidden="true"></div>
+                <div class="p-6 min-w-0 flex-1 flex flex-col">
+                  <div class="w-14 h-14 rounded-lg bg-[#D1FAE5] flex items-center justify-center mb-4 flex-shrink-0" aria-hidden="true">
+                    <span class="text-2xl" aria-hidden="true">✅</span>
+                  </div>
+                  <h3 class="text-lg font-bold text-[#111827] mb-3 truncate whitespace-nowrap block w-full">루틴 관리</h3>
+                  <p class="text-[#4B5563] text-sm leading-relaxed min-w-0">매일 반복할 루틴을 등록하고 주간 달력에서 실행 여부를 체크할 수 있습니다. 자동으로 쌓이는 데이터로 습관을 되돌아볼 수 있습니다.</p>
+                </div>
+              </article>
+              <article class="card border border-[#E5E7EB] rounded-xl overflow-hidden min-w-0 bg-white shadow-sm flex flex-col">
+                <div class="h-2 w-full bg-[#8B5CF6]" aria-hidden="true"></div>
+                <div class="p-6 min-w-0 flex-1 flex flex-col">
+                  <div class="w-14 h-14 rounded-lg bg-[#EDE9FE] flex items-center justify-center mb-4 flex-shrink-0" aria-hidden="true">
+                    <span class="text-2xl" aria-hidden="true">📝</span>
+                  </div>
+                  <h3 class="text-lg font-bold text-[#111827] mb-3 truncate whitespace-nowrap block w-full">메모 습관</h3>
+                  <p class="text-[#4B5563] text-sm leading-relaxed min-w-0">가슴의 통증과 꿀렁거리는 호흡... '내가 잘하고 있나'라는 의문이 확신으로 변하는 과정을 기록하십시오.</p>
+                </div>
+              </article>
+              <article class="card border border-[#E5E7EB] rounded-xl overflow-hidden min-w-0 bg-white shadow-sm flex flex-col">
+                <div class="h-2 w-full bg-[#5c8dff]" aria-hidden="true"></div>
+                <div class="p-6 min-w-0 flex-1 flex flex-col">
+                  <div class="w-14 h-14 rounded-lg bg-[#DBEAFE] flex items-center justify-center mb-4 flex-shrink-0" aria-hidden="true">
+                    <span class="text-2xl" aria-hidden="true">💡</span>
+                  </div>
+                  <h3 class="text-lg font-bold text-[#111827] mb-3 truncate whitespace-nowrap block w-full">인사이트</h3>
+                  <p class="text-[#4B5563] text-sm leading-relaxed min-w-0">루틴이 뇌 가소성을 어떻게 변화시키는지, 기록의 축적이 만드는 심리적 임계점에 대해 탐구합니다.</p>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <!-- Jay Calendar 소개 -->
+          <section class="px-6 sm:px-10 py-16 sm:py-24 border-t border-[#E5E7EB]" aria-labelledby="intro-heading">
+            <h2 id="intro-heading" class="text-xl font-bold text-[#111827] mb-6 text-center md:text-left">Jay Calendar 소개</h2>
+            <div class="max-w-3xl mx-auto min-w-0">
+              <p class="text-[#4B5563] leading-relaxed mb-4">Jay Calendar는 일정·할 일·루틴·메모를 한 화면에서 관리하고, PC 위젯처럼 띄워 쓸 수 있는 웹 서비스입니다. 달력에서 날짜를 선택해 일정을 등록하고, 이달의 목표를 상단에 두고 매일 확인할 수 있습니다.</p>
+              <p class="text-[#4B5563] leading-relaxed mb-4">대부분의 달력 서비스가 ‘일정’에 초점을 맞춘다면, Jay Calendar는 ‘실행 관리’에 초점을 맞춰 월간 달력에 담았습니다. 루틴만 세팅하면 실행은 자동으로 따라오고, 타이머·스탑워치·알람으로 집중 시간을 채울 수 있습니다.</p>
+              <p class="text-[#4B5563] leading-relaxed mb-4">인사이트(Insight)에서는 초급 수행자가 겪는 명치 통증부터 기운의 흐름까지, 단학을 통한 신체/심리적 변화 과정을 데이터로 기록하고 공유합니다. 관련 리포트는 주기적으로 업데이트됩니다.</p>
+              <p class="text-[#4B5563] leading-relaxed">여러분의 일정과 할 일 관리에 도움이 되길 바랍니다.</p>
+            </div>
+          </section>
         </div>
-
-        <!-- 하단 사이트 설명 (콘텐츠 밀도 강화) -->
-        <section class="home-section" style="margin-top:32px;padding-top:24px;border-top:1px solid var(--line);">
-          <div class="home-section-content" style="max-width:720px;margin:0 auto;">
-            <h2 style="font-size:20px;margin-bottom:16px;">Jay Calendar 소개</h2>
-            <p>Jay Calendar는 웹에서 개인 일정·할 일·루틴·메모를 한 화면에서 관리할 수 있도록 제공하는 서비스입니다. 사이트 목적은 이용자가 월별 달력을 기준으로 일정과 할 일을 등록·체크하고, 반복 루틴을 주간 단위로 관리하며, 날짜별 메모를 남겨 필요한 때 위젯으로 꺼내 쓸 수 있게 하는 것입니다.</p>
-            <p>사용자에게 도움이 되는 점은 별도 설치 없이 브라우저만으로 접속해 사용할 수 있고, 데이터는 이용자 기기의 저장소에 저장되며, 달력·루틴·메모·타이머 등을 메뉴와 위젯으로 나누어 필요한 기능만 골라 쓸 수 있다는 것입니다. 이달의 목표를 상단에 두어 매일 확인할 수 있고, 일정과 할 일은 날짜별로 구분되어 한눈에 파악하기 쉽습니다.</p>
-            <p>제공 기능은 월간 달력과 일정·할 일 등록·체크, 주간 루틴 관리, 날짜별 메모 목록 및 위젯 팝업, 타이머 등이 있으며, 상세 사용 방법은 각 메뉴 진입 후 화면 안내를 참고하면 됩니다.</p>
-          </div>
-        </section>
-
       </div>
 
 
@@ -417,6 +406,8 @@
         <span class="footer-divider">|</span>
         <a href="privacy.html" id="privacyLink" class="footer-link">개인정보 보호정책</a>
         <span class="footer-divider">|</span>
+        <a href="terms.html" class="footer-link">이용약관</a>
+        <span class="footer-divider">|</span>
         <a href="contact.html" id="contactLink" class="footer-link">문의하기</a>
       </div>
       <p class="footer-copyright">&copy; 2025 Jay Calendar. All rights reserved.</p>
@@ -439,6 +430,11 @@
         navigator.serviceWorker.register('./sw.js').catch(()=>{});
       });
     }
+    document.addEventListener('DOMContentLoaded', function(){
+      var cta = document.getElementById('homeCtaStart');
+      var routineBtn = document.querySelector('[data-widget="routine"]');
+      if(cta && routineBtn){ cta.addEventListener('click', function(){ routineBtn.click(); }); }
+    });
   </script>
 
 </body>
