@@ -24,7 +24,7 @@ scp -i $keyPath -o StrictHostKeyChecking=accept-new -r insight "${user}@${hostAd
 
 # SSH: /tmp → /var/www/html (sudo)
 Write-Host "서버 반영 중..." -ForegroundColor Yellow
-$cmd = "sudo cp /tmp/index.html /tmp/style.css /tmp/app.js /tmp/insight.html /tmp/sitemap.xml $targetDir/ && sudo mkdir -p $targetDir/insight && sudo cp -r /tmp/insight/* $targetDir/insight/ && echo '배포 완료'"
+$cmd = "sudo rm -f $targetDir/sitemap-0.xml && sudo cp /tmp/index.html /tmp/style.css /tmp/app.js /tmp/insight.html /tmp/sitemap.xml $targetDir/ && sudo mkdir -p $targetDir/insight && sudo cp -r /tmp/insight/* $targetDir/insight/ && echo '배포 완료'"
 ssh -i $keyPath -o StrictHostKeyChecking=accept-new "${user}@${hostAddr}" $cmd
 
 Write-Host "=== 배포 고속도로 개통 완료 및 라이브 서버 반영 성공 ===" -ForegroundColor Green
