@@ -1,0 +1,49 @@
+# J-Calendar 매일 자동 재배포 (Daily Rebuild)
+# 목적: future: false 등으로 미래 날짜 글이 숨겨져 있을 때,
+#       매일 아침 9시(KST) 빌드하여 해당 날짜의 글이 자동 공개되도록 함.
+# 필요 시크릿: EC2_SSH_KEY (서버 PEM 키 전체 내용), EC2_HOST, EC2_USER
+
+name: Daily Build & Deploy
+
+on:
+  schedule:
+    # 매일 00:00 UTC = 09:00 KST (한국 시간 오전 9시)
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+    # 수동 실행 가능 (Actions 탭에서 "Run workflow" 버튼)
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy_key.pem
+          chmod 600 ~/.ssh/deploy_key.pem
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || true
+
+      - name: Deploy to EC2
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USER: ${{ secrets.EC2_USER }}
+        run: |
+          TARGET="/var/www/html"
+          scp -i ~/.ssh/deploy_key.pem -o StrictHostKeyChecking=accept-new \
+            index.html style.css app.js insight.html sitemap.xml \
+            "${EC2_USER}@${EC2_HOST}:/tmp/"
+          scp -i ~/.ssh/deploy_key.pem -o StrictHostKeyChecking=accept-new -r insight \
+            "${EC2_USER}@${EC2_HOST}:/tmp/"
+          ssh -i ~/.ssh/deploy_key.pem "${EC2_USER}@${EC2_HOST}" \
+            "sudo rm -f ${TARGET}/sitemap-0.xml && \
+             sudo cp /tmp/index.html /tmp/style.css /tmp/app.js /tmp/insight.html /tmp/sitemap.xml ${TARGET}/ && \
+             sudo mkdir -p ${TARGET}/insight && \
+             sudo cp -r /tmp/insight/* ${TARGET}/insight/ && \
+             echo 'Daily deploy completed'"
+
+      - name: Cleanup
+        if: always()
+        run: rm -f ~/.ssh/deploy_key.pem
