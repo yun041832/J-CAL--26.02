@@ -1,6 +1,5 @@
 # J-Calendar 매일 자동 재배포 (Daily Rebuild)
-# 목적: future: false 등으로 미래 날짜 글이 숨겨져 있을 때,
-#       매일 아침 9시(KST) 빌드하여 해당 날짜의 글이 자동 공개되도록 함.
+# 목적: 미래 날짜 글 숨김, 매일 14:30 KST 빌드하여 해당 날짜 글 자동 공개
 # 필요 시크릿: EC2_SSH_KEY (서버 PEM 키 전체 내용), EC2_HOST, EC2_USER
 
 name: Daily Build & Deploy
@@ -10,7 +9,6 @@ on:
     # 매일 05:30 UTC = 14:30 KST (한국 시간 오후 2시 30분)
     - cron: '30 5 * * *'
   workflow_dispatch:
-    # 수동 실행 가능 (Actions 탭에서 "Run workflow" 버튼)
 
 jobs:
   deploy:
@@ -19,7 +17,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build posts (date-based publish: draft + date<=today → visible)
+      - name: Build posts
         run: |
           npm ci
           npm run build:posts
