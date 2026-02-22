@@ -7,7 +7,6 @@ name: Daily Build & Deploy
 on:
   schedule:
     - cron: '30 5 * * *'  # 14:30 KST
-    - cron: '30 5 * * *'
   workflow_dispatch:
 
 jobs:
