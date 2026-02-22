@@ -1,0 +1,10 @@
+{
+  "name": "j-cal",
+  "private": true,
+  "scripts": {
+    "build:posts": "node scripts/build-posts.js"
+  },
+  "devDependencies": {
+    "marked": "^12.0.0"
+  }
+}
