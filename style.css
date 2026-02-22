@@ -2233,7 +2233,8 @@ body.insight-page .main .content {
 }
 .insight-list-num { width: 60px; text-align: center; }
 .insight-list-cat { width: 90px; }
-.insight-list-title { min-width: 0; }
+.insight-list-title { min-width: 0; max-width: 100%; overflow: hidden; }
+.insight-list-title a { word-break: break-all; overflow-wrap: break-word; }
 .insight-list-author { width: 100px; }
 .insight-list-date { width: 100px; white-space: nowrap; }
 .insight-list-views { display: none !important; }
@@ -2547,6 +2548,8 @@ body.insight-page .main .content {
 @media (max-width: 480px) {
   .app,.card,.main,.content{ min-width:0; max-width:100%; overflow-x:hidden; box-sizing:border-box; }
   .app{ padding:10px; gap:4px; box-sizing:border-box; }
+  .insight-list-simple{ overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%; }
+  .insight-list-title a{ word-break:break-all; }
   .card{
     border-radius:12px;
   }
