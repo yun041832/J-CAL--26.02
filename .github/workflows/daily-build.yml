@@ -1,5 +1,5 @@
-# J-Calendar 매일 자동 재배포 (Daily Rebuild)
-# 목적: 미래 날짜 글 숨김, 매일 14:30 KST 빌드하여 해당 날짜 글 자동 공개
+# J-Calendar Daily Build & Deploy
+# Schedule: 14:30 KST only (cron 30 5 * * * UTC)
 # 필요 시크릿: EC2_SSH_KEY (서버 PEM 키 전체 내용), EC2_HOST, EC2_USER
 
 name: Daily Build & Deploy
