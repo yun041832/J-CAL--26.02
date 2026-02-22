@@ -138,6 +138,7 @@ for (let n = 1; n <= 20; n++) {
   const { front, body } = parseFrontmatter(raw);
   const title = front.title || body.match(/^#\s+(.+)$/m)?.[1]?.trim() || `게시글 ${String(n).padStart(2, '0')}`;
   const dateStr = front.date || '2026-01-01';
+  const isDraft = String(front.draft || '').toLowerCase() === 'true';
   const bodyHtml = marked.parse(body || '');
   const prev = n > 1 ? `insight-p${String(n - 1).padStart(2, '0')}.html` : '';
   const next = n < 20 ? `insight-p${String(n + 1).padStart(2, '0')}.html` : 'insight-b21.html';
@@ -152,7 +153,7 @@ for (let n = 1; n <= 20; n++) {
   html = html.replace(/<span class="insight-card__category">Guide<\/span>/, '<span class="insight-card__category">Action</span>');
   const outPath = path.join(OUT_DIR, `insight-p${String(n).padStart(2, '0')}.html`);
   fs.writeFileSync(outPath, html, 'utf-8');
-  posts.push({ num: n, title, dateStr });
+  posts.push({ num: n, title, dateStr, isDraft });
   console.log(`Built insight-p${String(n).padStart(2, '0')}.html`);
 }
 
@@ -169,10 +170,11 @@ for (let n = 21; n <= 160; n++) {
   }
   if (!title) title = `글 ${n}`;
   const dateStr = front.date || '2026-02-08';
+  const isDraft = String(front.draft || '').toLowerCase() === 'true';
   const bodyHtml = marked.parse(body || '');
   const outPath = path.join(OUT_DIR, `insight-b${String(n).padStart(2, '0')}.html`);
   fs.writeFileSync(outPath, buildHtml(n, title, dateStr, bodyHtml), 'utf-8');
-  posts.push({ num: n, title, dateStr });
+  posts.push({ num: n, title, dateStr, isDraft });
   console.log(`Built insight-b${String(n).padStart(2, '0')}.html`);
 }
 
@@ -183,13 +185,14 @@ fs.writeFileSync(
   'utf-8'
 );
 
-// insight.html 테이블 tbody를 60개로 갱신 (날짜 내림차순)
+// insight.html 테이블 tbody 갱신 (draft 제외, 날짜 내림차순)
 const insightPath = path.join(__dirname, '..', 'insight', 'insight.html');
 let insightHtml = fs.readFileSync(insightPath, 'utf-8');
-const sorted = [...posts].sort((a, b) => b.dateStr.localeCompare(a.dateStr));
+const published = posts.filter((p) => !p.isDraft);
+const sorted = [...published].sort((a, b) => b.dateStr.localeCompare(a.dateStr));
 const pad = (n) => String(n).padStart(2, '0');
 const rows = sorted.map((p, i) => {
-  const displayNum = posts.length - i;
+  const displayNum = published.length - i;
   const cat = p.num <= 20 ? 'Action' : 'Guide';
   const href = p.num <= 20 ? `insight-p${pad(p.num)}.html` : `insight-b${pad(p.num)}.html`;
   const title = escapeHtml(p.title);
@@ -198,12 +201,12 @@ const rows = sorted.map((p, i) => {
 const newTbody = '              <tbody>\n                ' + rows.join('\n                ') + '\n              </tbody>';
 insightHtml = insightHtml.replace(/<tbody>[\s\S]*?<\/tbody>/, newTbody);
 fs.writeFileSync(insightPath, insightHtml, 'utf-8');
-console.log(`Updated insight/insight.html table (${posts.length} posts, date desc).`);
+console.log(`Updated insight/insight.html table (${published.length} published, ${posts.length - published.length} draft hidden, date desc).`);
 
-// sitemap.xml 생성 (60개 포스트 + 정적 페이지)
+// sitemap.xml 생성 (draft 제외 + 정적 페이지)
 const base = 'https://jaycalendar.com';
 const today = new Date().toISOString().slice(0, 10);
-const postUrls = posts.map((p) => {
+const postUrls = published.map((p) => {
   const file = p.num <= 20 ? `insight-p${pad(p.num)}.html` : `insight-b${pad(p.num)}.html`;
   return `  <url>
     <loc>${base}/insight/${file}</loc>
@@ -248,6 +251,6 @@ ${postUrls.join('\n')}
 </urlset>
 `;
 fs.writeFileSync(path.join(__dirname, '..', 'sitemap.xml'), sitemap, 'utf-8');
-console.log(`Updated sitemap.xml (${posts.length} posts + static).`);
+console.log(`Updated sitemap.xml (${published.length} posts + static).`);
 
 console.log(`Done. ${posts.length} posts built.`);
