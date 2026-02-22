@@ -190,15 +190,14 @@ const insightPath = path.join(__dirname, '..', 'insight', 'insight.html');
 let insightHtml = fs.readFileSync(insightPath, 'utf-8');
 const today = new Date().toISOString().slice(0, 10);
 const published = posts.filter((p) => !p.isDraft || (p.isDraft && p.dateStr <= today));
-const sorted = [...published].sort((a, b) => b.dateStr.localeCompare(a.dateStr));
+const sorted = [...published].sort((a, b) => a.num - b.num);
 const pad = (n) => String(n).padStart(2, '0');
-const rows = sorted.map((p, i) => {
-  const displayNum = published.length - i;
+const rows = sorted.map((p) => {
   const cat = p.num <= 20 ? 'Action' : 'Guide';
   const href = p.num <= 20 ? `insight-p${pad(p.num)}.html` : `insight-b${pad(p.num)}.html`;
   const titleRaw = (p.title || '').replace(/^\d+\.\s*/, '');
-  const title = escapeHtml(displayNum + '. ' + titleRaw);
-  return `<tr><td class="insight-list-num">${displayNum}</td><td class="insight-list-cat">${cat}</td><td class="insight-list-title"><a href="${href}">${title}</a></td><td class="insight-list-author">J-Calendar</td><td class="insight-list-date">${p.dateStr}</td></tr>`;
+  const title = escapeHtml(p.num + '. ' + titleRaw);
+  return `<tr><td class="insight-list-num">${p.num}</td><td class="insight-list-cat">${cat}</td><td class="insight-list-title"><a href="${href}">${title}</a></td><td class="insight-list-author">J-Calendar</td><td class="insight-list-date">${p.dateStr}</td></tr>`;
 });
 const newTbody = '              <tbody>\n                ' + rows.join('\n                ') + '\n              </tbody>';
 insightHtml = insightHtml.replace(/<tbody>[\s\S]*?<\/tbody>/, newTbody);

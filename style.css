@@ -309,7 +309,7 @@ body{margin:0;display:flex;flex-direction:column;min-height:100vh;height:auto;ba
 .calendar{padding:0}
 .calendar__weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:0 0 4px;text-align:center}
 .calendar__grid{display:grid;grid-template-columns:repeat(7,1fr);grid-template-rows:repeat(5,auto);gap:4px}
-.day{position:relative;min-height:135px;height:100%;border:1px solid var(--line);border-radius:8px;background:#fff;transition:border 0.2s}
+.day{position:relative;min-height:135px;border:1px solid var(--line);border-radius:8px;background:#fff;transition:border 0.2s}
 .day--selected{border:3px solid #3b82f6 !important}
 .day--today{background:#f0f9ff}
 .day__num{position:absolute;top:6px;left:8px;font-size:10px;font-weight:600}
@@ -1504,10 +1504,11 @@ aside.right .todo-item{display:flex;align-items:center;gap:2px}
 .label-text{
   font-size:12px;
   color:#000;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
+  white-space:normal;
+  overflow:visible;
+  word-break:break-word;
   flex:1;
+  min-width:0;
   line-height:1.25;
   font-weight:400;
 }
@@ -2233,8 +2234,8 @@ body.insight-page .main .content {
 }
 .insight-list-num { width: 60px; text-align: center; }
 .insight-list-cat { width: 90px; }
-.insight-list-title { min-width: 0; max-width: 100%; overflow: hidden; }
-.insight-list-title a { word-break: break-all; overflow-wrap: break-word; }
+.insight-list-title { min-width: 0; max-width: 100%; }
+.insight-list-title a { word-break: break-word; overflow-wrap: break-word; }
 .insight-list-author { width: 100px; }
 .insight-list-date { width: 100px; white-space: nowrap; }
 .insight-list-views { display: none !important; }
@@ -2583,6 +2584,7 @@ body.insight-page .main .content {
   }
   .label-text{
     font-size:9px;
+    line-height:1.2;
   }
   .usage-grid{
     gap:8px;
@@ -2913,9 +2915,9 @@ body.insight-page .main .content {
   font-weight: 600;
   font-size: 16px;
   flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  min-width: 0;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .memo-card__btn {
