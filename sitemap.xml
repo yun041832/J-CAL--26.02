@@ -379,18 +379,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://jaycalendar.com/insight/insight-b62.html</loc>
-    <lastmod>2026-02-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://jaycalendar.com/insight/insight-b63.html</loc>
-    <lastmod>2026-02-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://jaycalendar.com/about.html</loc>
     <lastmod>2026-02-22</lastmod>
     <changefreq>monthly</changefreq>

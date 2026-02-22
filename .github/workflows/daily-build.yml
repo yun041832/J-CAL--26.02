@@ -7,8 +7,8 @@ name: Daily Build & Deploy
 
 on:
   schedule:
-    # 매일 00:00 UTC = 09:00 KST (한국 시간 오전 9시)
-    - cron: '0 0 * * *'
+    # 매일 05:30 UTC = 14:30 KST (한국 시간 오후 2시 30분)
+    - cron: '30 5 * * *'
   workflow_dispatch:
     # 수동 실행 가능 (Actions 탭에서 "Run workflow" 버튼)
 
@@ -18,6 +18,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Build posts (date-based publish: draft + date<=today → visible)
+        run: |
+          npm ci
+          npm run build:posts
 
       - name: Setup SSH key
         run: |

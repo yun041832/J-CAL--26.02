@@ -363,19 +363,19 @@
     "num": 61,
     "title": "임시 제목 (61)",
     "dateStr": "2026-02-22",
-    "isDraft": false
+    "isDraft": true
   },
   {
     "num": 62,
     "title": "임시 제목 (62)",
     "dateStr": "2026-02-23",
-    "isDraft": false
+    "isDraft": true
   },
   {
     "num": 63,
     "title": "임시 제목 (63)",
     "dateStr": "2026-02-24",
-    "isDraft": false
+    "isDraft": true
   },
   {
     "num": 64,

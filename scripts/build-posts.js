@@ -185,10 +185,11 @@ fs.writeFileSync(
   'utf-8'
 );
 
-// insight.html 테이블 tbody 갱신 (draft 제외, 날짜 내림차순)
+// insight.html 테이블 tbody 갱신 (draft 제외 + future: false = 날짜 지난 draft만 자동 공개)
 const insightPath = path.join(__dirname, '..', 'insight', 'insight.html');
 let insightHtml = fs.readFileSync(insightPath, 'utf-8');
-const published = posts.filter((p) => !p.isDraft);
+const today = new Date().toISOString().slice(0, 10);
+const published = posts.filter((p) => !p.isDraft || (p.isDraft && p.dateStr <= today));
 const sorted = [...published].sort((a, b) => b.dateStr.localeCompare(a.dateStr));
 const pad = (n) => String(n).padStart(2, '0');
 const rows = sorted.map((p, i) => {
@@ -205,7 +206,6 @@ console.log(`Updated insight/insight.html table (${published.length} published, 
 
 // sitemap.xml 생성 (draft 제외 + 정적 페이지)
 const base = 'https://jaycalendar.com';
-const today = new Date().toISOString().slice(0, 10);
 const postUrls = published.map((p) => {
   const file = p.num <= 20 ? `insight-p${pad(p.num)}.html` : `insight-b${pad(p.num)}.html`;
   return `  <url>
