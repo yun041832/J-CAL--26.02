@@ -1,5 +1,5 @@
 # J-Calendar Daily Build & Deploy
-# Schedule: 14:30 KST only (cron 30 5 * * * UTC)
+# Schedule: 14:30 KST (cron 30 5 * * * UTC) - NO 9am
 # 필요 시크릿: EC2_SSH_KEY (서버 PEM 키 전체 내용), EC2_HOST, EC2_USER
 
 name: Daily Build & Deploy
