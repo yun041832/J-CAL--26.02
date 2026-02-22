@@ -196,7 +196,8 @@ const rows = sorted.map((p, i) => {
   const displayNum = published.length - i;
   const cat = p.num <= 20 ? 'Action' : 'Guide';
   const href = p.num <= 20 ? `insight-p${pad(p.num)}.html` : `insight-b${pad(p.num)}.html`;
-  const title = escapeHtml(p.title);
+  const titleRaw = (p.title || '').replace(/^\d+\.\s*/, '');
+  const title = escapeHtml(displayNum + '. ' + titleRaw);
   return `<tr><td class="insight-list-num">${displayNum}</td><td class="insight-list-cat">${cat}</td><td class="insight-list-title"><a href="${href}">${title}</a></td><td class="insight-list-author">J-Calendar</td><td class="insight-list-date">${p.dateStr}</td></tr>`;
 });
 const newTbody = '              <tbody>\n                ' + rows.join('\n                ') + '\n              </tbody>';

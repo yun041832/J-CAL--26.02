@@ -2545,10 +2545,8 @@ body.insight-page .main .content {
 }
 
 @media (max-width: 480px) {
-  .app{
-    padding:2px;
-    gap:4px;
-  }
+  .app,.card,.main,.content{ min-width:0; max-width:100%; overflow-x:hidden; }
+  .app{ padding:2px; gap:4px; }
   .card{
     border-radius:12px;
   }
