@@ -2560,7 +2560,7 @@ body.insight-page .main .content {
   .app,.card,.main,.content{ min-width:0; max-width:100%; overflow-x:hidden; box-sizing:border-box; }
   .app{ padding:10px; gap:4px; box-sizing:border-box; }
   .insight-post .insight-card,.insight-post .insight-card__body,.insight-post .content,.insight-post .insight-card h1{ overflow:visible !important; height:auto !important; }
-  .insight-list-title,.insight-list-title a{ overflow:visible !important; text-overflow:clip !important; }
+  .insight-list-title,.insight-list-title a{ overflow:visible !important; text-overflow:clip !important; white-space:normal !important; }
   .insight-list-simple{ overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%; }
   .insight-list-title a{ word-break:break-word; }
   .card{
@@ -2573,7 +2573,7 @@ body.insight-page .main .content {
   }
   .card__header-unified .monthly-goal-input-unified{ flex:1 1 100%; min-width:0; }
   .insight-card{ min-height:auto; height:auto !important; padding:14px 12px 20px; margin:0; }
-  .insight-card__title{ word-break:break-word; overflow-wrap:break-word; flex-shrink:0; min-width:0; padding-right:0; }
+  .insight-card__title{ word-break:break-word; overflow-wrap:break-word; flex-shrink:0; min-width:0; padding-right:0; white-space:normal !important; }
   .insight-featured-grid .insight-card{ width:100%; max-width:100%; box-sizing:border-box; }
   .memo-card{ min-height:auto; height:auto !important; padding:14px 12px 20px; }
   .memo-card__title{ flex-shrink:0; min-width:0; }
