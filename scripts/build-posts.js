@@ -27,8 +27,8 @@ function parseFrontmatter(content) {
 
 const MAX_POSTS = 160;
 function buildHtml(num, title, dateStr, bodyHtml) {
-  const prev = num > 21 ? `insight-b${String(num - 1).padStart(2, '0')}.html` : (num === 21 ? 'insight-p20.html' : '');
-  const next = num < MAX_POSTS ? `insight-b${String(num + 1).padStart(2, '0')}.html` : '';
+  const prev = num > 21 ? `/insight/insight-b${String(num - 1).padStart(2, '0')}.html` : (num === 21 ? '/insight/insight-p20.html' : '');
+  const next = num < MAX_POSTS ? `/insight/insight-b${String(num + 1).padStart(2, '0')}.html` : '';
   const navPrev = prev
     ? `<a href="${prev}">← 이전 글</a>`
     : '<span></span>';
@@ -45,7 +45,7 @@ function buildHtml(num, title, dateStr, bodyHtml) {
   <meta name="description" content="${escapeHtml(title)}">
   <link rel="canonical" href="https://www.jaycalendar.com/insight/insight-b${String(num).padStart(2, '0')}.html">
   <meta name="theme-color" content="#5c8dff">
-  <link rel="stylesheet" href="../style.css?v=1.1">
+  <link rel="stylesheet" href="/style.css?v=1.1">
   <style>
     .insight-post .insight-card { max-width: 720px; margin: 0 auto; padding: 24px 20px; font-size: 16px; line-height: 1.8; }
     .insight-post .insight-card h1 { font-size: 1.5rem; margin: 0 0 24px; line-height: 1.4; font-weight: 700; }
@@ -74,7 +74,7 @@ function buildHtml(num, title, dateStr, bodyHtml) {
       <button type="button" id="themeToggleB${num}" class="menu-button nav-item" data-feature="dark" aria-label="테마 전환"><span class="menu-content"><span class="label">다크</span></span></button>
     </aside>
     <main class="main insight-post">
-      <a href="/insight.html" class="back-link" aria-label="인사이트 목록으로">← 인사이트 목록</a>
+      <a href="/insight/insight.html" class="back-link" aria-label="인사이트 목록으로">← 인사이트 목록</a>
       <article class="insight-card content" itemscope itemtype="https://schema.org/Article">
         <span class="insight-card__category">Guide</span>
         <h1>${escapeHtml(title)}</h1>
@@ -93,11 +93,11 @@ function buildHtml(num, title, dateStr, bodyHtml) {
       <div class="footer-links">
         <a href="/index.html" class="footer-link">홈</a>
         <span class="footer-divider">|</span>
-        <a href="/insight.html" class="footer-link">인사이트</a>
+        <a href="/insight/insight.html" class="footer-link">인사이트</a>
         <span class="footer-divider">|</span>
-        <a href="../privacy.html" class="footer-link">개인정보 보호정책</a>
+        <a href="/privacy.html" class="footer-link">개인정보 보호정책</a>
         <span class="footer-divider">|</span>
-        <a href="../contact.html" class="footer-link">문의하기</a>
+        <a href="/contact.html" class="footer-link">문의하기</a>
       </div>
       <p class="footer-copyright">&copy; 2025 Jay Calendar. All rights reserved.</p>
     </div>
@@ -140,8 +140,8 @@ for (let n = 1; n <= 20; n++) {
   const dateStr = front.date || '2026-01-01';
   const isDraft = String(front.draft || '').toLowerCase() === 'true';
   const bodyHtml = marked.parse(body || '');
-  const prev = n > 1 ? `insight-p${String(n - 1).padStart(2, '0')}.html` : '';
-  const next = n < 20 ? `insight-p${String(n + 1).padStart(2, '0')}.html` : 'insight-b21.html';
+  const prev = n > 1 ? `/insight/insight-p${String(n - 1).padStart(2, '0')}.html` : '';
+  const next = n < 20 ? `/insight/insight-p${String(n + 1).padStart(2, '0')}.html` : '/insight/insight-b21.html';
   const navPrev = prev ? `<a href="${prev}">← 이전 글</a>` : '<span></span>';
   const navNext = next ? `<a href="${next}">다음 글 →</a>` : '<span></span>';
   let html = buildHtml(21, title, dateStr, bodyHtml); // reuse template
@@ -194,7 +194,7 @@ const sorted = [...published].sort((a, b) => b.num - a.num);
 const pad = (n) => String(n).padStart(2, '0');
 const rows = sorted.map((p) => {
   const cat = p.num <= 20 ? 'Action' : 'Guide';
-  const href = p.num <= 20 ? `insight-p${pad(p.num)}.html` : `insight-b${pad(p.num)}.html`;
+  const href = p.num <= 20 ? `/insight/insight-p${pad(p.num)}.html` : `/insight/insight-b${pad(p.num)}.html`;
   const titleRaw = (p.title || '').replace(/^\d+\.\s*/, '');
   const title = escapeHtml(p.num + '. ' + titleRaw);
   return `<tr><td class="insight-list-num">${p.num}</td><td class="insight-list-cat">${cat}</td><td class="insight-list-title"><a href="${href}">${title}</a></td><td class="insight-list-author">J-Calendar</td><td class="insight-list-date">${p.dateStr}</td></tr>`;

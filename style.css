@@ -1,3 +1,10 @@
+/* ---------- [강제] 서치콘솔·모바일 레이아웃 고정 ---------- */
+html, body { width: 100%; overflow-x: hidden; margin: 0; padding: 0; box-sizing: border-box; }
+* { box-sizing: inherit; }
+/* 인사이트·메모 리스트 컨테이너 폭 고정 (글자 쏟아짐 방지) */
+.insight-list-simple, .insight-list-table, .memo__list, .todo__list { width: 100%; max-width: 100%; box-sizing: border-box; }
+/* ---------- END ---------- */
+
 /*
  * ============================================================
  * 메인 스타일시트 (style.css)
