@@ -195,14 +195,15 @@ document.addEventListener('DOMContentLoaded',()=>{
     };
   }
 
-  // 네비게이션: SPA 라우팅 적용 (홈에서는 새로고침 없이 즉시 이동)
+  // 네비게이션: 메뉴 링크(.nav-link)는 JS 간섭 없이 href로 즉시 이동
   var sidebar=document.querySelector('.sidebar');
   if(sidebar){
     sidebar.addEventListener('click',function(e){
+      var navLink=e.target.closest('a.nav-link');
+      if(navLink){ return; } // preventDefault 호출하지 않음 → 브라우저 기본 이동
+
       var btn=e.target.closest('.menu-button, .menu-btn');
       var link=e.target.closest('a[href]');
-      
-      // 만약 <a href> 링크를 클릭했다면 SPA 라우팅 로직을 태우지 않고 브라우저 기본 이동에 맡김
       if(link){ return; }
 
       if(!btn) return;
@@ -233,9 +234,6 @@ document.addEventListener('DOMContentLoaded',()=>{
         window.history.pushState({path: newUrl}, '', newUrl);
         return;
       }
-      
-      var link=e.target.closest('a[href]');
-      if(link){ return; } // 다른 페이지 링크면 브라우저가 이동하게 둠
       
       if(btn.tagName!=='BUTTON') return;
       e.preventDefault();
