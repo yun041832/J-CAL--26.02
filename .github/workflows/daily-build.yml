@@ -24,12 +24,16 @@ jobs:
           npm run build:posts
 
       - name: Setup SSH key and Deploy
-        continue-on-error: true
         env:
           EC2_HOST: ${{ secrets.EC2_HOST }}
           EC2_USER: ${{ secrets.EC2_USER }}
           EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
         run: |
+          if [ -z "$EC2_SSH_KEY" ] || [ -z "$EC2_HOST" ]; then
+            echo "Deployment skipped: Missing EC2 secrets. Please add EC2_SSH_KEY and EC2_HOST."
+            exit 0
+          fi
+          
           mkdir -p ~/.ssh
           # Fix for multi-line SSH key secret with Windows line endings
           echo "$EC2_SSH_KEY" | tr -d '\r' > ~/.ssh/deploy_key.pem
@@ -37,9 +41,9 @@ jobs:
           ssh-keyscan -H $EC2_HOST >> ~/.ssh/known_hosts 2>/dev/null || true
 
           TARGET="/var/www/html"
-          scp -i ~/.ssh/deploy_key.pem -o StrictHostKeyChecking=accept-new index.html style.css app.js insight.html sitemap.xml "${EC2_USER}@${EC2_HOST}:/tmp/" || true
-          scp -i ~/.ssh/deploy_key.pem -o StrictHostKeyChecking=accept-new -r insight "${EC2_USER}@${EC2_HOST}:/tmp/" || true
-          ssh -i ~/.ssh/deploy_key.pem "${EC2_USER}@${EC2_HOST}" "sudo rm -f ${TARGET}/sitemap-0.xml || true && sudo cp /tmp/index.html /tmp/style.css /tmp/app.js /tmp/insight.html /tmp/sitemap.xml ${TARGET}/ && sudo mkdir -p ${TARGET}/insight && sudo cp -r /tmp/insight/* ${TARGET}/insight/ && echo 'Daily deploy completed'" || true
+          scp -i ~/.ssh/deploy_key.pem -o StrictHostKeyChecking=accept-new index.html style.css app.js insight.html sitemap.xml "${EC2_USER}@${EC2_HOST}:/tmp/"
+          scp -i ~/.ssh/deploy_key.pem -o StrictHostKeyChecking=accept-new -r insight "${EC2_USER}@${EC2_HOST}:/tmp/"
+          ssh -i ~/.ssh/deploy_key.pem "${EC2_USER}@${EC2_HOST}" "sudo rm -f ${TARGET}/sitemap-0.xml && sudo cp /tmp/index.html /tmp/style.css /tmp/app.js /tmp/insight.html /tmp/sitemap.xml ${TARGET}/ && sudo mkdir -p ${TARGET}/insight && sudo cp -r /tmp/insight/* ${TARGET}/insight/ && echo 'Daily deploy completed'"
 
 
 
