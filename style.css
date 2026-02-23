@@ -2573,9 +2573,10 @@ body.insight-page .main .content {
   .insight-list-table thead { display: none; }
   .insight-list-table tr { display: flex; flex-wrap: wrap; padding: 12px 0; border-bottom: 1px solid var(--line); align-items: flex-start; width: 100% !important; box-sizing: border-box !important; }
   .insight-list-table td { display: inline-block; border: none; padding: 0; line-height: 1.4; box-sizing: border-box !important; }
-  .insight-list-num, .insight-list-cat, .insight-list-author, .insight-list-date { width: auto !important; margin-right: 8px; font-size: 12px; color: var(--text-muted); }
-  .insight-list-title { flex: 1 1 100% !important; width: 100% !important; order: 10; margin-top: 6px; box-sizing: border-box !important; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; }
-  .insight-list-title a { display: block !important; width: 100% !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; word-break: keep-all !important; box-sizing: border-box !important; }
+  .insight-list-num, .insight-list-cat, .insight-list-author { width: auto !important; margin-right: 8px; font-size: 12px; color: var(--text-muted); }
+  .insight-list-date { width: auto !important; min-width: 72px !important; margin-right: 8px; font-size: 12px; color: var(--text-muted); white-space: nowrap !important; flex-shrink: 0 !important; }
+  .insight-list-title { flex: 1 1 100% !important; width: 100% !important; min-width: 0 !important; order: 10; margin-top: 6px; box-sizing: border-box !important; overflow: hidden !important; text-overflow: ellipsis !important; white-space: normal !important; display: -webkit-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important; line-clamp: 2 !important; word-break: keep-all !important; }
+  .insight-list-title a { display: block !important; width: 100% !important; white-space: normal !important; overflow: hidden !important; text-overflow: ellipsis !important; word-break: keep-all !important; box-sizing: border-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important; line-clamp: 2 !important; }
   .card{
     border-radius:12px;
   }
@@ -2586,7 +2587,7 @@ body.insight-page .main .content {
   }
   .card__header-unified .monthly-goal-input-unified{ flex:1 1 100%; min-width:0; }
   .insight-card{ min-height:auto; height:auto !important; padding:14px 12px 20px; margin:0; }
-  .insight-card__title{ word-break:break-word; overflow-wrap:break-word; flex-shrink:0; min-width:0; padding-right:0; white-space:normal !important; }
+  .insight-card__title{ word-break:keep-all; overflow-wrap:break-word; flex-shrink:0; min-width:0; padding-right:0; white-space:normal !important; display:-webkit-box !important; -webkit-line-clamp:2 !important; -webkit-box-orient:vertical !important; line-clamp:2 !important; overflow:hidden !important; }
   .insight-featured-grid .insight-card{ width:100%; max-width:100%; box-sizing:border-box; }
   .memo-card{ min-height:auto; height:auto !important; padding:14px 12px 20px; }
   .memo-card__title{ flex-shrink:0; min-width:0; }
@@ -3321,7 +3322,12 @@ body.insight-page .main .content {
   display: none !important;
 }
 
-/* No Clipping Rule: post titles full visibility */
+/* 홈 히어로: 모바일에서 줄바꿈·말줄임 개선 */
+.home-hero-title,
+.home-hero-subtitle { word-break: keep-all; }
+.home-value-desc { white-space: normal; overflow: visible; word-break: keep-all; }
+
+/* No Clipping Rule: post titles full visibility (PC) */
 .post-title,
 .insight-card__title,
 .insight-list-title,
@@ -3331,5 +3337,22 @@ body.insight-page .main .content {
   text-overflow: ellipsis !important;
   display: block !important;
   box-sizing: border-box !important;
+}
+
+/* 모바일: 인사이트 제목 2줄·자연스러운 줄바꿈, 날짜 잘림 방지 */
+@media (max-width: 768px) {
+  .insight-card__title,
+  .insight-card__title a,
+  .insight-list-title,
+  .insight-list-title a {
+    white-space: normal !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    line-clamp: 2 !important;
+    word-break: keep-all !important;
+  }
+  .insight-list-date { min-width: 72px !important; flex-shrink: 0 !important; }
+  .insight-card__date { flex-shrink: 0 !important; }
 }
 

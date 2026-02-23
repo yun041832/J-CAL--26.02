@@ -109,10 +109,10 @@
   <div class="app">
     <aside class="sidebar" role="navigation" aria-label="메인 메뉴">
       <a class="nav-link menu-button nav-item" href="/index.html"><span class="menu-content"><span class="label">홈</span></span></a>
-      <a class="nav-link menu-button nav-item" href="/memo/memo.html"><span class="menu-content"><span class="label">메모</span></span></a>
+      <a class="nav-link menu-button nav-item" href="/index.html?widget=memo"><span class="menu-content"><span class="label">메모</span></span></a>
       <a class="nav-link menu-button nav-item" href="/insight/insight.html"><span class="menu-content"><span class="label">인사이트</span></span></a>
-      <a class="nav-link menu-button nav-item" href="/routine/routine.html"><span class="menu-content"><span class="label">루틴</span></span></a>
-      <a class="nav-link menu-button nav-item" href="/about/about.html"><span class="menu-content"><span class="label">About</span></span></a>
+      <a class="nav-link menu-button nav-item" href="/index.html?widget=routine"><span class="menu-content"><span class="label">루틴</span></span></a>
+      <a class="nav-link menu-button nav-item" href="/about.html"><span class="menu-content"><span class="label">About</span></span></a>
     </aside>
 
     <main class="main">
@@ -121,10 +121,10 @@
         <div class="font-sans text-[#111827] tracking-tight antialiased">
           <!-- 히어로 섹션 -->
           <section class="px-6 sm:px-10 py-16 sm:py-24 text-center" aria-labelledby="hero-heading">
-            <h1 id="hero-heading" class="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight tracking-tight text-[#111827] mb-6">
+            <h1 id="hero-heading" class="home-hero-title text-3xl sm:text-4xl md:text-5xl font-bold leading-tight tracking-tight text-[#111827] mb-6">
               계획에 에너지 쓰지 마세요.
             </h1>
-            <p class="text-lg sm:text-xl text-[#6B7280] leading-relaxed max-w-xl mx-auto mb-10 sm:mb-12">
+            <p class="home-hero-subtitle text-lg sm:text-xl text-[#6B7280] leading-relaxed max-w-xl mx-auto mb-10 sm:mb-12">
               루틴만 세팅하세요. 실행은 자동으로 따라옵니다.
             </p>
             <button type="button" id="homeCtaStart" class="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-[#374151] hover:bg-[#1F2937] rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#374151] focus:ring-offset-2 focus:ring-offset-[#F9FAFB]" aria-label="지금 바로 시작하기">
@@ -137,19 +137,19 @@
             <h2 id="value-heading" class="sr-only">서비스 가치</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 lg:gap-12 max-w-5xl mx-auto min-w-0">
               <article class="text-center md:text-left min-w-0">
-                <p class="text-sm font-semibold text-[#6B7280] uppercase tracking-wider mb-3 !whitespace-nowrap truncate block w-full">Focus</p>
+                <p class="text-sm font-semibold text-[#6B7280] uppercase tracking-wider mb-3">Focus</p>
                 <h3 class="text-xl font-bold text-[#111827] mb-4 leading-snug">뇌의 부하를 덜어내는 설계</h3>
-                <p class="text-[#4B5563] !whitespace-nowrap truncate block w-full" title="사소한 결정은 시스템에 맡기고, 당신의 에너지는 본질적인 성과에만 집중하게 합니다.">사소한 결정은 시스템에 맡기고, 당신의 에너지는 본질적인 성과에만 집중하게 합니다.</p>
+                <p class="text-[#4B5563] home-value-desc" title="사소한 결정은 시스템에 맡기고, 당신의 에너지는 본질적인 성과에만 집중하게 합니다.">사소한 결정은 시스템에 맡기고, 당신의 에너지는 본질적인 성과에만 집중하게 합니다.</p>
               </article>
               <article class="text-center md:text-left min-w-0">
-                <p class="text-sm font-semibold text-[#6B7280] uppercase tracking-wider mb-3 !whitespace-nowrap truncate block w-full">System</p>
+                <p class="text-sm font-semibold text-[#6B7280] uppercase tracking-wider mb-3">System</p>
                 <h3 class="text-xl font-bold text-[#111827] mb-4 leading-snug">의지력이 필요 없는 자동 루틴</h3>
-                <p class="text-[#4B5563] truncate whitespace-nowrap block w-full" title="번거로운 설정을 제거하여, 생각하기 전에 몸이 먼저 움직이는 환경을 만듭니다.">번거로운 설정을 제거하여, 생각하기 전에 몸이 먼저 움직이는 환경을 만듭니다.</p>
+                <p class="text-[#4B5563] home-value-desc" title="번거로운 설정을 제거하여, 생각하기 전에 몸이 먼저 움직이는 환경을 만듭니다.">번거로운 설정을 제거하여, 생각하기 전에 몸이 먼저 움직이는 환경을 만듭니다.</p>
               </article>
               <article class="text-center md:text-left min-w-0">
-                <p class="text-sm font-semibold text-[#6B7280] uppercase tracking-wider mb-3 !whitespace-nowrap truncate block w-full">Growth</p>
+                <p class="text-sm font-semibold text-[#6B7280] uppercase tracking-wider mb-3">Growth</p>
                 <h3 class="text-xl font-bold text-[#111827] mb-4 leading-snug">데이터로 확인하는 메타 인지</h3>
-                <p class="text-[#4B5563] !whitespace-nowrap truncate block w-full" title="자동으로 쌓이는 실행 데이터가 시각화될 때, 당신의 성장은 확신이 됩니다.">자동으로 쌓이는 실행 데이터가 시각화될 때, 당신의 성장은 확신이 됩니다.</p>
+                <p class="text-[#4B5563] home-value-desc" title="자동으로 쌓이는 실행 데이터가 시각화될 때, 당신의 성장은 확신이 됩니다.">자동으로 쌓이는 실행 데이터가 시각화될 때, 당신의 성장은 확신이 됩니다.</p>
               </article>
             </div>
           </section>
