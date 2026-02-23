@@ -190,7 +190,7 @@ const insightPath = path.join(__dirname, '..', 'insight', 'insight.html');
 let insightHtml = fs.readFileSync(insightPath, 'utf-8');
 const today = new Date().toISOString().slice(0, 10);
 const published = posts.filter((p) => !p.isDraft || (p.isDraft && p.dateStr <= today));
-const sorted = [...published].sort((a, b) => a.num - b.num);
+const sorted = [...published].sort((a, b) => b.num - a.num);
 const pad = (n) => String(n).padStart(2, '0');
 const rows = sorted.map((p) => {
   const cat = p.num <= 20 ? 'Action' : 'Guide';
