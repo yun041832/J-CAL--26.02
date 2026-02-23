@@ -23,26 +23,20 @@ jobs:
           npm ci
           npm run build:posts
 
-      - name: Copy files via scp
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          source: "index.html,style.css,app.js,insight.html,sitemap.xml,insight/*"
-          target: "/tmp/"
+      - name: Deploy to EC2
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USER: ${{ secrets.EC2_USER }}
+          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          # Fix for multi-line SSH key secret
+          echo "$EC2_SSH_KEY" > ~/.ssh/deploy_key.pem
+          chmod 600 ~/.ssh/deploy_key.pem
+          ssh-keyscan -H $EC2_HOST >> ~/.ssh/known_hosts 2>/dev/null || true
 
-      - name: Execute SSH commands to deploy
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            TARGET="/var/www/html"
-            sudo rm -f ${TARGET}/sitemap-0.xml || true
-            sudo cp /tmp/index.html /tmp/style.css /tmp/app.js /tmp/insight.html /tmp/sitemap.xml ${TARGET}/
-            sudo mkdir -p ${TARGET}/insight
-            sudo cp -r /tmp/insight/* ${TARGET}/insight/
-            echo 'Daily deploy completed'
+          TARGET="/var/www/html"
+          scp -i ~/.ssh/deploy_key.pem -o StrictHostKeyChecking=accept-new index.html style.css app.js insight.html sitemap.xml "${EC2_USER}@${EC2_HOST}:/tmp/"
+          scp -i ~/.ssh/deploy_key.pem -o StrictHostKeyChecking=accept-new -r insight "${EC2_USER}@${EC2_HOST}:/tmp/"
+          ssh -i ~/.ssh/deploy_key.pem "${EC2_USER}@${EC2_HOST}" "sudo rm -f ${TARGET}/sitemap-0.xml || true && sudo cp /tmp/index.html /tmp/style.css /tmp/app.js /tmp/insight.html /tmp/sitemap.xml ${TARGET}/ && sudo mkdir -p ${TARGET}/insight && sudo cp -r /tmp/insight/* ${TARGET}/insight/ && echo 'Daily deploy completed'"
 
