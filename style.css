@@ -2556,6 +2556,8 @@ body.insight-page .main .content {
 @media (max-width: 480px) {
   .app,.card,.main,.content{ min-width:0; max-width:100%; overflow-x:hidden; box-sizing:border-box; }
   .app{ padding:10px; gap:4px; box-sizing:border-box; }
+  .insight-post .insight-card,.insight-post .insight-card__body,.insight-post .content,.insight-post .insight-card h1{ overflow:visible !important; height:auto !important; }
+  .insight-list-title,.insight-list-title a{ overflow:visible !important; text-overflow:clip !important; }
   .insight-list-simple{ overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%; }
   .insight-list-title a{ word-break:break-word; }
   .card{
