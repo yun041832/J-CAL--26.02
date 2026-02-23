@@ -110,7 +110,7 @@
     <aside class="sidebar" role="navigation" aria-label="메인 메뉴">
 <a class="menu-button nav-item" href="/index.html"><span class="menu-content"><span class="label">홈</span></span></a>
       <a class="menu-button nav-item" href="/index.html?widget=routine"><span class="menu-content"><span class="label">루틴</span></span></a>
-      <a class="menu-button nav-item" href="/memo/memo.html"><span class="menu-content"><span class="label">메모</span></span></a>
+      <a class="menu-button nav-item" href="/index.html?widget=memo"><span class="menu-content"><span class="label">메모</span></span></a>
       <a class="menu-button nav-item" href="/insight/insight.html"><span class="menu-content"><span class="label">인사이트</span></span></a>
       <a class="menu-button nav-item" href="/about.html">About</a>
       
@@ -426,7 +426,7 @@
   <script>
     if('serviceWorker' in navigator){
       window.addEventListener('load',()=>{
-        navigator.serviceWorker.register('./sw.js').catch(()=>{});
+        navigator.serviceWorker.register('/sw.js').catch(()=>{});
       });
     }
     document.addEventListener('DOMContentLoaded', function(){
