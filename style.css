@@ -1854,7 +1854,7 @@ aside.right .todo-item{display:flex;align-items:center;gap:2px}
   margin:0;
   box-sizing:border-box;
   padding:2px;
-  overflow:hidden;
+  overflow:visible;
   position:relative;
 }
 .calendar__grid .day:nth-child(7n){border-right:none}
@@ -2598,6 +2598,7 @@ body.insight-page .main .content {
   }
   .day{
     min-height:80px;
+    overflow:visible !important;
   }
   .day__num{
     font-size:8px;
