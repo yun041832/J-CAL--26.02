@@ -2167,6 +2167,7 @@ body.insight-page .main .content {
   background: var(--card);
   transition: box-shadow 0.2s, border-color 0.2s;
   min-height: 180px;
+  height: auto !important;
 }
 .insight-card:hover { border-color: var(--primary); box-shadow: 0 4px 12px rgba(92,141,255,0.12); }
 .insight-card__category {
@@ -2186,6 +2187,8 @@ body.insight-page .main .content {
   color: var(--text);
   word-break: break-word;
   overflow-wrap: break-word;
+  flex-shrink: 0;
+  min-width: 0;
 }
 .insight-card__title a {
   color: inherit;
@@ -2564,8 +2567,11 @@ body.insight-page .main .content {
     gap:8px;
   }
   .card__header-unified .monthly-goal-input-unified{ flex:1 1 100%; min-width:0; }
-  .insight-card{ min-height:180px; padding:12px; }
-  .insight-card__title{ word-break:break-word; overflow-wrap:break-word; }
+  .insight-card{ min-height:180px; height:auto !important; padding:14px 12px; margin:0; }
+  .insight-card__title{ word-break:break-word; overflow-wrap:break-word; flex-shrink:0; min-width:0; padding-right:0; }
+  .insight-featured-grid .insight-card{ width:100%; max-width:100%; box-sizing:border-box; }
+  .memo-card{ height:auto !important; padding:14px 12px; }
+  .memo-card__title{ flex-shrink:0; min-width:0; }
   .monthly-goal-input-unified{
     font-size:12px;
     padding:5px 8px;
@@ -2903,6 +2909,7 @@ body.insight-page .main .content {
   box-shadow: 0 2px 8px rgba(0,0,0,.06);
   transition: all 0.2s;
   min-height: 180px;
+  height: auto !important;
   display: flex;
   flex-direction: column;
   cursor: pointer;
