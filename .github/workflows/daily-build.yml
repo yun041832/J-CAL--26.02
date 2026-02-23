@@ -19,9 +19,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build posts
-        run: |
-          npm ci
-          npm run build:posts
+        run: npm ci && npm run build:posts
 
       - name: Setup SSH key and Deploy
         env:
