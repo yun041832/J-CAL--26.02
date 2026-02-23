@@ -44,13 +44,13 @@
 <body>
   <div class="app">
     <aside class="sidebar" role="navigation" aria-label="메인 메뉴">
-      <a href="/index.html" class="menu-button nav-item"><span class="menu-content"><span class="label">홈</span></span></a>
-      <a href="/index.html" class="menu-button nav-item"><span class="menu-content"><span class="label">루틴</span></span></a>
-      <a href="/index.html" class="menu-button nav-item"><span class="menu-content"><span class="label">메모</span></span></a>
-      <a href="/index.html" class="menu-button nav-item"><span class="menu-content"><span class="label">달력</span></span></a>
-      <a href="/insight.html" class="menu-button nav-item" aria-label="인사이트"><span class="menu-content"><span class="label">인사이트</span></span></a>
-      <a href="/about.html" class="menu-button nav-item" aria-current="page">About</a>
-      <button type="button" id="themeToggle" class="menu-button nav-item" data-feature="dark" aria-label="테마 전환"><span class="menu-content"><span class="label">다크</span></span></button>
+      <a class="menu-button nav-item" href="/index.html" data-widget="home"><span class="menu-content"><span class="label">홈</span></span></a>
+      <a class="menu-button nav-item" href="/index.html?widget=routine" data-widget="routine"><span class="menu-content"><span class="label">루틴</span></span></a>
+      <a class="menu-button nav-item" href="/index.html?widget=memo" data-widget="memo"><span class="menu-content"><span class="label">메모</span></span></a>
+      <a class="menu-button nav-item" href="/index.html?widget=calendar" data-feature="calendar" data-widget="calendar" id="calendarMenuBtn"><span class="menu-content"><span class="label">달력</span></span></a>
+      <a class="menu-button nav-item" href="/insight/insight.html" aria-label="인사이트"><span class="menu-content"><span class="label">인사이트</span></span></a>
+      <a class="menu-button nav-item" href="/about.html">About</a>
+      <button id="themeToggle" class="menu-button nav-item" data-feature="dark" aria-label="테마 전환"><span class="menu-content"><span class="label">다크</span></span></button>
     </aside>
     <main class="main">
   <div class="wrap">

@@ -167,6 +167,17 @@ function showTimerPage(){
 // ...existing code...
 
 document.addEventListener('DOMContentLoaded',()=>{
+  // URL Parameter parsing for external links
+  const urlParams = new URLSearchParams(window.location.search);
+  const startWidget = urlParams.get('widget');
+  if (startWidget) {
+    setTimeout(() => {
+      if (startWidget === 'memo' && typeof showMemoPage === 'function') showMemoPage();
+      else if (startWidget === 'routine' && typeof showRoutinePage === 'function') showRoutinePage();
+      else if (startWidget === 'timer' && typeof showTimerPage === 'function') showTimerPage();
+    }, 100);
+  }
+
   // 네비게이션 방해 방지: DOM 조작을 먼저 한 번만 수행 (이동 직전 조작 없음)
   ['calendar','timer','alarm','stopwatch','dark'].forEach(function(key){
     if(key==='dark' || !FEATURES[key]) document.querySelectorAll('[data-feature="'+key+'"]').forEach(function(el){ el.classList.add('feature-off'); });
@@ -184,30 +195,53 @@ document.addEventListener('DOMContentLoaded',()=>{
     };
   }
 
-  // 네비게이션: <a href>는 JS 미적용 → 1회 클릭으로 즉시 이동. 버튼만 위임 처리.
+  // 네비게이션: SPA 라우팅 적용 (홈에서는 새로고침 없이 즉시 이동)
   var sidebar=document.querySelector('.sidebar');
   if(sidebar){
     sidebar.addEventListener('click',function(e){
-      var link=e.target.closest('a[href]');
-      if(link){ return; }
       var btn=e.target.closest('.menu-button, .menu-btn');
-      if(!btn||btn.tagName!=='BUTTON') return;
-      e.preventDefault();
-      if(btn.id==='homeBtn'){ showHomeIntro(); trackMenuPV('menu:home'); return; }
+      var link=e.target.closest('a[href]');
+      
+      // 만약 <a href> 링크를 클릭했다면 SPA 라우팅 로직을 태우지 않고 브라우저 기본 이동에 맡김
+      if(link){ return; }
+
+      if(!btn) return;
+      
       var t=btn.dataset.widget;
-      if(t==='calendar'&&!FEATURES.calendar) return;
-      if(t==='timer'&&!FEATURES.timer) return;
-      if(t==='alarm'&&!FEATURES.alarm) return;
-      if(t==='stopwatch'&&!FEATURES.stopwatch) return;
-      trackMenuPV('menu:'+ (t||'unknown'));
-      showUsage(t);
-      if(t==='calendar') openCalendar();
-      else if(t==='memo') showMemoPage();
-      else if(t==='routine') showRoutinePage();
-      else if(t==='todo') widgetTodo?.();
-      else if(t==='timer') showTimerPage();
-      else if(t==='alarm') widgetAlarm?.();
-      else if(t==='stopwatch') widgetStopwatch?.();
+      var currentPath = window.location.pathname.replace(/^.*\//,'') || 'index.html';
+      var isHome = currentPath === 'index.html' || window.location.pathname === '/';
+
+      if(t && isHome){
+        e.preventDefault();
+        if(t==='home'){ showHomeIntro(); trackMenuPV('menu:home'); return; }
+        if(t==='calendar'&&!FEATURES.calendar) return;
+        if(t==='timer'&&!FEATURES.timer) return;
+        if(t==='alarm'&&!FEATURES.alarm) return;
+        if(t==='stopwatch'&&!FEATURES.stopwatch) return;
+        trackMenuPV('menu:'+ t);
+        showUsage(t);
+        if(t==='calendar') openCalendar();
+        else if(t==='memo') showMemoPage();
+        else if(t==='routine') showRoutinePage();
+        else if(t==='todo') widgetTodo?.();
+        else if(t==='timer') showTimerPage();
+        else if(t==='alarm') widgetAlarm?.();
+        else if(t==='stopwatch') widgetStopwatch?.();
+        
+        // Update URL without reloading
+        var newUrl = t === 'home' ? '/index.html' : '/index.html?widget=' + t;
+        window.history.pushState({path: newUrl}, '', newUrl);
+        return;
+      }
+      
+      var link=e.target.closest('a[href]');
+      if(link){ return; } // 다른 페이지 링크면 브라우저가 이동하게 둠
+      
+      if(btn.tagName!=='BUTTON') return;
+      e.preventDefault();
+      if(btn.id==='themeToggle'){
+        // existing themeToggle logic if any, or it's handled elsewhere
+      }
     });
     var path=window.location.pathname.replace(/^.*\//,'')||'index.html';
     sidebar.querySelectorAll('a[href]').forEach(function(a){
