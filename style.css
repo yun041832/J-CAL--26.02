@@ -184,9 +184,9 @@ body{margin:0;display:flex;flex-direction:column;min-height:100vh;height:auto;ba
   }
   .app .sidebar .menu-button .menu-content,
   .app .sidebar .menu-button .label{
-    white-space:nowrap !important;
-    overflow:hidden !important;
-    text-overflow:ellipsis !important;
+    white-space:normal !important;
+    overflow:visible !important;
+    word-break:break-word !important;
   }
   /* 메인: 하단 네비 높이만큼 여백 → 콘텐츠 가림 없음 (AdSense 친화) */
   .app .main{
@@ -1463,7 +1463,7 @@ aside.right .todo-item{display:flex;align-items:center;gap:2px}
   font-size:14px;font-weight:700;color:#334155;
 }
 .date-picker-body{
-  display:grid;grid-template-columns:1fr 1fr;height:220px;overflow:hidden;
+  display:grid;grid-template-columns:1fr 1fr;min-height:220px;overflow:auto;
 }
 .date-picker-col{
   overflow-y:auto;padding:6px;border-right:1px solid #e2e8f0;
@@ -2334,7 +2334,7 @@ body.insight-page .main .content {
 .widget--calendar .mini-day--out .mini-day__num{color:#cbd5e1}
 .widget--calendar .mini-day--sel{outline:2px solid #dbeafe}
 .widget--calendar .mini-labels{display:flex;flex-direction:column;gap:2px;overflow:hidden;flex:1}
-.widget--calendar .mini-label{display:flex;align-items:center;gap:3px;font-size:13px;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#1f2937;padding:0;border-radius:0;background:transparent}
+.widget--calendar .mini-label{display:flex;align-items:center;gap:3px;font-size:13px;line-height:1.15;white-space:normal;word-break:break-word;color:#1f2937;padding:0;border-radius:0;background:transparent}
 .widget--calendar .mini-label.done{color:#94a3b8;text-decoration:line-through;background:transparent}
 .widget--calendar .mini-more{margin-left:auto;font-size:10px;color:#2563eb;font-weight:600}
 .widget--calendar .mini-dots{display:none}
@@ -2550,13 +2550,16 @@ body.insight-page .main .content {
   .app,.card,.main,.content{ min-width:0; max-width:100%; overflow-x:hidden; box-sizing:border-box; }
   .app{ padding:10px; gap:4px; box-sizing:border-box; }
   .insight-list-simple{ overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%; }
-  .insight-list-title a{ word-break:break-all; }
+  .insight-list-title a{ word-break:break-word; }
   .card{
     border-radius:12px;
   }
   .card__header-unified{
     padding:6px;
+    flex-wrap:wrap;
+    gap:8px;
   }
+  .card__header-unified .monthly-goal-input-unified{ flex:1 1 100%; min-width:0; }
   .monthly-goal-input-unified{
     font-size:12px;
     padding:5px 8px;

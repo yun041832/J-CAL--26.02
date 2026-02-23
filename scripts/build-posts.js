@@ -119,8 +119,8 @@ function escapeHtml(s) {
     .replace(/'/g, '&#39;');
 }
 
-// 01~60번 파일명 패턴
-const files = fs.readdirSync(POSTS_DIR).filter((f) => /^\d+[-_].*\.md$/.test(f));
+// 01~60번 파일명 패턴 (동일 ID 중 알파벳 순 첫 번째 파일 사용 → 일관된 매핑)
+const files = fs.readdirSync(POSTS_DIR).filter((f) => /^\d+[-_].*\.md$/.test(f)).sort();
 const numToFile = {};
 files.forEach((f) => {
   const num = parseInt(f.split(/[-_]/)[0], 10);
