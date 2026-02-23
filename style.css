@@ -2557,17 +2557,17 @@ body.insight-page .main .content {
 }
 
 @media (max-width: 480px) {
-  .app,.card,.main,.content{ min-width:0; max-width:100%; overflow-x:hidden; box-sizing:border-box; }
+  .app,.card,.main,.content{ min-width:0; max-width:100%; width: 100% !important; overflow-x:hidden; box-sizing:border-box !important; }
   .app{ padding:10px; gap:4px; box-sizing:border-box; }
   .insight-post .insight-card,.insight-post .insight-card__body,.insight-post .content,.insight-post .insight-card h1{ overflow:visible !important; height:auto !important; }
-  .insight-list-simple{ overflow-x:hidden; max-width:100%; }
-  .insight-list-table, .insight-list-table tbody { display: flex; flex-direction: column; width: 100%; }
+  .insight-list-simple{ overflow-x:hidden; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; }
+  .insight-list-table, .insight-list-table tbody { display: flex; flex-direction: column; width: 100% !important; box-sizing: border-box !important; margin: 0; padding: 0; }
   .insight-list-table thead { display: none; }
-  .insight-list-table tr { display: flex; flex-wrap: wrap; padding: 12px 0; border-bottom: 1px solid var(--line); align-items: center; }
-  .insight-list-table td { display: inline-block; border: none; padding: 0; line-height: 1.4; }
+  .insight-list-table tr { display: flex; flex-wrap: wrap; padding: 12px 0; border-bottom: 1px solid var(--line); align-items: flex-start; width: 100% !important; box-sizing: border-box !important; }
+  .insight-list-table td { display: inline-block; border: none; padding: 0; line-height: 1.4; box-sizing: border-box !important; }
   .insight-list-num, .insight-list-cat, .insight-list-author, .insight-list-date { width: auto !important; margin-right: 8px; font-size: 12px; color: var(--text-muted); }
-  .insight-list-title { flex: 1 1 100%; width: 100%; order: 10; margin-top: 6px; }
-  .insight-list-title a { display: block !important; width: 100%; white-space: normal !important; overflow: hidden !important; text-overflow: ellipsis !important; word-break: keep-all; }
+  .insight-list-title { flex: 1 1 100% !important; width: 100% !important; order: 10; margin-top: 6px; box-sizing: border-box !important; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; }
+  .insight-list-title a { display: block !important; width: 100% !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; word-break: keep-all !important; box-sizing: border-box !important; }
   .card{
     border-radius:12px;
   }
@@ -3318,11 +3318,10 @@ body.insight-page .main .content {
 .insight-card__title,
 .insight-list-title,
 .insight-list-title a {
-  white-space: normal !important;
+  white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   display: block !important;
-  word-break: keep-all !important;
-  overflow-wrap: break-word !important;
+  box-sizing: border-box !important;
 }
 
