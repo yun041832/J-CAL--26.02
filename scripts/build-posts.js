@@ -1,4 +1,4 @@
-/**
+﻿/**
  * contents/posts/*.md → insight/insight-b21.html ~ insight-b60.html 빌드
  * 21~60번 블로그 글을 HTML로 변환하여 insight 폴더에 출력
  */
@@ -70,7 +70,7 @@ function buildHtml(num, title, dateStr, bodyHtml) {
       <a class="nav-link menu-button nav-item" href="/index.html?widget=memo"><span class="menu-content"><span class="label">메모</span></span></a>
       <a class="nav-link menu-button nav-item" href="/insight/insight.html"><span class="menu-content"><span class="label">인사이트</span></span></a>
       <a class="nav-link menu-button nav-item" href="/index.html?widget=routine"><span class="menu-content"><span class="label">루틴</span></span></a>
-      <a class="nav-link menu-button nav-item" href="/about.html"><span class="menu-content"><span class="label">About</span></span></a>
+      <a class="nav-link menu-button nav-item" href="/about/about.html"><span class="menu-content"><span class="label">About</span></span></a>
       <button type="button" id="themeToggleB${num}" class="menu-button nav-item" data-feature="dark" aria-label="테마 전환"><span class="menu-content"><span class="label">다크</span></span></button>
     </aside>
     <main class="main insight-post">
