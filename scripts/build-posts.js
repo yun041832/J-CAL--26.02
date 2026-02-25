@@ -1,4 +1,4 @@
-﻿/**
+/**
  * contents/posts/*.md → insight/insight-b21.html ~ insight-b60.html 빌드
  * 21~60번 블로그 글을 HTML로 변환하여 insight 폴더에 출력
  */
@@ -23,6 +23,30 @@ function parseFrontmatter(content) {
     }
   });
   return { front, body: match[2] };
+}
+
+const REDIRECT_URL = 'https://www.upsidelog.com';
+const REDIRECT_MSG = '현재 페이지는 업사이드로그(https://www.upsidelog.com)로 이전되었습니다';
+
+/** 포스팅 폐쇄: 과거 URL 접속 시 업사이드로그로 리다이렉트하는 HTML 생성 */
+function buildRedirectHtml(fileName) {
+  return `<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>콘텐츠 이전 안내 | J-Calendar</title>
+  <meta http-equiv="refresh" content="0;url=${REDIRECT_URL}">
+  <script>location.replace("${REDIRECT_URL}");</script>
+  <style>body{font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#f6f7fb;color:#111827;} .box{padding:24px;text-align:center;} a{color:#5c8dff;}</style>
+</head>
+<body>
+  <div class="box">
+    <p>${REDIRECT_MSG}</p>
+    <p><a href="${REDIRECT_URL}">업사이드로그로 이동</a></p>
+  </div>
+</body>
+</html>`;
 }
 
 const MAX_POSTS = 160;
@@ -127,130 +151,28 @@ files.forEach((f) => {
   if (num >= 1 && num <= 160) numToFile[num] = f;
 });
 
-marked.setOptions({ gfm: true, breaks: true });
+marked.setOptions({ gfm: true, breaks: false });
 const posts = [];
 
-// 01~20: insight-p01 ~ insight-p20 (제미니 메모)
-for (let n = 1; n <= 20; n++) {
-  const f = numToFile[n];
-  if (!f) continue;
-  const raw = fs.readFileSync(path.join(POSTS_DIR, f), 'utf-8');
-  const { front, body } = parseFrontmatter(raw);
-  const title = front.title || body.match(/^#\s+(.+)$/m)?.[1]?.trim() || `게시글 ${String(n).padStart(2, '0')}`;
-  const dateStr = front.date || '2026-01-01';
-  const isDraft = String(front.draft || '').toLowerCase() === 'true';
-  const bodyHtml = marked.parse(body || '');
-  const prev = n > 1 ? `/insight/insight-p${String(n - 1).padStart(2, '0')}.html` : '';
-  const next = n < 20 ? `/insight/insight-p${String(n + 1).padStart(2, '0')}.html` : '/insight/insight-b21.html';
-  const navPrev = prev ? `<a href="${prev}">← 이전 글</a>` : '<span></span>';
-  const navNext = next ? `<a href="${next}">다음 글 →</a>` : '<span></span>';
-  let html = buildHtml(21, title, dateStr, bodyHtml); // reuse template
-  html = html.replace(/insight-b21/g, `insight-p${String(n).padStart(2, '0')}`);
-  html = html.replace(/insight\/insight-b21\.html/g, `insight/insight-p${String(n).padStart(2, '0')}.html`);
-  html = html.replace(/id="themeToggleB21"/, `id="themeToggleP${n}"`);
-  html = html.replace(/themeToggleB21/g, `themeToggleP${n}`);
-  html = html.replace(/<nav class="insight-nav"[^>]*>[\s\S]*?<\/nav>/, `<nav class="insight-nav" aria-label="글 내비게이션">${navPrev}${navNext}</nav>`);
-  html = html.replace(/<span class="insight-card__category">Guide<\/span>/, '<span class="insight-card__category">Action</span>');
-  const outPath = path.join(OUT_DIR, `insight-p${String(n).padStart(2, '0')}.html`);
-  fs.writeFileSync(outPath, html, 'utf-8');
-  posts.push({ num: n, title, dateStr, isDraft });
-  console.log(`Built insight-p${String(n).padStart(2, '0')}.html`);
-}
-
-for (let n = 21; n <= 160; n++) {
-  const f = numToFile[n];
-  if (!f) continue;
-  const raw = fs.readFileSync(path.join(POSTS_DIR, f), 'utf-8');
-  const { front, body } = parseFrontmatter(raw);
-  // fallback: 첫 번째 # 제목에서 추출
-  let title = front.title || '';
-  if (!title) {
-    const h1 = body.match(/^#\s+(.+)$/m);
-    if (h1) title = h1[1].trim();
-  }
-  if (!title) title = `글 ${n}`;
-  const dateStr = front.date || '2026-02-08';
-  const isDraft = String(front.draft || '').toLowerCase() === 'true';
-  const bodyHtml = marked.parse(body || '');
-  const outPath = path.join(OUT_DIR, `insight-b${String(n).padStart(2, '0')}.html`);
-  fs.writeFileSync(outPath, buildHtml(n, title, dateStr, bodyHtml), 'utf-8');
-  posts.push({ num: n, title, dateStr, isDraft });
-  console.log(`Built insight-b${String(n).padStart(2, '0')}.html`);
-}
-
-// posts 메타데이터를 JSON으로 저장
-fs.writeFileSync(
-  path.join(__dirname, '..', 'scripts', 'posts-meta.json'),
-  JSON.stringify(posts, null, 2),
-  'utf-8'
-);
-
-// insight.html 테이블 tbody 갱신 (draft 제외 + future: false = 날짜 지난 draft만 자동 공개)
-const insightPath = path.join(__dirname, '..', 'insight', 'insight.html');
-let insightHtml = fs.readFileSync(insightPath, 'utf-8');
-const today = new Date().toISOString().slice(0, 10);
-const published = posts.filter((p) => !p.isDraft || (p.isDraft && p.dateStr <= today));
-const sorted = [...published].sort((a, b) => b.num - a.num);
+// 블로그 폐쇄: 모든 포스팅 URL을 업사이드로그 리다이렉트 페이지로 출력
 const pad = (n) => String(n).padStart(2, '0');
-const rows = sorted.map((p) => {
-  const cat = p.num <= 20 ? 'Action' : 'Guide';
-  const href = p.num <= 20 ? `/insight/insight-p${pad(p.num)}.html` : `/insight/insight-b${pad(p.num)}.html`;
-  const titleRaw = (p.title || '').replace(/^\d+\.\s*/, '');
-  const title = escapeHtml(p.num + '. ' + titleRaw);
-  return `<tr><td class="insight-list-num">${p.num}</td><td class="insight-list-cat">${cat}</td><td class="insight-list-title"><a href="${href}">${title}</a></td><td class="insight-list-author">J-Calendar</td><td class="insight-list-date">${p.dateStr}</td></tr>`;
-});
-const newTbody = '              <tbody>\n                ' + rows.join('\n                ') + '\n              </tbody>';
-insightHtml = insightHtml.replace(/<tbody>[\s\S]*?<\/tbody>/, newTbody);
-fs.writeFileSync(insightPath, insightHtml, 'utf-8');
-console.log(`Updated insight/insight.html table (${published.length} published, ${posts.length - published.length} draft hidden, date desc).`);
+for (let n = 1; n <= 20; n++) {
+  const fileName = `insight-p${pad(n)}.html`;
+  fs.writeFileSync(path.join(OUT_DIR, fileName), buildRedirectHtml(fileName), 'utf-8');
+  console.log(`Redirect: ${fileName}`);
+}
+for (let n = 21; n <= 80; n++) {
+  const fileName = `insight-b${pad(n)}.html`;
+  fs.writeFileSync(path.join(OUT_DIR, fileName), buildRedirectHtml(fileName), 'utf-8');
+  console.log(`Redirect: ${fileName}`);
+}
+// (기존 마크다운 빌드 비활성화)
+// for (let n = 1; n <= 20; n++) { ... }
+// for (let n = 21; n <= 160; n++) { ... }
 
-// sitemap.xml 생성 (draft 제외 + 정적 페이지)
-const base = 'https://jaycalendar.com';
-const postUrls = published.map((p) => {
-  const file = p.num <= 20 ? `insight-p${pad(p.num)}.html` : `insight-b${pad(p.num)}.html`;
-  return `  <url>
-    <loc>${base}/insight/${file}</loc>
-    <lastmod>${p.dateStr}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>`;
-});
-const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>${base}/</loc>
-    <lastmod>${today}</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>${base}/insight/insight.html</loc>
-    <lastmod>${today}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-${postUrls.join('\n')}
-  <url>
-    <loc>${base}/about.html</loc>
-    <lastmod>${today}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>${base}/privacy.html</loc>
-    <lastmod>${today}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>${base}/contact.html</loc>
-    <lastmod>${today}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.4</priority>
-  </url>
-</urlset>
-`;
-fs.writeFileSync(path.join(__dirname, '..', 'sitemap.xml'), sitemap, 'utf-8');
-console.log(`Updated sitemap.xml (${published.length} posts + static).`);
+// (블로그 폐쇄: 메타·insight·sitemap 자동 갱신 비활성화)
+// fs.writeFileSync(posts-meta.json ...
+// insight.html 테이블 갱신 비활성화
+// sitemap.xml 포스팅 URL 추가 비활성화 — sitemap.xml은 수동 유지
 
-console.log(`Done. ${posts.length} posts built.`);
+console.log('Done. Redirect pages written for insight-p01~p20, insight-b21~b80.');
