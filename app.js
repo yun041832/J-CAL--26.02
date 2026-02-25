@@ -259,7 +259,18 @@ document.addEventListener('DOMContentLoaded',()=>{
 
   if(homeIntroSection) showHomeIntro(); /* app.html에는 homeIntroSection 없음 → 호출 생략으로 rightPane 숨김/빈화면 방지 */
 
-  // ...existing code...
+  (function verificationLog(){
+    var vw = window.innerWidth, vh = window.innerHeight;
+    var main = document.querySelector('.main');
+    var body = document.body;
+    var report = {
+      viewport: { width: vw, height: vh, '100vw/100vh': vw + 'px/' + vh + 'px' },
+      body: body ? { clientWidth: body.clientWidth, scrollWidth: body.scrollWidth } : null,
+      main: main ? { clientWidth: main.clientWidth, offsetWidth: main.offsetWidth } : null,
+      server: window.location.origin
+    };
+    try { console.log('[J-CAL verification]', report); } catch(e) {}
+  })();
 });
 
 // ...existing code...

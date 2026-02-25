@@ -1,5 +1,6 @@
-/* ---------- [강제] 서치콘솔·모바일 레이아웃 고정 ---------- */
-html, body { width: 100%; overflow-x: hidden; margin: 0; padding: 0; box-sizing: border-box; }
+/* ---------- Viewport & layout (single source: 100vw/100vh) ---------- */
+html { width: 100%; height: 100%; margin: 0; padding: 0; overflow-x: hidden; box-sizing: border-box; }
+body { width: 100%; min-height: 100vh; margin: 0; padding: 0; overflow-x: hidden; box-sizing: border-box; }
 * { box-sizing: inherit; }
 body, .app, .main, .content, .main-container, .content-area, .wrap { box-sizing: border-box; overflow-x: hidden; }
 /* 인사이트·메모 리스트 컨테이너 폭 고정 (글자 쏟아짐 방지) */
@@ -72,8 +73,8 @@ body, .app, .main, .content, .main-container, .content-area, .wrap { box-sizing:
   --bg:#f6f7fb; --card:#ffffff; --line:#e9ecf2; --text:#111827;
 }
 *{box-sizing:border-box}
-html{margin:0;overflow-x:hidden;min-height:100%}
-body{margin:0;display:flex;flex-direction:column;min-height:100vh;height:auto;background:var(--bg);color:var(--text);font-family:"Noto Sans","Noto Sans KR",sans-serif;overflow-x:hidden;overflow-y:auto}
+html{height:100%}
+body{width:100%;min-height:100vh;margin:0;display:flex;flex-direction:column;height:auto;background:var(--bg);color:var(--text);font-family:"Noto Sans","Noto Sans KR",sans-serif;overflow-x:hidden;overflow-y:auto}
 /* ---------- 가로 스크롤/메뉴 돌출 원천 차단 (모바일·웨일 등) ---------- */
 .app{overflow-x:hidden;max-width:100%;box-sizing:border-box}
 .main,.content{max-width:100%;min-width:0;box-sizing:border-box}
@@ -3302,10 +3303,6 @@ body.insight-page .main .content {
   color: #ef4444;
 }
 
-/* ---------- 16. 모바일 메뉴 (한 줄 스크롤) ---------- */
-@media (max-width: 1024px) {
-  html, body { overflow-x: hidden !important; overflow-x: clip !important; }
-}
 
 /*
  * ============================================================

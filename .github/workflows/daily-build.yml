@@ -1,47 +1,66 @@
-# J-Calendar Daily Build & Deploy
-# Schedule: 11:00 KST - cron 0 2 * * *
-# 필요 시크릿: EC2_SSH_KEY, EC2_HOST, EC2_USER
+# J-Calendar: Single Deploy Pipeline (push + optional schedule)
+# Secrets: EC2_SSH_KEY, EC2_HOST, EC2_USER
 
 name: Daily Build & Deploy
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [main]
   schedule:
-    - cron: '0 2 * * *'  # 11:00 KST
+    - cron: "0 2 * * *"
   workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Build posts
         run: npm ci && npm run build:posts
 
-      - name: Setup SSH key and Deploy
+      - name: Deploy to EC2 with Rollback
         env:
           EC2_HOST: ${{ secrets.EC2_HOST }}
           EC2_USER: ${{ secrets.EC2_USER }}
           EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
         run: |
+          set -e
           if [ -z "$EC2_SSH_KEY" ] || [ -z "$EC2_HOST" ]; then
-            echo "Deployment skipped: Missing EC2 secrets. Please add EC2_SSH_KEY and EC2_HOST."
+            echo "Deployment skipped: missing EC2 secrets."
             exit 0
           fi
-          
           mkdir -p ~/.ssh
-          # Fix for multi-line SSH key secret with Windows line endings
           echo "$EC2_SSH_KEY" | tr -d '\r' > ~/.ssh/deploy_key.pem
           chmod 600 ~/.ssh/deploy_key.pem
-          ssh-keyscan -H $EC2_HOST >> ~/.ssh/known_hosts 2>/dev/null || true
+          ssh-keyscan -H "$EC2_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
 
           TARGET="/var/www/html"
-          scp -i ~/.ssh/deploy_key.pem -o StrictHostKeyChecking=accept-new index.html style.css app.js insight.html sitemap.xml "${EC2_USER}@${EC2_HOST}:/tmp/"
-          scp -i ~/.ssh/deploy_key.pem -o StrictHostKeyChecking=accept-new -r insight "${EC2_USER}@${EC2_HOST}:/tmp/"
-          ssh -i ~/.ssh/deploy_key.pem "${EC2_USER}@${EC2_HOST}" "sudo rm -f ${TARGET}/sitemap-0.xml && sudo cp /tmp/index.html /tmp/style.css /tmp/app.js /tmp/insight.html /tmp/sitemap.xml ${TARGET}/ && sudo mkdir -p ${TARGET}/insight && sudo cp -r /tmp/insight/* ${TARGET}/insight/ && echo 'Daily deploy completed'"
+          BACKUP="${TARGET}.backup.$(date +%Y%m%d%H%M%S)"
 
+          deploy() {
+            ssh -i ~/.ssh/deploy_key.pem "${EC2_USER}@${EC2_HOST}" "sudo cp -a ${TARGET} ${BACKUP}"
+            scp -i ~/.ssh/deploy_key.pem -o StrictHostKeyChecking=accept-new \
+              index.html style.css app.js insight.html sitemap.xml \
+              "${EC2_USER}@${EC2_HOST}:/tmp/"
+            scp -i ~/.ssh/deploy_key.pem -o StrictHostKeyChecking=accept-new \
+              -r insight "${EC2_USER}@${EC2_HOST}:/tmp/"
+            ssh -i ~/.ssh/deploy_key.pem "${EC2_USER}@${EC2_HOST}" \
+              "sudo cp /tmp/index.html /tmp/style.css /tmp/app.js /tmp/insight.html /tmp/sitemap.xml ${TARGET}/ && \
+               sudo mkdir -p ${TARGET}/insight && sudo cp -r /tmp/insight/* ${TARGET}/insight/ && \
+               sudo rm -f ${TARGET}/sitemap-0.xml && echo 'Deploy OK'"
+          }
 
+          rollback() {
+            ssh -i ~/.ssh/deploy_key.pem "${EC2_USER}@${EC2_HOST}" \
+              "sudo rm -rf ${TARGET} && sudo mv ${BACKUP} ${TARGET} && echo 'Rollback OK'" || true
+          }
 
+          if deploy; then
+            echo "Deployment completed."
+          else
+            echo "Deploy failed; attempting rollback."
+            rollback
+            exit 1
+          fi
