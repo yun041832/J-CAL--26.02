@@ -6,7 +6,7 @@ name: Daily Build & Deploy
 on:
   push:
     branches: [main]
-  # schedule:
+  # schedule: (동면 모드 — 자동 배포 중단. 재개 시 아래 두 줄 주석 해제)
   #   - cron: "0 2 * * *"
   workflow_dispatch:
 
