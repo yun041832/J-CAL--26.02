@@ -170,13 +170,9 @@ document.addEventListener('DOMContentLoaded',()=>{
   // URL Parameter parsing for external links
   const urlParams = new URLSearchParams(window.location.search);
   const startWidget = urlParams.get('widget');
-  if (startWidget) {
-    setTimeout(() => {
-      if (startWidget === 'memo' && typeof showMemoPage === 'function') showMemoPage();
-      else if (startWidget === 'routine' && typeof showRoutinePage === 'function') showRoutinePage();
-      else if (startWidget === 'timer' && typeof showTimerPage === 'function') showTimerPage();
-    }, 100);
-  }
+  if (startWidget === 'memo' && typeof showMemoPage === 'function') showMemoPage();
+  else if (startWidget === 'routine' && typeof showRoutinePage === 'function') showRoutinePage();
+  else if (startWidget === 'timer' && typeof showTimerPage === 'function') showTimerPage();
 
   // 네비게이션 방해 방지: DOM 조작을 먼저 한 번만 수행 (이동 직전 조작 없음)
   ['calendar','timer','alarm','stopwatch','dark'].forEach(function(key){
@@ -241,11 +237,13 @@ document.addEventListener('DOMContentLoaded',()=>{
         // existing themeToggle logic if any, or it's handled elsewhere
       }
     });
-    var path=window.location.pathname.replace(/^.*\//,'')||'index.html';
+    var pathname=window.location.pathname||'/';
+    var path=pathname.replace(/^\/+/, '').split('/').pop()||'index.html';
     sidebar.querySelectorAll('a[href]').forEach(function(a){
       a.removeAttribute('aria-current');
-      var h=a.getAttribute('href')||'';
-      if(h===path||(path===''&&h==='index.html')) a.setAttribute('aria-current','page');
+      var h=(a.getAttribute('href')||'').split('?')[0].replace(/^\/+/, '');
+      var hFile=h.split('/').pop()||'index.html';
+      if(hFile===path||(path==='index.html'&&(hFile==='index.html'||h==='index.html'||h===''))) a.setAttribute('aria-current','page');
     });
   }
 

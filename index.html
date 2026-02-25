@@ -12,6 +12,7 @@
   <meta name="naver-site-verification" content="c610c2376179223d74c7dbea33a711f002d52026">
 
   <meta name="theme-color" content="#5c8dff">
+  <meta name="robots" content="noarchive">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link rel="manifest" href="/manifest.webmanifest">
@@ -164,7 +165,7 @@
                   <div class="w-14 h-14 rounded-lg bg-[#D1FAE5] flex items-center justify-center mb-4 flex-shrink-0" aria-hidden="true">
                     <span class="text-2xl" aria-hidden="true">✅</span>
                   </div>
-                  <h3 class="text-lg font-bold text-[#111827] mb-3 truncate whitespace-nowrap block w-full">루틴 관리</h3>
+                  <h3 class="text-lg font-bold text-[#111827] mb-3 leading-snug">루틴 관리</h3>
                   <p class="text-[#4B5563] text-sm leading-relaxed min-w-0">매일 반복할 루틴을 등록하고 주간 달력에서 실행 여부를 체크할 수 있습니다. 자동으로 쌓이는 데이터로 습관을 되돌아볼 수 있습니다.</p>
                 </div>
               </article>
@@ -174,7 +175,7 @@
                   <div class="w-14 h-14 rounded-lg bg-[#EDE9FE] flex items-center justify-center mb-4 flex-shrink-0" aria-hidden="true">
                     <span class="text-2xl" aria-hidden="true">📝</span>
                   </div>
-                  <h3 class="text-lg font-bold text-[#111827] mb-3 truncate whitespace-nowrap block w-full">메모 습관</h3>
+                  <h3 class="text-lg font-bold text-[#111827] mb-3 leading-snug">메모 습관</h3>
                   <p class="text-[#4B5563] text-sm leading-relaxed min-w-0">가슴의 통증과 꿀렁거리는 호흡... '내가 잘하고 있나'라는 의문이 확신으로 변하는 과정을 기록하십시오.</p>
                 </div>
               </article>
@@ -184,7 +185,7 @@
                   <div class="w-14 h-14 rounded-lg bg-[#DBEAFE] flex items-center justify-center mb-4 flex-shrink-0" aria-hidden="true">
                     <span class="text-2xl" aria-hidden="true">💡</span>
                   </div>
-                  <h3 class="text-lg font-bold text-[#111827] mb-3 truncate whitespace-nowrap block w-full">인사이트</h3>
+                  <h3 class="text-lg font-bold text-[#111827] mb-3 leading-snug">인사이트</h3>
                   <p class="text-[#4B5563] text-sm leading-relaxed min-w-0">루틴이 뇌 가소성을 어떻게 변화시키는지, 기록의 축적이 만드는 심리적 임계점에 대해 탐구합니다.</p>
                 </div>
               </article>
@@ -430,8 +431,7 @@
     }
     document.addEventListener('DOMContentLoaded', function(){
       var cta = document.getElementById('homeCtaStart');
-      var routineBtn = document.querySelector('[data-widget="routine"]');
-      if(cta && routineBtn){ cta.addEventListener('click', function(){ routineBtn.click(); }); }
+      if(cta){ cta.addEventListener('click', function(){ window.location.href='/index.html?widget=routine'; }); }
     });
   </script>
 

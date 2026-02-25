@@ -6,7 +6,7 @@ name: Daily Build & Deploy
 on:
   push:
     branches: [main]
-  # schedule: (블로그 폐쇄·예약 배포 중단)
+  # schedule: (일시 중단 — 재개 시 아래 두 줄 주석 해제)
   #   - cron: "0 2 * * *"
   workflow_dispatch:
 
